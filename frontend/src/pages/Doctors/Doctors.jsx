@@ -7,6 +7,7 @@ import getDoctors from "../../hooks/userFetchData";
 import Error from "../../components/About/Error";
 import { RiFilterLine } from "react-icons/ri";
 import apiInstance from "../../slices/ApiSlices.js";
+import Pagination from "../../components/pagination/Pagination.jsx";
 
 const Doctors = () => {
   const dispatch = useDispatch();
@@ -17,7 +18,7 @@ const Doctors = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage, setPostPerPage] = useState(8);
   const [showfilterModal, setShowFilterModal] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const [sortOption, setSortOption] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
@@ -55,11 +56,18 @@ const Doctors = () => {
       setTimeout(() => {
         setDocData(data);
         const filteredDoctors = filterDoctors(data);
-        setFilteredResult(filteredDoctors);
         setIsLoading(false);
       }, 1000);
     }
   }, [dispatch, data, loading, error, search]);
+
+
+
+  useEffect(() => {
+    const filteredDoctors = filterDoctors(docData);
+    setFilteredResult(filteredDoctors);
+  }, [docData, search]);
+
 
   const handlefilter = async (filterorder, e) => {
     e.preventDefault();
@@ -69,14 +77,27 @@ const Doctors = () => {
       const res = await apiInstance.get(`${BASE_URL}/users/getDoctors/filter`,{
         params:{query:filterorder}
       });
+
+      console.log(res,"response")
+      if(res.data&& res.data.doctors){
+        console.log(res.data.doctors,"courses")
+
+        setDocData(res.data.doctors)
+
+      }
+
+      setIsSidebarOpen(false)
+      
       
 
     } catch (error) {}
   };
 
+
+
   const handleSearch = (event) => {
     setSearch(event.target.value);
-    const filteredDoctors = filteredDoctors(docData);
+    const filteredDoctors = filterDoctors(docData);
     setFilteredResult(filteredDoctors);
   };
 
@@ -109,7 +130,7 @@ const Doctors = () => {
 
       {/** filter seciton */}
       {/* <div className="flex justify-end mr-8"> */}
-      <section>
+      <section className="mr-12">
         <div className="ml-1 flex justify-end mr-8">
           <RiFilterLine
             className="cursor-pointer"
@@ -297,6 +318,9 @@ const Doctors = () => {
             </div>
           </div>
         </div>
+
+        {/** sort */}
+        
       </section>
 
       <section>
@@ -307,7 +331,9 @@ const Doctors = () => {
         </div>
       </section>
 
-      <section className="mt-11">
+     <Pagination postPerPage={postPerPage} totalPosts={filteredResult.length} setCurrentPage={setCurrentPage}  currentPage={currentPage}  />
+
+      {/* <section className="mt-11">
         <div className="container">
           <div className="xl:w-[470px] mx-auto">
             <h2 className="heading text-center">What our patient Says</h2>
@@ -318,7 +344,7 @@ const Doctors = () => {
           </div>
           <Testimonial />
         </div>
-      </section>
+      </section> */}
     </>
   );
 };

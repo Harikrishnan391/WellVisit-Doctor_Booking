@@ -38,7 +38,7 @@ router.get(
 
 router.get("/getAvailableSlots", getAvailableSlots);
 router.get("/getSingleDoctor/:id", getSingleDoctor);
-router.get("/getAvailableDates/:id", getAvailableDates);
-router.post("/makePayment", makepayment);
+router.get("/getAvailableDates/:id",authenticate, restrict(["patient"]),getAvailableDates);
+router.post("/makePayment",authenticate, restrict(["patient"]),makepayment);
 router.get("/getDoctors/filter", filterDoctor);
 export default router;

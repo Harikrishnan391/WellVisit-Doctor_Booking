@@ -1,21 +1,43 @@
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  theme: {
-    extend: {
-      colors: {
-        primaryColor: "#0067FF",
-        yellowColor: "#FEB60D",
-        purpleColor: "#9771FF",
-        irisBlueColor: "#10b981",
-        headingColor: "#181A1E",
-        textColor: "#4E545F",
-      },
+  /** @type {import('tailwindcss').Config} */
+  const withMT = require("@material-tailwind/react/utils/withMT");
+  // export default {
+  //   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  //   theme: {
+  //     extend: {
+  //       colors: {
+  //         primaryColor: "#0067FF",
+  //         yellowColor: "#FEB60D",
+  //         purpleColor: "#9771FF",
+  //         irisBlueColor: "#10b981",
+  //         headingColor: "#181A1E",
+  //         textColor: "#4E545F",
+  //       },
 
-      boxShadow: {
-        panelShadow: "rgba(17,12,46,0.15) 0px 48px 100px 0px",
+  //       boxShadow: {
+  //         panelShadow: "rgba(17,12,46,0.15) 0px 48px 100px 0px",
+  //       },
+  //     },
+  //   },
+  //   plugins: [],
+  // };
+
+  module.exports = withMT({
+    content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+    theme: {
+      extend: {
+        colors: {
+          primaryColor: "#0067FF",
+          yellowColor: "#FEB60D",
+          purpleColor: "#9771FF",
+          irisBlueColor: "#10b981",
+          headingColor: "#181A1E",
+          textColor: "#4E545F",
+        },
+  
+        boxShadow: {
+          panelShadow: "rgba(17,12,46,0.15) 0px 48px 100px 0px",
+        },
       },
     },
-  },
-  plugins: [],
-};
+    plugins: [],
+  });

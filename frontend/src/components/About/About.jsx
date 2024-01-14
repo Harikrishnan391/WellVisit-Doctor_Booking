@@ -1,16 +1,41 @@
-import React from "react";
+import React,{useState, useEffect} from "react";
 import aboutImg from "../../assets/images/about.png";
 import aboutCardImg from "../../assets/images/about-card.png";
+import aboutImg2 from "../../assets/images/about2.png"
 import { Link } from "react-router-dom";
+import { useSpring, animated } from "react-spring";
+
+
 
 const About = () => {
+
+  const [scrollY, setScrollY] = useState(0);
+  const HandleScroll = () => {
+    setScrollY(window.scrollY);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", HandleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", HandleScroll);
+    };
+  }, []);
+  const parallaxProps = useSpring({
+    transform: `translateY(${scrollY / 2}px)`,
+    opacity: 1 - scrollY / 1000,
+
+  });
+
+
   return (
     <section className="p-4 md:p-8 lg:p-12 lg:mt-12">
+  
       <div className="conatiner">
         <div className="flex  items-center justify-between gap-[20px] lg:gap-[1px]  flex-col lg:flex-row">
           {/**=====about image */}
           <div className="relative w-3/4 lg:w-1/2 xl:w-[770px] z-10 order-2 lg:order-1 lg:left-[50px] ">
-            <img src={aboutImg} alt="" />
+            <img src={aboutImg2} alt="" />
             <div className="absolute z-20 bottom-3 w-[200px] md:w-[300px] right-[-30%] md:right-[-7%] lg:right-[22%] left-[40%]">
               <img src={aboutCardImg} alt="" />
             </div>

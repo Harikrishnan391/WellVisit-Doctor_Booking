@@ -57,8 +57,8 @@ const SidePanel = (details) => {
     <div className="shadow-panelShadow p-3 lg:p-5  rounded-md">
       <div className="flex items-center justify-between py-2">
         <p className="text_para mt-0 font-semibold"> Fees for Consultation:</p>
-        <span className="text-[16px]  leading-7 lg:text-[22px] lg:leading-8 text-headingColor font-bold">
-          {details.details.fee}
+        <span className="text-[16px]  leading-7 lg:text-[22px] lg:leading-8 text-headingColor font-bold mr-9">
+          {`₹${details.details.fee}`}
         </span>
       </div>
       <div className="mt-[30px]">
@@ -92,8 +92,8 @@ const SidePanel = (details) => {
                 onClick={() => setSelectedTime({ slot })}
                 className={`${
                   selectedTime.slot === slot
-                    ? "bg-[#f72585] border-[1.5px] border-blacl p-3 rounded-lg hover-bg-[#f72585] hover:scale-105  transition duration-100 ease-in-out  cursor-pointer relative"
-                    : "p-3 rounded-lg bg-violet-500 hover-bg-[#f72585] hover:scale-105 transition duration-100 ease-in-out cursor-pointer relative"
+                    ? "bg-[#3160e1] border-[1.5px] border-blacl p-3 rounded-lg hover-bg-[#f72585] hover:scale-105  transition duration-100 ease-in-out  cursor-pointer relative"
+                    : "p-3 rounded-lg bg-[#d32f2f] hover-bg-[#f72585] hover:scale-105 transition duration-100 ease-in-out cursor-pointer relative"
                 }`}
               >
                 {slot}

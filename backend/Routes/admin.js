@@ -1,4 +1,5 @@
 import express from "express"
+import { authenticateAdmin } from "../auth/verifyAdminToken.js"
 
 import {
     BlockUser,

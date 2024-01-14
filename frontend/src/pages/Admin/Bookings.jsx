@@ -1,264 +1,149 @@
-import React,{useState} from "react";
+import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
-const Bookings = () => {
-  const [showPassword, setShowPassword] = useState(true);
+const ShuffleHero = () => {
   return (
-    <>
-    <div className="flex  justify-center">
-      <div className="bg-white relative lg:py-20  m">
-        <div
-          className="flex flex-col items-center justify-between pt-0 pr-10 pb-0 pl-10 mt-0 mr-auto mb-0 ml-auto max-w-7xl
-xl:px-5 lg:flex-row"
-        >
-          <div className="flex flex-col items-center w-full pt-5 pr-10 pb-20 pl-10 lg:pt-20 lg:flex-row">
-            <div className="w-full bg-cover relative max-w-md lg:max-w-2xl lg:w-7/12">
-              <div className="flex flex-col items-center justify-center w-full h-full relative lg:pr-10">
-                <img
-                  src="https://res.cloudinary.com/macxenon/image/upload/v1631570592/Run_-_Health_qcghbu.png"
-                  className="btn-"
-                />
-              </div>
-            </div>
-            <div className="w-full mt-20 mr-0 mb-0 ml-0 relative z-10 max-w-2xl lg:mt-0 lg:w-5/12">
-              <div
-                className="flex flex-col items-start justify-start pt-10 pr-10 pb-10 pl-10 bg-white shadow-2xl rounded-xl
-      relative z-10"
-              >
-                <p className="w-full text-4xl font-medium text-center leading-snug font-serif">
-                  Sign up for an account
-                </p>
-                <div className="w-full mt-6 mr-0 mb-0 ml-0 relative space-y-8">
-                  <div className="relative">
-                    <p className="bg-white pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600 absolute">
-                      Email
-                    </p>
-                    <input
-                      placeholder="123@ex.com"
-                      type="text"
-                      className="border placeholder-gray-400 focus:outline-none
-            focus:border-black w-full pt-4 pr-4 pb-4 pl-4 mt-2 mr-0 mb-0 ml-0 text-base block bg-white
-            border-gray-300 rounded-md"
-                    />
-                  </div>
-                  <div className="relative">
-                    <p
-                      className="bg-white pt-0 pr-2 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600
-            absolute"
-                    >
-                      Password
-                    </p>
-                    <input
-                      placeholder="Password"
-                      type="password"
-                      className="border placeholder-gray-400 focus:outline-none
-            focus:border-black w-full pt-4 pr-4 pb-4 pl-4 mt-2 mr-0 mb-0 ml-0 text-base block bg-white
-            border-gray-300 rounded-md"
-                    />
-                  </div>
-                  <div className="relative">
-                    <a
-                      className="w-full inline-block pt-4 pr-5 pb-4 pl-5 text-xl font-medium text-center text-white bg-indigo-500
-            rounded-lg transition duration-200 hover:bg-indigo-600 ease"
-                    >
-                      Submit
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <svg
-                viewBox="0 0 91 91"
-                className="absolute top-0 left-0 z-0 w-32 h-32 -mt-12 -ml-12 text-yellow-300
-      fill-current"
-              >
-                <g stroke="none" strokewidth={1} fillrule="evenodd">
-                  <g fillrule="nonzero">
-                    <g>
-                      <g>
-                        <circle cx="3.261" cy="3.445" r="2.72" />
-                        <circle cx="15.296" cy="3.445" r="2.719" />
-                        <circle cx="27.333" cy="3.445" r="2.72" />
-                        <circle cx="39.369" cy="3.445" r="2.72" />
-                        <circle cx="51.405" cy="3.445" r="2.72" />
-                        <circle cx="63.441" cy="3.445" r="2.72" />
-                        <circle cx="75.479" cy="3.445" r="2.72" />
-                        <circle cx="87.514" cy="3.445" r="2.719" />
-                      </g>
-                      <g transform="translate(0 12)">
-                        <circle cx="3.261" cy="3.525" r="2.72" />
-                        <circle cx="15.296" cy="3.525" r="2.719" />
-                        <circle cx="27.333" cy="3.525" r="2.72" />
-                        <circle cx="39.369" cy="3.525" r="2.72" />
-                        <circle cx="51.405" cy="3.525" r="2.72" />
-                        <circle cx="63.441" cy="3.525" r="2.72" />
-                        <circle cx="75.479" cy="3.525" r="2.72" />
-                        <circle cx="87.514" cy="3.525" r="2.719" />
-                      </g>
-                      <g transform="translate(0 24)">
-                        <circle cx="3.261" cy="3.605" r="2.72" />
-                        <circle cx="15.296" cy="3.605" r="2.719" />
-                        <circle cx="27.333" cy="3.605" r="2.72" />
-                        <circle cx="39.369" cy="3.605" r="2.72" />
-                        <circle cx="51.405" cy="3.605" r="2.72" />
-                        <circle cx="63.441" cy="3.605" r="2.72" />
-                        <circle cx="75.479" cy="3.605" r="2.72" />
-                        <circle cx="87.514" cy="3.605" r="2.719" />
-                      </g>
-                      <g transform="translate(0 36)">
-                        <circle cx="3.261" cy="3.686" r="2.72" />
-                        <circle cx="15.296" cy="3.686" r="2.719" />
-                        <circle cx="27.333" cy="3.686" r="2.72" />
-                        <circle cx="39.369" cy="3.686" r="2.72" />
-                        <circle cx="51.405" cy="3.686" r="2.72" />
-                        <circle cx="63.441" cy="3.686" r="2.72" />
-                        <circle cx="75.479" cy="3.686" r="2.72" />
-                        <circle cx="87.514" cy="3.686" r="2.719" />
-                      </g>
-                      <g transform="translate(0 49)">
-                        <circle cx="3.261" cy="2.767" r="2.72" />
-                        <circle cx="15.296" cy="2.767" r="2.719" />
-                        <circle cx="27.333" cy="2.767" r="2.72" />
-                        <circle cx="39.369" cy="2.767" r="2.72" />
-                        <circle cx="51.405" cy="2.767" r="2.72" />
-                        <circle cx="63.441" cy="2.767" r="2.72" />
-                        <circle cx="75.479" cy="2.767" r="2.72" />
-                        <circle cx="87.514" cy="2.767" r="2.719" />
-                      </g>
-                      <g transform="translate(0 61)">
-                        <circle cx="3.261" cy="2.846" r="2.72" />
-                        <circle cx="15.296" cy="2.846" r="2.719" />
-                        <circle cx="27.333" cy="2.846" r="2.72" />
-                        <circle cx="39.369" cy="2.846" r="2.72" />
-                        <circle cx="51.405" cy="2.846" r="2.72" />
-                        <circle cx="63.441" cy="2.846" r="2.72" />
-                        <circle cx="75.479" cy="2.846" r="2.72" />
-                        <circle cx="87.514" cy="2.846" r="2.719" />
-                      </g>
-                      <g transform="translate(0 73)">
-                        <circle cx="3.261" cy="2.926" r="2.72" />
-                        <circle cx="15.296" cy="2.926" r="2.719" />
-                        <circle cx="27.333" cy="2.926" r="2.72" />
-                        <circle cx="39.369" cy="2.926" r="2.72" />
-                        <circle cx="51.405" cy="2.926" r="2.72" />
-                        <circle cx="63.441" cy="2.926" r="2.72" />
-                        <circle cx="75.479" cy="2.926" r="2.72" />
-                        <circle cx="87.514" cy="2.926" r="2.719" />
-                      </g>
-                      <g transform="translate(0 85)">
-                        <circle cx="3.261" cy="3.006" r="2.72" />
-                        <circle cx="15.296" cy="3.006" r="2.719" />
-                        <circle cx="27.333" cy="3.006" r="2.72" />
-                        <circle cx="39.369" cy="3.006" r="2.72" />
-                        <circle cx="51.405" cy="3.006" r="2.72" />
-                        <circle cx="63.441" cy="3.006" r="2.72" />
-                        <circle cx="75.479" cy="3.006" r="2.72" />
-                        <circle cx="87.514" cy="3.006" r="2.719" />
-                      </g>
-                    </g>
-                  </g>
-                </g>
-              </svg>
-              <svg
-                viewBox="0 0 91 91"
-                className="absolute bottom-0 right-0 z-0 w-32 h-32 -mb-12 -mr-12 text-indigo-500
-      fill-current"
-              >
-                <g stroke="none" strokewidth={1} fillrule="evenodd">
-                  <g fillrule="nonzero">
-                    <g>
-                      <g>
-                        <circle cx="3.261" cy="3.445" r="2.72" />
-                        <circle cx="15.296" cy="3.445" r="2.719" />
-                        <circle cx="27.333" cy="3.445" r="2.72" />
-                        <circle cx="39.369" cy="3.445" r="2.72" />
-                        <circle cx="51.405" cy="3.445" r="2.72" />
-                        <circle cx="63.441" cy="3.445" r="2.72" />
-                        <circle cx="75.479" cy="3.445" r="2.72" />
-                        <circle cx="87.514" cy="3.445" r="2.719" />
-                      </g>
-                      <g transform="translate(0 12)">
-                        <circle cx="3.261" cy="3.525" r="2.72" />
-                        <circle cx="15.296" cy="3.525" r="2.719" />
-                        <circle cx="27.333" cy="3.525" r="2.72" />
-                        <circle cx="39.369" cy="3.525" r="2.72" />
-                        <circle cx="51.405" cy="3.525" r="2.72" />
-                        <circle cx="63.441" cy="3.525" r="2.72" />
-                        <circle cx="75.479" cy="3.525" r="2.72" />
-                        <circle cx="87.514" cy="3.525" r="2.719" />
-                      </g>
-                      <g transform="translate(0 24)">
-                        <circle cx="3.261" cy="3.605" r="2.72" />
-                        <circle cx="15.296" cy="3.605" r="2.719" />
-                        <circle cx="27.333" cy="3.605" r="2.72" />
-                        <circle cx="39.369" cy="3.605" r="2.72" />
-                        <circle cx="51.405" cy="3.605" r="2.72" />
-                        <circle cx="63.441" cy="3.605" r="2.72" />
-                        <circle cx="75.479" cy="3.605" r="2.72" />
-                        <circle cx="87.514" cy="3.605" r="2.719" />
-                      </g>
-                      <g transform="translate(0 36)">
-                        <circle cx="3.261" cy="3.686" r="2.72" />
-                        <circle cx="15.296" cy="3.686" r="2.719" />
-                        <circle cx="27.333" cy="3.686" r="2.72" />
-                        <circle cx="39.369" cy="3.686" r="2.72" />
-                        <circle cx="51.405" cy="3.686" r="2.72" />
-                        <circle cx="63.441" cy="3.686" r="2.72" />
-                        <circle cx="75.479" cy="3.686" r="2.72" />
-                        <circle cx="87.514" cy="3.686" r="2.719" />
-                      </g>
-                      <g transform="translate(0 49)">
-                        <circle cx="3.261" cy="2.767" r="2.72" />
-                        <circle cx="15.296" cy="2.767" r="2.719" />
-                        <circle cx="27.333" cy="2.767" r="2.72" />
-                        <circle cx="39.369" cy="2.767" r="2.72" />
-                        <circle cx="51.405" cy="2.767" r="2.72" />
-                        <circle cx="63.441" cy="2.767" r="2.72" />
-                        <circle cx="75.479" cy="2.767" r="2.72" />
-                        <circle cx="87.514" cy="2.767" r="2.719" />
-                      </g>
-                      <g transform="translate(0 61)">
-                        <circle cx="3.261" cy="2.846" r="2.72" />
-                        <circle cx="15.296" cy="2.846" r="2.719" />
-                        <circle cx="27.333" cy="2.846" r="2.72" />
-                        <circle cx="39.369" cy="2.846" r="2.72" />
-                        <circle cx="51.405" cy="2.846" r="2.72" />
-                        <circle cx="63.441" cy="2.846" r="2.72" />
-                        <circle cx="75.479" cy="2.846" r="2.72" />
-                        <circle cx="87.514" cy="2.846" r="2.719" />
-                      </g>
-                      <g transform="translate(0 73)">
-                        <circle cx="3.261" cy="2.926" r="2.72" />
-                        <circle cx="15.296" cy="2.926" r="2.719" />
-                        <circle cx="27.333" cy="2.926" r="2.72" />
-                        <circle cx="39.369" cy="2.926" r="2.72" />
-                        <circle cx="51.405" cy="2.926" r="2.72" />
-                        <circle cx="63.441" cy="2.926" r="2.72" />
-                        <circle cx="75.479" cy="2.926" r="2.72" />
-                        <circle cx="87.514" cy="2.926" r="2.719" />
-                      </g>
-                      <g transform="translate(0 85)">
-                        <circle cx="3.261" cy="3.006" r="2.72" />
-                        <circle cx="15.296" cy="3.006" r="2.719" />
-                        <circle cx="27.333" cy="3.006" r="2.72" />
-                        <circle cx="39.369" cy="3.006" r="2.72" />
-                        <circle cx="51.405" cy="3.006" r="2.72" />
-                        <circle cx="63.441" cy="3.006" r="2.72" />
-                        <circle cx="75.479" cy="3.006" r="2.72" />
-                        <circle cx="87.514" cy="3.006" r="2.719" />
-                      </g>
-                    </g>
-                  </g>
-                </g>
-              </svg>
-            </div>
-          </div>
-        </div>
+    <section className="w-full px-8 py-12 grid grid-cols-1 md:grid-cols-2 items-center gap-8 max-w-6xl mx-auto">
+      <div>
+        <span className="block mb-4 text-xs md:text-sm text-indigo-500 font-medium">
+          Better every day
+        </span>
+        <h3 className="text-4xl md:text-6xl font-semibold">
+          Let's change it up a bit
+        </h3>
+        <p className="text-base md:text-lg text-slate-700 my-4 md:my-6">
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nam nobis in
+          error repellat voluptatibus ad.
+        </p>
+        <button className="bg-indigo-500 text-white font-medium py-2 px-4 rounded transition-all hover:bg-indigo-600 active:scale-95">
+          Find a class
+        </button>
       </div>
-    </div>
-
-
-
-</>
-  )
+      <ShuffleGrid />
+    </section>
+  );
 };
 
-export default Bookings;
+const shuffle = (array) => {
+  let currentIndex = array.length,
+    randomIndex;
+
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+};
+
+const squareData = [
+  {
+    id: 1,
+    src: "https://images.unsplash.com/photo-1547347298-4074fc3086f0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+  },
+  {
+    id: 2,
+    src: "https://images.unsplash.com/photo-1510925758641-869d353cecc7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+  },
+  {
+    id: 3,
+    src: "https://images.unsplash.com/photo-1629901925121-8a141c2a42f4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+  },
+  {
+    id: 4,
+    src: "https://images.unsplash.com/photo-1580238053495-b9720401fd45?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+  },
+  {
+    id: 5,
+    src: "https://images.unsplash.com/photo-1569074187119-c87815b476da?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1325&q=80",
+  },
+  {
+    id: 6,
+    src: "https://images.unsplash.com/photo-1556817411-31ae72fa3ea0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+  },
+  {
+    id: 7,
+    src: "https://images.unsplash.com/photo-1599586120429-48281b6f0ece?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+  },
+  {
+    id: 8,
+    src: "https://plus.unsplash.com/premium_photo-1671436824833-91c0741e89c9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+  },
+  {
+    id: 9,
+    src: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+  },
+  {
+    id: 10,
+    src: "https://images.unsplash.com/photo-1610768764270-790fbec18178?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+  },
+  {
+    id: 11,
+    src: "https://images.unsplash.com/photo-1507034589631-9433cc6bc453?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=684&q=80",
+  },
+  {
+    id: 12,
+    src: "https://images.unsplash.com/photo-1533107862482-0e6974b06ec4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=882&q=80",
+  },
+  {
+    id: 13,
+    src: "https://images.unsplash.com/photo-1560089000-7433a4ebbd64?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+  },
+  {
+    id: 14,
+    src: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=686&q=80",
+  },
+  {
+    id: 15,
+    src: "https://images.unsplash.com/photo-1606244864456-8bee63fce472?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=681&q=80",
+  },
+  {
+    id: 16,
+    src: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1820&q=80",
+  },
+];
+
+const generateSquares = () => {
+  return shuffle(squareData).map((sq) => (
+    <motion.div
+      key={sq.id}
+      layout
+      transition={{ duration: 1.5, type: "spring" }}
+      className="w-full h-full"
+      style={{
+        backgroundImage: `url(${sq.src})`,
+        backgroundSize: "cover",
+      }}
+    ></motion.div>
+  ));
+};
+
+const ShuffleGrid = () => {
+  const timeoutRef = useRef(null);
+  const [squares, setSquares] = useState(generateSquares());
+
+  useEffect(() => {
+    shuffleSquares();
+
+    return () => clearTimeout(timeoutRef.current);
+  }, []);
+
+  const shuffleSquares = () => {
+    setSquares(generateSquares());
+
+    timeoutRef.current = setTimeout(shuffleSquares, 3000);
+  };
+
+  return (
+    <div className="grid grid-cols-4 grid-rows-4 h-[450px] gap-1">
+      {squares.map((sq) => sq)}
+    </div>
+  );
+};
+
+export default ShuffleHero;

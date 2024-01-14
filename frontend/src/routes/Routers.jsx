@@ -24,6 +24,8 @@ import UserResetPassword from "../pages/UserResetPassword";
 import DoctorDetails from "../pages/Doctors/DoctorDetails";
 import PaymentSuccess from "../components/PaymentSuccess/PaymentSuccess";
 import PaymentFailed from "../components/PaymentFailed/PaymentFailed";
+import CarouselDefault from "../pages/Admin/Bookings";
+
 
 const Routers = () => {
   return (
@@ -71,7 +73,7 @@ const Routers = () => {
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin/users" element={<ProtectedAdmin allowedTypes={["admin"]}><AdminUsers /></ProtectedAdmin>} />
       <Route path="/admin/doctors" element={<ProtectedAdmin allowedTypes={["admin"]}><AdminDoctors /></ProtectedAdmin>} />
-      <Route path="/admin/bookings" element={<Bookings/>} />
+      <Route path="/admin/bookings" element={<CarouselDefault />} />
     </Routes>
   );
 };

@@ -99,7 +99,7 @@ const TimeShedule = () => {
       <div>
         <button
           onClick={handleToggle}
-          className="p-2 mt-6 rounded bg-[#4cc6c6] text-white hover:bg-[#660f56]"
+          className="p-2 mt-6 rounded bg-[#dd3a25] text-white hover:bg-[#660f56]"
         >
           Select Time Slots
         </button>
@@ -123,8 +123,8 @@ const TimeShedule = () => {
                 onClick={() => handleGridClick(value)}
                 className={`${
                   selectedGrid.includes(value)
-                    ? "bg-[#f72585] p-3 rounded-lg hover:scale-105 transition duration-100 ease-in-out cursor-pointer"
-                    : "p-3 rounded-lg bg-violet-600 hover:bg-[#72585] hover:scale-105 transition duration-100 ease-in-out cursor-pointer"
+                    ? "bg-[#4e7a78] p-3 rounded-lg hover:scale-105 transition duration-100 ease-in-out cursor-pointer"
+                    : "p-3 rounded-lg bg-red-500 hover:bg-[#72585] hover:scale-105 transition duration-100 ease-in-out cursor-pointer"
                 }
                  `}
               >

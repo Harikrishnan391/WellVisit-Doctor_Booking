@@ -4,7 +4,6 @@ import { doctorPath } from "../../config";
 import starIcon from "../../assets/images/Star.png";
 
 const DoctorsCard = (data) => {
-  console.log(data, "doctorsCard");
   return (
     <>
     

@@ -9,36 +9,37 @@ import { format } from "date-fns";
 
 export const updateUser = async (req, res) => {
   const id = req.userId;
-  console.log(req.body.name, "req.bodyyyyy");
-  // const { name, email, number, role, gender, appoinments, bloodType } =
-  //   req.body;
-  // console.log(name, "name from req.body");
+  console.log(req.body, "req.bodyyyyy");
+  const { name, email, number, role, gender, appoinments, bloodType,address } =
+    req.body;
+  console.log(address, "name from req.body");
 
-  // const pic = req.file?.filename;
-  // const updateData = {
-  //   name,
-  //   email,
-  //   number,
-  //   role,
-  //   gender,
-  //   appoinments,
-  //   bloodType,
-  //   photo: pic,
-  // };
-  // try {
-  //   const updateUser = await User.findByIdAndUpdate(
-  //     id,
-  //     { $set: updateData },
-  //     { new: true }
-  //   );
-  //   console.log("updateUser", updateUser);
+  const pic = req.file?.filename;
+  const updateData = {
+    name,
+    email,
+    number,
+    role,
+    gender,
+    appoinments,
+    bloodType,
+    address
+  
+  };
+  try {
+    const updateUser = await User.findByIdAndUpdate(
+      id,
+      { $set: updateData },
+      { new: true }
+    );
+    console.log("updateUser", updateUser);
 
-  //   res.status(200).json({ status: true, message: "successfully updated" });
-  // } catch (error) {
-  //   res
-  //     .status(500)
-  //     .json({ status: false, message: "failed to updated", data: updateUser });
-  // }
+    res.status(200).json({ status: true, message: "successfully updated" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: false, message: "failed to updated", data: updateUser });
+  }
 };
 
 export const deleteUser = async (req, res) => {
@@ -175,7 +176,7 @@ export const getAllUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: "Not found" });
   }
-};
+};  
 
 /**==============Controller for User profile====================== */
 
@@ -241,8 +242,6 @@ export const getAvailableSlots = async (req, res) => {
   try {
     const doctor = await Doctor.findById(docId);
 
-  
-
     if (!doctor) {
       return res.status(404).json({ message: "Doctor Not found" });
     }
@@ -258,45 +257,70 @@ export const getAvailableSlots = async (req, res) => {
 
     const slot = timeSlot.slots;
     return res.status(200).json({ message: "Time slot Found", data: slot });
-   
   } catch (error) {
     console.log(error, "error");
     res.status(500).json({ message: "Internal server Error" });
   }
 };
 
-
-
 /**==============get Available Dates======================== */
-export const getAvailableDates=async(req,res)=>{
+export const getAvailableDates = async (req, res) => {
   console.log("hi iam here");
-  const docId=req.params.id
+  const docId = req.params.id;
 
   try {
-    const doctor=await Doctor.findById(docId)
+    const doctor = await Doctor.findById(docId);
 
-    if(!Doctor){
-      return res.status(404).json({message:"Doctor not found"})
+    if (!Doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
     }
 
-    const dates=doctor.timeSlots.map((timeslot)=>timeslot.uniDate)
-    console.log(dates,"dates");
-    res.status(200).json({data:dates})
+    const dates = doctor.timeSlots.map((timeslot) => timeslot.uniDate);
+    console.log(dates, "dates");
+    res.status(200).json({ data: dates });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
-
-}
+};
 
 /**==============get Available filter doctors======================== */
 
-export const filterDoctor=async(req,res)=>{
-
+export const filterDoctor = async (req, res) => {
   console.log("Hello filter doctor");
-  
-  const {query}=req.query
-  console.log(query)
-}
+  try {
+    const { query } = req.query;
+    console.log(query);
 
+    let filterOption;
 
+    switch (query) {
+      case "1-500":
+        filterOption = { fee: { $gt: 1, $lte: 500 } };
+        break;
+
+      case "501-1000":
+        filterOption = { fee: { $gte: 501, $lte: 1000 } };
+        break;
+
+      case "1001-2000":
+        filterOption = { fee: { $gte: 1001, $lte: 2000 } };
+        break;
+
+      case "2001-above":
+        filterOption = { fee: { $gte: 2001 } };
+        break;
+    }
+
+    console.log(filterOption);
+
+    const doctors = await Doctor.find(filterOption);
+    console.log(doctors);
+
+    res.status(200).json({ success: true, doctors });
+  } catch (error) {
+
+    console.error("Error in filter by Price",error)
+    res.status(500).json({error:"Internal server error"})
+  }
+};

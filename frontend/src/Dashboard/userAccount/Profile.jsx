@@ -15,6 +15,7 @@ const Profile = ({ user }) => {
     name: "",
     email: "",
     number: "",
+    address:"",
     password: "",
     gender: "male",
     bloodType: "",
@@ -27,6 +28,7 @@ const Profile = ({ user }) => {
       name: user.name,
       email: user.email,
       number: user.number,
+      address:user.address,
       gender: user.gender,
       bloodType: user.bloodType,
     });
@@ -61,10 +63,10 @@ const Profile = ({ user }) => {
         method: "put",
         headers: {
           Authorization: `Bearer ${token} `,
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
         // body: JSON.stringify({ data: formData })
-        body: formDataToSend,
+        body: JSON.stringify(formData),
       });
 
       let result = await res.json();
@@ -113,6 +115,14 @@ const Profile = ({ user }) => {
           placeholder="Mobile Number"
           name="number"
           value={formData.number}
+          onChange={handleInputChange}
+        />
+           <input
+          className="w-full px-4 py-2 mt-4 text-sm border border-gray-300 border-solid rounded"
+          type="text"
+          placeholder="address"
+          name="address"
+          value={formData.address}
           onChange={handleInputChange}
         />
         <input

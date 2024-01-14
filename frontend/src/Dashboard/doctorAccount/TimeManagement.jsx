@@ -104,7 +104,7 @@ const TimeManagement = () => {
           {availableSlots.map((slot, index) => (
             <div
               key={index}
-              className="p-3 rounded-lg bg-violet-600  hover:bg-[#f72585] hover:scale-105 transition duration-100 ease-in-out cursor-pointer relative"
+              className="p-3 rounded-lg bg-red-600  hover:bg-[#f72585] hover:scale-105 transition duration-100 ease-in-out cursor-pointer relative"
             >
               {slot}
               <button

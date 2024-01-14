@@ -12,13 +12,14 @@ const client = new Twilio(
 const verifyServiceSid = process.env.TWILIO_VERIFY;
 
 const sendOtpTwlio = async (mobileNumber) => {
+  console.log(mobileNumber)
   try {
     await client.verify.v2.services(verifyServiceSid).verifications.create({
       to: `+91${mobileNumber}`,
       channel: `sms`,
     });
   } catch (error) {
-    console.log(error.message);
+    console.log(error,"error");
     throw new Error("Failed to send the verification code");
   }
 };

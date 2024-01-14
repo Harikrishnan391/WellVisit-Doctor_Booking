@@ -74,6 +74,7 @@ export const register = async (req, res) => {
         gender,
         role,
         verificationCode,
+        address
       });
     }
     if (role === "doctor") {
@@ -84,6 +85,7 @@ export const register = async (req, res) => {
         gender,
         role,
         verificationCode,
+        
       });
     }
 
