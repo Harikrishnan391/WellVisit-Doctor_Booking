@@ -1,6 +1,91 @@
 import Booking from "../model/BookingSchema.js";
 import Doctor from "../model/DoctorSchema.js";
 import { format } from "date-fns";
+import bcrypt from "bcryptjs";
+import generateOTP from "../utils/generateOtp.js";
+import generateMail from "../utils/generateMail.js";
+
+export const DoctorForgotPassword = async (req, res) => {
+  try {
+    console.log(req.body, "req.body");
+    const { email } = req.body;
+    const doctor = await Doctor.findOne({ email });
+
+    if (!doctor) {
+      res.status(400).json({ success: false, message: "Invalid user" });
+    }
+    if (doctor.isBlocked) {
+      res.status(401).json({ success: false, message: "Doctor is Bolocked" });
+      return;
+    }
+
+    const verificationCode = generateOTP();
+    const status = await generateMail(verificationCode, doctor.email);
+    console.log(status, "status");
+    if (status.success) {
+      doctor.verificationCode = verificationCode;
+    }
+    await doctor.save();
+    console.log(doctor, "doctor");
+
+    res.status(200).json({
+      message: "Verification OTP sended to email",
+      doctorData: {
+        name: doctor._doc.name,
+        email: doctor._doc.email,
+      },
+    });
+  } catch (error) {
+    console.log(error.message, "error");
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const resetPasswordOtpVerify = async (req, res) => {
+  try {
+    const { email, verificationCode } = req.body;
+    console.log(email, "email  ");
+    const doctor = await Doctor.findOne({ email, verificationCode });
+    console.log(doctor, "doctor");
+    if (!doctor) {
+      res.status(404).json({ status: false, message: "User not found" });
+    }
+    doctor.isVerified = true;
+    await doctor.save();
+
+    return res.status(200).json({
+      message: "Otp verified successfully",
+      email: doctor.email,
+      status: true,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const DoctorResetPassword = async (req, res) => {
+  console.log(req.body, "req.body");
+  const {email,password}=req.body
+  const doctor = await Doctor.findOne({ email });
+  const salt = await bcrypt.genSalt(10);
+  const hashPassword = await bcrypt.hash(password,salt);
+  console.log(doctor)
+
+  if (doctor) {
+    doctor.password = hashPassword;
+    await doctor.save();
+
+    res.status(200).json({
+      _id: doctor._id,
+      name: doctor.name,
+      email: doctor.email,
+    });
+  } else {
+    res
+      .status(404)
+      .json({ success: true, message: "Cant able to reset Password" });
+  }
+};
 
 export const updateDoctor = async (req, res) => {
   const id = req.params.id;
@@ -18,6 +103,7 @@ export const updateDoctor = async (req, res) => {
       message: "Successfully Updated",
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ status: false, message: "Failed to update" });
   }
 };
@@ -64,7 +150,7 @@ export const getAllDoctor = async (req, res) => {
     if (query) {
       doctors = await Doctor.find({
         isApproved: "true",
-        $or: [
+        $or: [  
           { name: { $regex: query, $options: "i" } },
           { specialization: { $regex: query, $options: "i" } },
         ],
@@ -250,3 +336,27 @@ export const getDoctorProfile = async (req, res) => {
     res.status(500).json({ success: false, message: "Something went wrong" });
   }
 };
+
+/**
+ * 
+ *  // const {email,passoword}=req.body
+  // console.log(req.body,"req.body")
+  // const doctor=await Doctor.findOne({email})
+  // const salt=await bcrypt.hash(passoword,salt)
+
+  // if(doctor){
+
+  //   doctor.password=hashPassword
+  //   await doctor.save()
+
+  //   res.status(200).json({
+  //   _id:doctor._id,
+  //     name:doctor.name,
+  //     email:doctor.email
+  //   })
+  // }else{
+
+  //   res.status(404).json({success:true,message:"Cant able to reset Password"})
+
+  // }
+ */

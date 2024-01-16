@@ -74,7 +74,6 @@ export const register = async (req, res) => {
         gender,
         role,
         verificationCode,
-        address
       });
     }
     if (role === "doctor") {
@@ -182,9 +181,7 @@ export const login = async (req, res) => {
   let token;
   try {
     const { email, password, role } = req.body;
-
     const userModel = role === "patient" ? User : Doctor;
-
     const user = await userModel.findOne({ email: email });
     if (!user) {
       res.status(404).json({ message: "Invalid user" });

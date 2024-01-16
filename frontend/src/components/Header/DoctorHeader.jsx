@@ -117,7 +117,7 @@ const DoctorHeader = () => {
                     Login
                   </button>
                 </Link>
-                <Link to="/doctorSignup">
+                <Link to="/doctors/doctorSignup">
                   <button className="bg-primaryColor py-2 px-6 text-white font-[600] h-[37px] flex items-center cursor-pointer justify-center rounded-[50px]">
                     Signup
                   </button>

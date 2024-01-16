@@ -161,7 +161,7 @@ function DoctorSignup() {
       setTimeout(() => {
         setLoading(false);
         toast.success(result.message);
-        navigate("/doctorOtp");
+        navigate(`/doctors/doctorOtp?email=${formData.email}`);
       }, 2000);
     } catch (error) {
       console.log("error", error.message);

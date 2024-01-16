@@ -29,6 +29,7 @@ router.put("/updateUser/:id", authenticate, restrict(["patient"]), updateUser);
 router.get("/userProfile", authenticate, restrict(["patient"]), getUserProfile);
 router.post("/forgot-password", forgotPassword);
 router.route("/reset-password").post(resetPasswordOtpVerify).put(resetPassword);
+
 router.get(
   "/appointments/my-appointments",
   authenticate,

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../config";
-import { setPatientCredentials } from "../slices/patientAuthSlice";
+import { BASE_URL } from "../../config.js";
+// import { setDoctorCredentials } from "../slices/DoctorAuthSlice.js";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-const UserResetPassword = () => {
+
+const DoctorResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -16,18 +17,18 @@ const UserResetPassword = () => {
       return toast.error("Password not match");
     }
 
-    const user = JSON.parse(localStorage.getItem("userData"));
+    const user = JSON.parse(localStorage.getItem("DocotorData"));
+    console.log(user, "userr");
 
     if (!user) {
       toast.error("Error occured while processing credential Provide mail");
-      return navigate("/forgot-password");
+      return navigate("/doctors/forgot-password");
     }
     const { email } = user;
-    console.log(email)
-
+    console.log(email);
     try {
-      const res = await fetch(`${BASE_URL}/users/reset-password`, {
-        method: "put",
+      const res = await fetch(`${BASE_URL}/doctors/DoctorResetPassword`, {
+        method: "post",
         headers: {
           "Content-Type": "application/json",
         },
@@ -37,16 +38,17 @@ const UserResetPassword = () => {
         }),
       });
       const { status, ...rest } = res;
-      console.log(rest, "rest");
+      localStorage.removeItem("DocotorData")
+
       if (res?.status == 200) {
         toast.success("Password Updated Successfully");
         navigate("/users/login");
       }
     } catch (error) {
-      console.log(error);
+
+      console.log(error, "erroor");
     }
   };
-
   return (
     <div className="bg-gray-100 flex items-center justify-center h-screen">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
@@ -67,19 +69,19 @@ const UserResetPassword = () => {
           onSubmit={submitHandler}
         >
           {/* <div>
-          <label
-            htmlFor="currentPassword"
-            className="text-sm font-medium text-gray-700 block mb-2"
-          >
-            Current Password *
-          </label>
-          <input
-            type="password"
-            id="currentPassword"
-            className="password-input form-input block w-full border border-gray-300 rounded-md shadow-sm"
-            required=""
-          />
-        </div> */}
+        <label
+          htmlFor="currentPassword"
+          className="text-sm font-medium text-gray-700 block mb-2"
+        >
+          Current Password *
+        </label>
+        <input
+          type="password"
+          id="currentPassword"
+          className="password-input form-input block w-full border border-gray-300 rounded-md shadow-sm"
+          required=""
+        />
+      </div> */}
           <div>
             <label
               htmlFor="newPassword"
@@ -143,4 +145,4 @@ const UserResetPassword = () => {
   );
 };
 
-export default UserResetPassword;
+export default DoctorResetPassword;

@@ -78,7 +78,7 @@ const DoctorsAccount = () => {
               </button>
             </div>
 
-            <div className="mt-[50px] md:mt-[100px]    ">
+            <div className="mt-[50px] md:mt-[100px]">
             
             </div>
           </div>

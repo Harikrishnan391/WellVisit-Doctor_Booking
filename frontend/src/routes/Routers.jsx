@@ -25,6 +25,8 @@ import DoctorDetails from "../pages/Doctors/DoctorDetails";
 import PaymentSuccess from "../components/PaymentSuccess/PaymentSuccess";
 import PaymentFailed from "../components/PaymentFailed/PaymentFailed";
 import CarouselDefault from "../pages/Admin/Bookings";
+import DoctorForgotPassword from "../pages/Doctors/DoctorForgotPassword";
+import DoctorResetPassword from "../pages/Doctors/DoctorResetPassword";
 
 
 const Routers = () => {
@@ -56,10 +58,13 @@ const Routers = () => {
 
 
       /** Doctor Routes */
-      <Route path="/doctorSignup" element={<DoctorSignUp />} />
-      <Route path="/doctorOtp" element={<DoctorOtp />} />
+      <Route path="/doctors/doctorSignup" element={<DoctorSignUp />} />
+      <Route path="doctors/doctorOtp" element={<DoctorOtp />} />
       <Route path="doctors/login" element={<DoctorLogin />} />
+      <Route path="doctors/forgot-password" element={<DoctorForgotPassword />} />
+      <Route path="doctors/reset-password" element={<DoctorResetPassword />} />
       <Route path="doctors/home" element={<ProtectedDoctorRoute allowedRoles={["doctor"]}><Home /></ProtectedDoctorRoute>} />
+    
       <Route
         path="/doctors/doctorProfile"
         element={
