@@ -5,9 +5,11 @@ import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
 import { RxDotFilled } from "react-icons/rx";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import Swal from "sweetalert2";
+import Pagination from "../../components/pagination/Pagination";
 
 const AdminDoctors = () => {
   const [doctors, setDoctors] = useState([]);
+  console.log(doctors, "doctorsssss");
   const [carosal, setCarosal] = useState(false);
   const [slides, setSlides] = useState([]);
   const [openModal, setOpenModal] = useState(false);
@@ -15,12 +17,11 @@ const AdminDoctors = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage, setPostPerpage] = useState(5);
+  console.log(postPerPage, "post per page");
 
   console.log(certificate, "state Certificate");
   const modalHandler = (certificate) => {
     setCarosal(true);
-    console.log(certificate, "certificate");
-
     const slides = certificate?.map((certificate) => ({
       certificate: certificate,
     }));
@@ -47,7 +48,7 @@ const AdminDoctors = () => {
     `${BASE_URL}/admin/getAlldoctor`
   );
 
-  console.log(data);
+  console.log(data, "data from fetch doctors");
 
   useEffect(() => {
     if (error) {
@@ -74,7 +75,7 @@ const AdminDoctors = () => {
       if (!res.ok) {
         throw new Error(result.message);
       }
-      console.log(res)
+      console.log(res);
       Swal.fire({
         title: "Done!",
         text: "Your changed the doctor status",
@@ -153,7 +154,7 @@ const AdminDoctors = () => {
         });
 
         let result = res.json();
-        console.log(result)
+        console.log(result);
 
         if (!res.ok) {
           throw new Error(result.message);
@@ -178,6 +179,7 @@ const AdminDoctors = () => {
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
   const currentDoctors = doctors.slice(firstPostIndex, lastPostIndex);
+
   return (
     <div>
       <section className="container">
@@ -341,6 +343,15 @@ const AdminDoctors = () => {
           </div>
         </div>
       )}
+
+      <div className="mt-20">
+        <Pagination
+          postPerPage={postPerPage}
+          totalPosts={doctors.length}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+        />
+      </div>
     </div>
   );
 };

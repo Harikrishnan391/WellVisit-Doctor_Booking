@@ -31,7 +31,7 @@ const DoctorForgotPassword = () => {
     if(res?.status===200){
 
       toast.success("check your mail for vefification code ")
-      console.log(localStorage.setItem("DocotorData",JSON.stringify(data.doctorData)))
+      console.log(localStorage.setItem("DoctorData",JSON.stringify(data.doctorData)))
       navigate(`/doctors/doctorOtp?email=${email}&forgot-password=${true}`)
     }
     } catch (error) {

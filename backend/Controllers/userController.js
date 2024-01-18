@@ -10,7 +10,7 @@ import { format } from "date-fns";
 export const updateUser = async (req, res) => {
   const id = req.userId;
   console.log(req.body, "req.bodyyyyy");
-  const { name, email, number, role, gender, appoinments, bloodType,address } =
+  const { name, email, number, role, gender, appoinments, bloodType, address } =
     req.body;
   console.log(address, "name from req.body");
 
@@ -23,8 +23,7 @@ export const updateUser = async (req, res) => {
     gender,
     appoinments,
     bloodType,
-    address
-  
+    address,
   };
   try {
     const updateUser = await User.findByIdAndUpdate(
@@ -140,7 +139,7 @@ export const getSingleUser = async (req, res) => {
   }
 };
 
-/**======================Reset password ==================================== */
+/**======================Reset password  User not Logged in ============================= */
 export const resetPassword = async (req, res) => {
   const { email, password } = req.body;
   console.log(email, "Email of the user");
@@ -164,6 +163,49 @@ export const resetPassword = async (req, res) => {
   }
 };
 
+/***====================Change  Password  User is Logged IN============================ */
+
+export const changePassword = async (req, res) => {
+ 
+   const {currentPassword,newPassword,confirmPassword,email}=req.body
+
+  try {
+    
+    const user=await User.findOne({email})
+
+    if(!user){
+      return res.status(404).json({error:"User not Found"})
+    }
+
+    //for check if the currentPassword matches the user's password
+
+    const isPasswordValid=await bcrypt.compare(currentPassword,user.password)
+
+    if(!isPasswordValid){
+      return res.status(400).json({error:"Invalid current Password"})
+    }
+
+    if(newPassword !==confirmPassword){
+      return res.status(400).json({error:"new Password and confirm Password do not Match"})
+    }
+
+    const salt=await bcrypt.genSalt(10)
+    const hashedPassword=await bcrypt.hash(confirmPassword,salt)
+
+    user.password=hashedPassword
+
+    await user.save()
+
+    res.status(200).json({message:"Password updated successfully"})
+
+
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({error:"Internal server error"})
+    
+  }
+};
+
 export const getAllUser = async (req, res) => {
   try {
     const users = await User.find({}).select("-password");
@@ -176,7 +218,7 @@ export const getAllUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: "Not found" });
   }
-};  
+};
 
 /**==============Controller for User profile====================== */
 
@@ -319,8 +361,7 @@ export const filterDoctor = async (req, res) => {
 
     res.status(200).json({ success: true, doctors });
   } catch (error) {
-
-    console.error("Error in filter by Price",error)
-    res.status(500).json({error:"Internal server error"})
+    console.error("Error in filter by Price", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };

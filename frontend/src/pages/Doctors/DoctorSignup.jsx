@@ -144,27 +144,26 @@ function DoctorSignup() {
         body: formDataToSend,
       });
 
-      let result = await res.json();
-      console.log("result", result);
+      let { message, doctorData } = await res.json();
 
       if (!res.ok) {
-        throw new Error(result.message);
+        throw new Error(message);
       }
-      const dataToSave = {
-        formData: formData,
-        photoPath: result.photoPath,
-        certificatePath: result.certificatePath,
-      };
+      // const dataToSave = {
+      //   formData: formData,
+      //   photoPath: result.photoPath,
+      //   certificatePath: result.certificatePath,
+      // };
 
-      localStorage.setItem("doctorSignUpData", JSON.stringify(dataToSave));
-
+      // localStorage.setItem("doctorSignUpData", JSON.stringify(dataToSave));
+      localStorage.setItem("DoctorData", JSON.stringify(doctorData));
       setTimeout(() => {
         setLoading(false);
-        toast.success(result.message);
+        toast.success(message);
         navigate(`/doctors/doctorOtp?email=${formData.email}`);
       }, 2000);
     } catch (error) {
-      console.log("error", error.message);
+
 
       setTimeout(() => {
         toast.error(error.message);

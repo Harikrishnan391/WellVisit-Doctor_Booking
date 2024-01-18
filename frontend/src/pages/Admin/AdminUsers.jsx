@@ -4,20 +4,41 @@ import userFetchData from "../../hooks/userFetchData";
 import { BASE_URL, adminToken } from "../../config";
 import { BiTrophy } from "react-icons/bi";
 import Swal from "sweetalert2";
+import Pagination from "../../components/pagination/Pagination"
+import { useNavigate } from "react-router-dom";
 
 const AdminUsers = () => {
+  
   const [users, setUsers] = useState([]);
   const { data, error, loading, refetch } = userFetchData(
     `${BASE_URL}/admin/getAllUser`
   );
+
+  const navigate=useNavigate()
 
   useEffect(() => {
     if (error) {
       console.log(error);
     } else if (!error && !loading) {
       setUsers(data);
+      checkBlockedStatus(data)
     }
   }, [error, loading, data]);
+
+  const checkBlockedStatus=(users)=>{
+
+    users.forEach((user)=>{
+      if(user.isBlocked){
+        handleLogout()
+      }
+    })
+  }
+
+  const handleLogout=()=>{
+
+    localStorage.removeItem("PatientInfo")
+
+  }
 
   const handleBlock = async (userId) => {
     const confirmResult = await Swal.fire({

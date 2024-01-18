@@ -63,13 +63,41 @@ export const resetPasswordOtpVerify = async (req, res) => {
   }
 };
 
+export const resendOtp = async (req, res) => {
+  console.log("Resend Otp came ");
+  const { email } = req.body;
+  const doctor = await Doctor.findOne({ email });
+  if (!doctor) {
+    res.status(400);
+    throw new Error("Invalid user");
+  }
+
+  const verificationCode = generateOTP();
+  const status = await generateMail(verificationCode, doctor.email);
+  console.log(status);
+
+  if (status.success) {
+    doctor.verificationCode = verificationCode;
+    console.log(doctor, "doctor after setting verification Code");
+    await doctor.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Otp Resend Successfully please check email for the OTP",
+    });
+  } else if (!status?.success) {
+    res.status(500);
+    throw new Error("Server is temporarly Unavaliable");
+  }
+};
+
 export const DoctorResetPassword = async (req, res) => {
   console.log(req.body, "req.body");
-  const {email,password}=req.body
+  const { email, password } = req.body;
   const doctor = await Doctor.findOne({ email });
   const salt = await bcrypt.genSalt(10);
-  const hashPassword = await bcrypt.hash(password,salt);
-  console.log(doctor)
+  const hashPassword = await bcrypt.hash(password, salt);
+  console.log(doctor);
 
   if (doctor) {
     doctor.password = hashPassword;
@@ -85,6 +113,10 @@ export const DoctorResetPassword = async (req, res) => {
       .status(404)
       .json({ success: true, message: "Cant able to reset Password" });
   }
+};
+
+export const changeDoctorPassword = async (req, res) => {
+  console.log(req.body, "req.body");
 };
 
 export const updateDoctor = async (req, res) => {
@@ -150,7 +182,7 @@ export const getAllDoctor = async (req, res) => {
     if (query) {
       doctors = await Doctor.find({
         isApproved: "true",
-        $or: [  
+        $or: [
           { name: { $regex: query, $options: "i" } },
           { specialization: { $regex: query, $options: "i" } },
         ],

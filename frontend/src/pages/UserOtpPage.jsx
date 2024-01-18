@@ -13,7 +13,6 @@ const UserOtpPage = () => {
   const [resendDisabled, setResendDisabled] = useState(true);
 
   const [countDown, setCountdown] = useState(60);
-  console.log(otp);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -86,6 +85,8 @@ const UserOtpPage = () => {
         }),
       });
 
+      console.log(res,"response")
+
       if (res.status == 200) {
         toast.success("OTP sent Successfully! check Your email");
       }
@@ -94,7 +95,6 @@ const UserOtpPage = () => {
       setCountdown(60);
       startCountdown();
     } catch (error) {
-      console.log(error);
       toast.error(error.data?.message || error.message);
     }
   };
@@ -126,7 +126,7 @@ const UserOtpPage = () => {
       
 
         const { message, ...rest } = data;
-        console.log(data, "message");
+      
 
         // dispatch(setPatientCredentials({ ...rest }));
 

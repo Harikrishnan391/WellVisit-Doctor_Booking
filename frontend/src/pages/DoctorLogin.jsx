@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setPatientCredentials } from "../slices/patientAuthSlice.js";
 import { setDoctorCredentials } from "../slices/doctorAuthSlice.js";
+import { PacmanLoader } from "react-spinners";
 
 const DoctorLogin = () => {
   const navigate = useNavigate();
@@ -69,8 +70,9 @@ const DoctorLogin = () => {
         }
       }, 1000);
     } catch (error) {
+      console.log(error, "error");
       setTimeout(() => {
-        toast.error(error.messgae);
+        toast.error(error.message);
         setLoading(false);
       }, 1000);
     }
@@ -177,7 +179,7 @@ const DoctorLogin = () => {
 
           <p className="mt-10 text-center text-sm text-gray-500"></p>
         </div>
-      </div>   */}
+      </div>    */}
 
       <div className="flex items-center min-h-screen p-4 bg-gray-100 lg:justify-center">
         <div className="flex flex-col overflow-hidden bg-white rounded-md shadow-lg max md:flex-row md:flex-1 lg:max-w-screen-md">
@@ -237,7 +239,8 @@ const DoctorLogin = () => {
                   >
                     Password
                   </label>
-                  <Link to="/doctors/forgot-password"
+                  <Link
+                    to="/doctors/forgot-password"
                     className="text-sm text-blue-600 hover:underline focus:text-blue-800"
                   >
                     Forgot Password?
@@ -253,12 +256,38 @@ const DoctorLogin = () => {
                 />
               </div>
 
+              <div className="mt-4">
+                <div className="flex items-center gap-4">
+                  <label className="mr-4 text-sm text-slate-500">I am a:</label>
+                  <label>
+                    <input
+                      type="radio"
+                      value="doctor"
+                      name="role"
+                      checked={formData.role === "doctor"}
+                      onChange={handleInputChange}
+                    />
+                    Doctor
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      value="patient"
+                      name="role"
+                      checked={formData.role === "patient"}
+                      onChange={handleInputChange}
+                    />
+                    Patient
+                  </label>
+                </div>
+              </div>
+
               <div>
                 <button
                   type="submit"
                   className="w-full px-4 py-2 text-lg font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
                 >
-                  Log in
+                  {loading ? <PacmanLoader color="#36D7B7" size={15} margin={2} /> : "Login"}
                 </button>
               </div>
               <div className="flex flex-col space-y-5">

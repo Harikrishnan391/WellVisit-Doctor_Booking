@@ -13,6 +13,7 @@ import {
   getAvailableSlots,
   getAvailableDates,
   filterDoctor,
+  changePassword
 } from "../Controllers/userController.js";
 
 import { authenticate, restrict } from "../auth/verifyToken.js";
@@ -29,11 +30,12 @@ router.put("/updateUser/:id", authenticate, restrict(["patient"]), updateUser);
 router.get("/userProfile", authenticate, restrict(["patient"]), getUserProfile);
 router.post("/forgot-password", forgotPassword);
 router.route("/reset-password").post(resetPasswordOtpVerify).put(resetPassword);
+router.post("/changePassword",changePassword)
 
 router.get(
   "/appointments/my-appointments",
   authenticate,
-  restrict(["patient"]),
+  restrict(["patient"]),  
   getMyAppointments
 );
 

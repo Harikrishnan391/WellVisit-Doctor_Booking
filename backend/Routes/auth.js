@@ -9,9 +9,10 @@ import {
   doctorSendOtp,
   doctorVerifyOtp,
 } from "../Controllers/doctorAuthController.js";
-import { multipleUpload } from "../multer/multer.js";
 
+import { multipleUpload } from "../multer/multer.js";
 const router = express.Router();
+//Authentication Routers 
 
 router.post("/register", register);
 router.post("/verify-otp", verifyOtp);

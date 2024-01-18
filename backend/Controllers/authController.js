@@ -8,38 +8,6 @@ import generateOTP from "../utils/generateOtp.js";
 import generateMail from "../utils/generateMail.js";
 
 /**========================================================================= */
-//                         Sending OTP
-/**========================================================================= */
-
-export const sendOtp = async (req, res) => {
-  try {
-    const phoneNumber = req.body.data.number;
-    const email = req.body.data.email;
-    const type = req.body.data.role;
-    let user = null;
-
-    if (type === "patient") {
-      user = await User.findOne({ email });
-    } else if (type === "doctor") {
-      user = await Doctor.findOne({ email });
-    }
-
-    // Checking if the user exists
-
-    if (user) {
-      return res.status(400).json({ message: "User Already Exists" });
-    }
-
-    const otp = await sendOtpTwlio(phoneNumber);
-
-    res.status(200).json({ status: true, message: "otp send successfully" });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ status: false, message: "error in sending otp" });
-  }
-};
-
-/**========================================================================= */
 //                         User Registeration
 /**========================================================================= */
 

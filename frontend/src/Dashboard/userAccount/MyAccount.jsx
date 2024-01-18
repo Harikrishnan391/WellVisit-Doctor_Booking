@@ -6,10 +6,16 @@ import useGetProfile from "../../hooks/userFetchData";
 import { BASE_URL, type } from "../../config";
 import Loading from "../../components/Loader/Loading";
 import Error from "../../components/Error/Error";
+import PasswordReset from "./PasswordReset";
 
 const MyAccount = () => {
   // const { dispatch } = useContext(authContext);
   const [tab, setTab] = useState("bookings");
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const openModal = (isOpen) => {
+    setModalOpen(isOpen);
+  };
 
   const {
     data: userData,
@@ -17,7 +23,7 @@ const MyAccount = () => {
     error,
     refetch,
   } = useGetProfile(`${BASE_URL}/users/userProfile`, type);
-  
+
   const handleLogout = () => {
     dispatch({ type: "LOGOUT" });
   };
@@ -55,18 +61,21 @@ const MyAccount = () => {
                 </p>
               </div>
               <div className="mt-[50px] md:mt-[100px] ">
-                <button
-                  onClick={handleLogout}
-                  className="w-full   bg-[#181A1E] p-3 text-[16px] leading-7  rounded-md  text-white "
-                >
-                  Logout
-                </button>
-                <button
-                  className="w-full   bg-red-600 mt-4 p-3 text-[16px] leading-7  rounded-md text-white
-           "
-                >
-                  Delete Account{" "}
-                </button>
+                <div>
+                  <button 
+                  onClick={()=>setTab("password-reset")}
+                  className="w-full   bg-[#3568ce] p-3 text-[16px] leading-7  rounded-md  text-white ">
+                    Change Your Password
+
+                  </button>
+                  <button
+                    className="w-full   bg-red-600 mt-4 p-3 text-[16px] leading-7  rounded-md text-white"
+                    onclick="openModal(true)"
+                  >
+                    Delete Account{" "}
+                  </button>
+             
+                </div>
               </div>
             </div>
 
@@ -95,6 +104,7 @@ const MyAccount = () => {
               {tab === "settings" && (
                 <Profile user={userData} refetch={refetch} />
               )}
+              {tab === "password-reset" && <PasswordReset /> }
             </div>
           </div>
         )}

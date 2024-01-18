@@ -1,12 +1,17 @@
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { IoIosArrowRoundForward } from "react-icons/io";
 
-function Pagination({ totalPosts, postPerpage, setCurrentPage, currentPage }) {
+function Pagination({ postPerPage, totalPosts, setCurrentPage, currentPage }) {
+  console.log(postPerPage, "postPerpage");
+  console.log(totalPosts, "totalpost");
+  //  console.log(setCurrentPage,"setCurrentPage");
+  console.log(currentPage, "currentPage");
 
-     console.log(postPerpage,"totalPostsss")
   let pages = [];
 
-  for (let i = 1; i <= Math.ceil(totalPosts / postPerpage); i++) {
+  console.log(pages);
+
+  for (let i = 1; i <= Math.ceil(totalPosts / postPerPage); i++) {
     pages.push(i);
   }
 
@@ -17,10 +22,10 @@ function Pagination({ totalPosts, postPerpage, setCurrentPage, currentPage }) {
   };
 
   const next = async () => {
-    console.log(currentPage,"currentPage");
-    console.log(pages.length,"page.length");
+    console.log(currentPage, "currentPage");
+    console.log(pages.length, "page.length");
     if (currentPage < pages.length) {
-      setCurrentPage(currentPage);
+      setCurrentPage(currentPage + 1);
     }
   };
 
@@ -37,29 +42,28 @@ function Pagination({ totalPosts, postPerpage, setCurrentPage, currentPage }) {
             </a>
           </li>
 
-          {pages.map((page, index) => {
+          {pages.map((page, index) => (
             <li onClick={() => setCurrentPage(page)}>
               <a
                 href="#"
                 className={`${
                   currentPage === page
-                    ? "bg-violet-500 text-white border rounded-full"
+                    ? "bg-red-500 text-white border rounded-full"
                     : ""
                 }flex items-center justify-center px-4 h-10 leading-tight  hover:bg-gray-100 hover:text-gray-700`}
               >
                 {page}
               </a>
-            </li>;
-          })}
+            </li>
+          ))}
 
-          <li onClick={()=>next()}>
-
-            <a 
-            href="#"
-            className="flex items-center text-[30px] justify-center px-4 h-10 leading-tight hover:scale-125 transition ease-in-out"
-            >  
-            <IoIosArrowRoundForward />
-             </a>
+          <li onClick={() => next()}>
+            <a
+              href="#"
+              className="flex items-center text-[30px] justify-center px-4 h-10 leading-tight hover:scale-125 transition ease-in-out"
+            >
+              <IoIosArrowRoundForward />
+            </a>
           </li>
         </ul>
       </nav>
@@ -67,4 +71,4 @@ function Pagination({ totalPosts, postPerpage, setCurrentPage, currentPage }) {
   );
 }
 
-export default Pagination
+export default Pagination;
