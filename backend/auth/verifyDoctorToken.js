@@ -34,8 +34,10 @@ export const restrict = (role) => async (req, res, next) => {
   const userId = req.userId;
   let user;
 
+
   const patient = await User.findById(userId);
   const doctor = await Doctor.findById(userId);
+  console.log(doctor)
 
   if (patient) {
     user = patient;
