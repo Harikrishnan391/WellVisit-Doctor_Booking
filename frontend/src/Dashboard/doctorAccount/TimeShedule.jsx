@@ -23,11 +23,12 @@ const TimeShedule = () => {
       const confirmChange = window.confirm(
         "You have unsaved changes. Are you Sure want to change the  date without submitting?"
       );
+
+      if (!confirmChange) {
+      return;
+     }
     }
 
-    if (!confirmChange) {
-      return;
-    }
     setselectedGrid([]);
     setSelectedDate(date);
   };
@@ -92,6 +93,7 @@ const TimeShedule = () => {
         filterDate={(date) => date.getDay() !== 0}
         isClearable
         onChange={handleDateChange}
+      
       />
 
 

@@ -27,7 +27,7 @@ export const makepayment = async (req, res) => {
   const indianDate = format(new Date(req.body.date), "dd/MM/yyyy");
   try {
     const unit_amount = req.body.doctor.details.fee * 100;
-    console.log(typeof unit_amount,"unit amount")
+    console.log(typeof unit_amount, "unit amount");
     const userId = req.body.user._id;
     const user = await User.findById(userId);
 
@@ -53,9 +53,8 @@ export const makepayment = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.CLIENT_URL}/users/paymentSuccess?session_id{CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.CLIENT_URL}/users/paymentSuccess?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.CLIENT_URL}/users/paymentFailed`,
-
     });
     res.send({ url: session.url });
   } catch (error) {
@@ -63,3 +62,13 @@ export const makepayment = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const sessionStatus=async (req,res)=>{
+  const session=await stripe.checkout.sessions.retrieve(req.query.session_id)
+
+  res.send({
+    status:session.status,
+    paymentId:session.id,
+    customer_email:session.customer_details.email
+  })
+}

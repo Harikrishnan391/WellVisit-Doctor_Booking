@@ -6,7 +6,7 @@ import { BASE_URL, token } from "../../config.js";
 import { toast } from "react-toastify";
 import HashLoader from "react-spinners/HashLoader";
 
-const Profile = ({ user }) => {
+const Profile = ({ user,refetch }) => {
   // const [selectedFile, setSelectedFile] = useState(null);
 
   const [loading, setLoading] = useState(false);
@@ -15,10 +15,11 @@ const Profile = ({ user }) => {
     name: "",
     email: "",
     number: "",
-    address:"",
+    address: "",
     password: "",
     gender: "male",
     bloodType: "",
+    photo:null
   });
 
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const Profile = ({ user }) => {
       name: user.name,
       email: user.email,
       number: user.number,
-      address:user.address,
+      address: user.address,
       gender: user.gender,
       bloodType: user.bloodType,
     });
@@ -44,6 +45,14 @@ const Profile = ({ user }) => {
   //   const data = await uploadImageCloudinary(file);
   //   // console.log(data);
   // };
+
+  const handlePhotoInputChange = (e) => {
+    const pic = e.target.files[0];
+    setFormData({
+      ...formData,
+      photo: pic,
+    });
+  };
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -63,10 +72,9 @@ const Profile = ({ user }) => {
         method: "put",
         headers: {
           Authorization: `Bearer ${token} `,
-          "Content-Type": "application/json",
         },
         // body: JSON.stringify({ data: formData })
-        body: JSON.stringify(formData),
+        body: formDataToSend,
       });
 
       let result = await res.json();
@@ -76,11 +84,11 @@ const Profile = ({ user }) => {
         throw new Error(result.message);
       }
 
+      refetch()
       setLoading(false);
       toast.success(result.message);
     } catch (error) {
       console.log("error", error);
-
       setTimeout(() => {
         toast.error(error.message);
         setLoading(false);
@@ -117,7 +125,7 @@ const Profile = ({ user }) => {
           value={formData.number}
           onChange={handleInputChange}
         />
-           <input
+        <input
           className="w-full px-4 py-2 mt-4 text-sm border border-gray-300 border-solid rounded"
           type="text"
           placeholder="address"
@@ -165,6 +173,37 @@ const Profile = ({ user }) => {
             </select>
           </div>
         </div>
+
+         <div className="flex items-center justify-center gap-7">
+          <div className="flex flex-col items-center gap-3 mb-5 mt-7 ">
+            {formData.photo && formData.photo instanceof File && (
+              <figure className=" w-[60px] h-[60px] rounded-full border-2 border-solid border-primaryColor flex items-center justify-center ">
+                <img
+                  src={URL.createObjectURL(formData.photo)}
+                  alt=""
+                  className="w-full rounded-full"
+                />
+              </figure>
+            )}
+            <div className="relative w-[160px] h-[50px]  ">
+              <input
+                type="file"
+                name="photo"
+                id="photo"
+                onChange={handlePhotoInputChange}
+                accept=".jpg,.png"
+                className="absolute top-0 left-0 h-full opacity-0 cursor-pointer"
+              />
+              <label
+                htmlFor="photo"
+                className="absolute top-0 left-0 w-full h-fullflex items-center px-[0.75rem] py-[0.375rem] text-[15px] leading-6 overflow-hidden bg-[#0066ff46] text-headingColor 
+                   placeholder: font-semibold rounded-lg truncate cursor-pointer flex justify-center "
+              >
+                Upload Photo
+              </label>
+            </div>
+          </div>
+        </div> 
 
         <div className="text-center md:text-left  ">
           <button

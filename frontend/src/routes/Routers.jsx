@@ -27,6 +27,8 @@ import PaymentFailed from "../components/PaymentFailed/PaymentFailed";
 import CarouselDefault from "../pages/Admin/Bookings";
 import DoctorForgotPassword from "../pages/Doctors/DoctorForgotPassword";
 import DoctorResetPassword from "../pages/Doctors/DoctorResetPassword";
+import VideoCallRoom from "../pages/Admin/VideoCallRoom";
+import Appointments from "../pages/Doctors/Appointments";
 
 
 const Routers = () => {
@@ -64,6 +66,7 @@ const Routers = () => {
       <Route path="doctors/forgot-password" element={<DoctorForgotPassword />} />
       <Route path="doctors/reset-password" element={<DoctorResetPassword />} />
       <Route path="doctors/home" element={<ProtectedDoctorRoute allowedRoles={["doctor"]}><Home /></ProtectedDoctorRoute>} />
+      <Route path="/doctors/appointments" element={<Appointments />} />
     
       <Route
         path="/doctors/doctorProfile"
@@ -79,6 +82,7 @@ const Routers = () => {
       <Route path="/admin/users" element={<ProtectedAdmin allowedTypes={["admin"]}><AdminUsers /></ProtectedAdmin>} />
       <Route path="/admin/doctors" element={<ProtectedAdmin allowedTypes={["admin"]}><AdminDoctors /></ProtectedAdmin>} />
       <Route path="/admin/bookings" element={<CarouselDefault />} />
+      <Route path='/admin/room/:roomId' element={<VideoCallRoom />} />
     </Routes>
   );
 };

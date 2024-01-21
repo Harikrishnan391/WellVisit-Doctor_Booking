@@ -66,7 +66,6 @@ export const BlockUser = async (req, res) => {
       status: true,
       message: `user is ${user.isBlocked ? "Blocked" : "unblock"}`,
     });
-  
   } catch (error) {
     console.log(error);
   }
@@ -96,14 +95,35 @@ export const approveCertificate = async (req, res) => {
       { new: true }
     );
 
-
     if (!changeStatus) {
       return res.status(404).json({ message: "Doctor not found" });
     }
 
-    res.status(200).json({status:true,message:"Doctor status changed"})
+    res.status(200).json({ status: true, message: "Doctor status changed" });
   } catch (error) {
     res.status(500).json({ status: false, message: "Change status failed" });
+  }
+};
+
+export const approveVideoCall = async (req, res) => {
+  const docId = req.params.id;
+  console.log(docId, "from approveVideoCall");
+  const status = req.query.status;
+
+  try {
+    const changeStatus = await Doctor.findByIdAndUpdate(
+      docId,
+      { $set: { VideoCallApprove: status } },
+      { new: true }
+    );
+
+    if (!changeStatus) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+    const doctor = await Doctor.findOne();
+    res.status(200).json({ status: true, message: "Doctor status changed" });
+  } catch (error) {
+    res.status(500).json({ status: false, message: "Change status failed " });
   }
 };
 

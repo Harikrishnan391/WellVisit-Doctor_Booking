@@ -1,64 +1,67 @@
-import React,{useState} from 'react'
+import React, { useState } from "react";
 import { PacmanLoader } from "react-spinners";
+import { BASE_URL } from "../../config";
+import {toast}from "react-toastify"
+import { logoutDoctor } from "../../slices/doctorAuthSlice.js";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 
 const ChangePassword = () => {
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-    const user = JSON.parse(localStorage.getItem("doctorInfo"));
-    const formData = {
-      currentPassword,
-      newPassword,
-      confirmPassword,
-      email: user.email,
-    };
+  const user = JSON.parse(localStorage.getItem("doctorInfo"));
+  console.log(user);
+  const formData = {
+    currentPassword,
+    newPassword,
+    confirmPassword,
+    email: user.email,
+  };
 
-    const submitHandler=async (e)=>{
-        e.preventDefault();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-        try {
-          setLoading(true);
-          setError("");
-          const res = await fetch(`${BASE_URL}/doctors/changePassword`, {
-            method: "post",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-          });
-          
-    
-        //   const { error, message } = await res.json();
-    
-        //   if (error) {
-        //     setError(error);
-        //     toast.error(error);
-        //   } else {
-        //     toast.success("password Reset Successfully");
-        //     setTimeout(() => {
-        //       dispatch(logoutPatient());
-        //       navigate("/doctors/login");
-        //     }, 2000);
-        //   }
-        } catch (error) {
-        //   console.log(error);
-        //   setError(
-        //     "An error occurred while changing the password. Please try again."
-        //   );
-        //   toast.error(
-        //     "An error occurred while changing the password. Please try again."
-        //   );
-        } finally {
-        //   setLoading(false);
-        }
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+      setError("");
+      const res = await fetch(`${BASE_URL}/doctors/changePassword`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const { error, message } = await res.json();
+
+      if (error) {
+        setError(error);
+        toast.error(error);
+      } else {
+        toast.success("password Reset Successfully");
+        setTimeout(() => {
+          dispatch(logoutDoctor());
+          navigate("/doctors/login");
+        }, 2000);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
+  };
 
   return (
-   <>
-    <div className="bg-gray-100 flex items-center ml-12 justify-center h-screen">
+    <>
+      <div className="bg-gray-100 flex items-center ml-12 justify-center h-screen">
         <div className="bg-white p-8 py-12 rounded-lg mb-12 shadow-lg max-w-sm w-full mt-[-100px]">
           <div className="flex items-center space-x-4 mb-6">
             <img
@@ -148,14 +151,14 @@ const ChangePassword = () => {
                   <PacmanLoader color="#36D7B7" size={15} margin={2} />
                 ) : (
                   "ResetPassword"
-                )}
+                )} 
               </button>
             </div>
           </form>
         </div>
       </div>
-   </>
-  )
-}
+    </>
+  );
+};
 
-export default ChangePassword
+export default ChangePassword;

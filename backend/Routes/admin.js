@@ -9,6 +9,7 @@ import {
     getAllUser,
     login,
     HandleBlock,
+    approveVideoCall
     
 
 } from "../Controllers/AdminController.js"
@@ -24,5 +25,6 @@ router.get('/getAllDoctor',getAllDoctor)
 router.post('/approveCertificate/:id',approveCertificate)
 router.put('/HandleApprove/:id',HandleApprove)
 router.put('/HandleBlock/:id',HandleBlock)
+router.post('/approveVideoCall/:id',approveVideoCall)
 
 export default router

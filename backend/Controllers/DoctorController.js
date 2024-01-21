@@ -1,13 +1,13 @@
-import Booking from "../model/BookingSchema.js";
 import Doctor from "../model/DoctorSchema.js";
 import { format } from "date-fns";
 import bcrypt from "bcryptjs";
 import generateOTP from "../utils/generateOtp.js";
 import generateMail from "../utils/generateMail.js";
+import Booking from "../model/bookingSchema.js";
+import bookingSchema from "../model/bookingSchema.js";
 
 export const DoctorForgotPassword = async (req, res) => {
   try {
-    console.log(req.body, "req.body");
     const { email } = req.body;
     const doctor = await Doctor.findOne({ email });
 
@@ -46,7 +46,6 @@ export const resetPasswordOtpVerify = async (req, res) => {
     const { email, verificationCode } = req.body;
     console.log(email, "email  ");
     const doctor = await Doctor.findOne({ email, verificationCode });
-    console.log(doctor, "doctor");
     if (!doctor) {
       res.status(404).json({ status: false, message: "User not found" });
     }
@@ -64,7 +63,6 @@ export const resetPasswordOtpVerify = async (req, res) => {
 };
 
 export const resendOtp = async (req, res) => {
-  console.log("Resend Otp came ");
   const { email } = req.body;
   const doctor = await Doctor.findOne({ email });
   if (!doctor) {
@@ -92,12 +90,10 @@ export const resendOtp = async (req, res) => {
 };
 
 export const DoctorResetPassword = async (req, res) => {
-  console.log(req.body, "req.body");
   const { email, password } = req.body;
   const doctor = await Doctor.findOne({ email });
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(password, salt);
-  console.log(doctor);
 
   if (doctor) {
     doctor.password = hashPassword;
@@ -116,10 +112,48 @@ export const DoctorResetPassword = async (req, res) => {
 };
 
 export const changeDoctorPassword = async (req, res) => {
-  console.log(req.body, "req.body");
+  const { currentPassword, newPassword, confirmPassword, email } = req.body;
+
+  try {
+    const user = await Doctor.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not Found" });
+    }
+
+    //for check if the currentPassword matches the user's password
+
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+
+    if (!isPasswordValid) {
+      return res.status(400).json({ error: "Invalid current Password" });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res
+        .status(400)
+        .json({ error: "new Password and confirm Password do not Match" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(confirmPassword, salt);
+
+    user.password = hashedPassword;
+
+    await user.save();
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 export const updateDoctor = async (req, res) => {
+  console.log("hereeeeeeee");
   const id = req.params.id;
   const updateData = { ...req.body };
 
@@ -227,8 +261,8 @@ export const addTimeSlots = async (req, res) => {
     });
 
     if (existingSlotIndex !== -1) {
-      console.log("exist");
-      console.log(doctor.timeSlots[existingSlotIndex].slots);
+      // console.log("exist");
+      // console.log(doctor.timeSlots[existingSlotIndex].slots);
       slots.forEach((slot) => {
         doctor.timeSlots[existingSlotIndex].slots.push(slot);
       });
@@ -252,7 +286,6 @@ export const addTimeSlots = async (req, res) => {
 //// getting available Dates ////
 
 export const getAvailableDates = async (req, res) => {
-  console.log("helllo");
   const docId = req.userId;
 
   try {
@@ -333,7 +366,7 @@ export const removeSlots = async (req, res) => {
       { $pull: { timeSlots: { slots: [] } } }
     );
 
-    if (result.nModified === 1) {
+    if (result.Modified === 1) {
       console.log("result", result);
       return res.status(200).json({ message: "Slot removed successfully" });
     } else {
@@ -368,6 +401,49 @@ export const getDoctorProfile = async (req, res) => {
     res.status(500).json({ success: false, message: "Something went wrong" });
   }
 };
+
+///// get Appointments //////
+
+export const getAppointments = async (req, res) => {
+  const doctorId = req.userId;
+
+  try {
+    const bookings = await Booking.find(
+      { "doctor._id": doctorId },
+      {
+        "patient.name": 1,
+        "patient.photo": 1,
+        IndianDate: 1,
+        slot: 1,
+        isCancelled: 1,
+      }
+    ).sort({ AppointmentDate: -1 });
+    console.log(bookings,"myBookings")
+
+    if (bookings.length === 0) {
+      throw new Error("Oops! you did't have any appointments yet");
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Appointments are getting",
+      data: bookings,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+        ? error.message
+        : "Something went Wrong, cannot get Appointments",
+    });
+  }
+};
+
+/////getMyAppointments/////
+
+
 
 /**
  * 

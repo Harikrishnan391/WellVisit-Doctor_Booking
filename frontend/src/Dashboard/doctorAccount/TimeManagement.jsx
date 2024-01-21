@@ -32,6 +32,7 @@ const TimeManagement = () => {
   };
 
   const highlightDate = parseBackendDates(backendDates);
+  console.log(highlightDate,"@@@@@@@@@@")
 
   const handleDateChange = async (date) => {
     setSelectedDate(date);

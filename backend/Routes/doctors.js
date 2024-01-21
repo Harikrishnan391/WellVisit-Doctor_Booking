@@ -14,10 +14,12 @@ import {
   DoctorResetPassword,
   resendOtp,
   changeDoctorPassword,
+  getAppointments,
 } from "../Controllers/DoctorController.js";
 import { authenticateDoctor, restrict } from "../auth/verifyDoctorToken.js";
 import reviewRouter from "./review.js";
 import { authenticate } from "../auth/verifyToken.js";
+import { multipleUpload } from "../multer/multer.js";
 
 const router = express.Router();
 
@@ -26,13 +28,20 @@ router.use("/:doctorId/reviews", reviewRouter);
 
 // router.get("/:id", getSingleDoctor);
 router.get("/getAllDoctor", authenticate, getAllDoctor);
-router.put("/:id", authenticateDoctor, restrict(["doctor"]), updateDoctor);
+router.put(
+  "/:id",
+  authenticateDoctor,
+  restrict(["doctor"]),
+  multipleUpload,
+  updateDoctor
+);
 router.delete("/:id", authenticateDoctor, restrict(["doctor"]), deleteDoctor);
 router.post("/forgot-password", DoctorForgotPassword);
 router.post("/reset-password", resetPasswordOtpVerify);
 router.post("/DoctorResetPassword", DoctorResetPassword);
 router.post("/resend-Otp", resendOtp);
 router.post("/changePassword", changeDoctorPassword);
+router.get("/getMyAppointments",authenticateDoctor,getAppointments);
 router.get(
   "/getDoctorProfile",
   authenticateDoctor,

@@ -1,29 +1,32 @@
 import User from "../model/UserSchema.js";
-import Booking from "../model/BookingSchema.js";
 import Doctor from "../model/DoctorSchema.js";
 import generateOTP from "../utils/generateOtp.js";
+import Booking from "../model/bookingSchema.js"
 import generateMail from "../utils/generateMail.js";
 import bcrypt from "bcryptjs";
 import generatePatientToken from "../jwt/patient/patientjwt.js";
 import { format } from "date-fns";
+import bookingSchema from "../model/bookingSchema.js";
 
 export const updateUser = async (req, res) => {
   const id = req.userId;
-  console.log(req.body, "req.bodyyyyy");
-  const { name, email, number, role, gender, appoinments, bloodType, address } =
+  const { name, email, number, role, gender, bloodType,address } =
     req.body;
-  console.log(address, "name from req.body");
+console.log(req.body,"req.body")
+const pic = req.file?.filename;
+console.log(pic,"picture")
 
-  const pic = req.file?.filename;
+
   const updateData = {
     name,
     email,
     number,
     role,
     gender,
-    appoinments,
     bloodType,
     address,
+    photo:pic
+
   };
   try {
     const updateUser = await User.findByIdAndUpdate(
@@ -166,43 +169,43 @@ export const resetPassword = async (req, res) => {
 /***====================Change  Password  User is Logged IN============================ */
 
 export const changePassword = async (req, res) => {
- 
-   const {currentPassword,newPassword,confirmPassword,email}=req.body
+  const { currentPassword, newPassword, confirmPassword, email } = req.body;
 
   try {
-    
-    const user=await User.findOne({email})
+    const user = await User.findOne({ email });
 
-    if(!user){
-      return res.status(404).json({error:"User not Found"})
+    if (!user) {
+      return res.status(404).json({ error: "User not Found" });
     }
 
     //for check if the currentPassword matches the user's password
 
-    const isPasswordValid=await bcrypt.compare(currentPassword,user.password)
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
 
-    if(!isPasswordValid){
-      return res.status(400).json({error:"Invalid current Password"})
+    if (!isPasswordValid) {
+      return res.status(400).json({ error: "Invalid current Password" });
     }
 
-    if(newPassword !==confirmPassword){
-      return res.status(400).json({error:"new Password and confirm Password do not Match"})
+    if (newPassword !== confirmPassword) {
+      return res
+        .status(400)
+        .json({ error: "new Password and confirm Password do not Match" });
     }
 
-    const salt=await bcrypt.genSalt(10)
-    const hashedPassword=await bcrypt.hash(confirmPassword,salt)
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(confirmPassword, salt);
 
-    user.password=hashedPassword
+    user.password = hashedPassword;
 
-    await user.save()
+    await user.save();
 
-    res.status(200).json({message:"Password updated successfully"})
-
-
+    res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
-    console.error(error)
-    res.status(500).json({error:"Internal server error"})
-    
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -249,26 +252,34 @@ export const getUserProfile = async (req, res) => {
 };
 
 export const getMyAppointments = async (req, res) => {
+  const userId=req.userId
+ 
   try {
-    //step1:retrive  appointments from booking  for specific user
 
-    const bookings = await Booking.find({ user: req.userId });
+    const booking=await Booking.find(
+      {"patient._id":userId},
 
-    //step2:extract doctor  appointments from booking
+      {
+        "doctor.name":1,
+        "doctor.specialization":1,
+        "doctor.photo":1,
+        indianDate:1,
+        slot:1,
+        isCancelled:1,
+        cancelReason:1
+      }
+    ).sort({createdAt:-1})
 
-    const doctorIds = bookings.map((el) => el.doctor.id);
-
-    //step-3:retrive doctors  using doctor ids
-
-    const doctors = await Doctor.find({ _id: { $in: doctorIds } }).select(
-      "-password"
-    );
+    if(booking.length ===0){
+      throw new Error("Oops ! you did't have any appointments yet!")
+    }
 
     res.status(200).json({
-      success: true,
-      message: "Appointments are getting",
-      data: doctors,
-    });
+      success:true,
+      message:"Appointments are getting",
+      data:booking
+    })
+    
   } catch (error) {
     res.status(500).json({ success: false, message: "Something went wrong" });
   }

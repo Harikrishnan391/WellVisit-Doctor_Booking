@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import userImg from "../../assets/images/doctor-img01.png";
 import MyBookings from "./MyBookings";
 import Profile from "./Profile";
 import useGetProfile from "../../hooks/userFetchData";
-import { BASE_URL, type } from "../../config";
+import { BASE_URL, type,userPath } from "../../config";
 import Loading from "../../components/Loader/Loading";
 import Error from "../../components/Error/Error";
 import PasswordReset from "./PasswordReset";
@@ -24,10 +24,12 @@ const MyAccount = () => {
     refetch,
   } = useGetProfile(`${BASE_URL}/users/userProfile`, type);
 
-  const handleLogout = () => {
-    dispatch({ type: "LOGOUT" });
-  };
-
+  useEffect(() => {
+    if (error) {
+      console.log("Error in Doctor profile fetching data");
+    }
+  }, [error, userData, loading, userData]);
+ 
   return (
     <section>
       <div className="max-w-[1170px] px-5 mx-auto">
@@ -40,7 +42,7 @@ const MyAccount = () => {
               <div className="flex itmes-center justify-center">
                 <figure className="w-[100px] h-[100px] rounded-full border-2 border-solid border-primaryColor">
                   <img
-                    src={userImg}
+                    src={`${userPath}${userData.photo}`}
                     alt=""
                     className=" w-full h-full rounded-full"
                   />

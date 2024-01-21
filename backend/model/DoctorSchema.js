@@ -51,6 +51,12 @@ const DoctorSchema = new mongoose.Schema({
     // enum: ["pending", "true", "false"],
     default: false,
   },
+
+  VideoCallApprove: {
+    type: Boolean,
+    default: false,
+  },
+
   isBlocked: {
     type: Boolean,
     // enum: ["pending", "true", "false"],
@@ -59,10 +65,10 @@ const DoctorSchema = new mongoose.Schema({
 
   appointments: [{ type: mongoose.Types.ObjectId, ref: "Appointment" }],
   verificationCode: { type: String },
-  isVerified:{
-    type:Boolean,
-    default:false
-  }
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export default mongoose.model("Doctor", DoctorSchema);

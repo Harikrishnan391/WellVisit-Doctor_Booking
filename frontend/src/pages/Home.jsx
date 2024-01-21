@@ -22,25 +22,26 @@ import DoctorList from "../components/Doctors/DoctorList";
 import { Carousel } from "@material-tailwind/react";
 import { Parallax, ParallaxLayer } from "@react-spring/parallax";
 
-const Home = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [scrollY, setScrollY] = useState(0);
-  const images = [
-    "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80",
-    "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80",
-    "https://images.unsplash.com/photo-1518623489648-a173ef7824f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2762&q=80",
-    "https://images.unsplash.com/photo-1624727828489-a1e03b79bba8?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1628348070889-cb656235b4eb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1480985041486-c65b20c01d1f?q=80&w=1476&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  ];
-  /*=============for Banner images==================== */
-  useEffect(() => {
-    const interValid = setInterval(() => {
-      setActiveIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000);
 
-    return () => clearInterval(interValid);
-  }, [images.length]);
+const Home = () => {
+  // const [activeIndex, setActiveIndex] = useState(0);
+  // const [scrollY, setScrollY] = useState(0);
+  // const images = [
+  //   "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80",
+  //   "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80",
+  //   "https://images.unsplash.com/photo-1518623489648-a173ef7824f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2762&q=80",
+  //   "https://images.unsplash.com/photo-1624727828489-a1e03b79bba8?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  //   "https://images.unsplash.com/photo-1628348070889-cb656235b4eb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  //   "https://images.unsplash.com/photo-1480985041486-c65b20c01d1f?q=80&w=1476&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  // ];
+  // /*=============for Banner images==================== */
+  // useEffect(() => {
+  //   const interValid = setInterval(() => {
+  //     setActiveIndex((prevIndex) => (prevIndex + 1) % images.length);
+  //   }, 5000);
+
+  //   return () => clearInterval(interValid);
+  // }, [images.length]);
 
   /**==============for Animated scroll effect==================== */
 
@@ -66,7 +67,7 @@ const Home = () => {
   return (
     <>
       {/**Section for moving currosals   */}
-    
+{/*     
         <div className="rounded-xl overflow-hidden relative h-96">
           {images.map((image, index) => (
             <img
@@ -78,8 +79,8 @@ const Home = () => {
               } transition-opacity duration-1000`}
             />
           ))}
-        </div>
-   
+        </div> */}
+
       {/**=======hero section==== */}
       <ShuffleHero />
 

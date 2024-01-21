@@ -107,22 +107,6 @@ const DoctorProfileSettings = ({ data, refetch }) => {
               />
             </div>
             <div>
-              <label
-                className="text-white dark:text-gray-200"
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <input
-                name="password"
-                id="password"
-                type="password"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-              />
-            </div>
-            <div>
               <label className="text-white dark:text-gray-200">
                 Phone number
               </label>
@@ -143,20 +127,19 @@ const DoctorProfileSettings = ({ data, refetch }) => {
               >
                 Bio
               </label>
-              <input
-                name="bio"
+              <textarea
                 id="bio"
+                name="bio"
                 type="text"
                 onChange={(e) => setBio(e.target.value)}
                 value={bio}
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                defaultValue={""}
               />
             </div>
 
             <div>
-              <label className="text-white dark:text-gray-200" htmlFor="gender">
-                gender
-              </label>
+              <label className="text-white dark:text-gray-200">gender</label>
               <select
                 name="gender"
                 id="gender"
@@ -207,76 +190,75 @@ const DoctorProfileSettings = ({ data, refetch }) => {
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
               />
             </div>
-            <h1 className="mt-2 mb-4 font-bold m">Qualifications</h1>
 
-            {/*         
-            <div>
-              <label
-                className="text-white dark:text-gray-200"
-                htmlFor="passwordConfirmation"
-              >
-                Date
-              </label>
-              <input
-                id="date"
-                type="date"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-              />
-            </div> */}
-
-            <div>
-              <label
-                className="text-white dark:text-gray-200"
-                htmlFor="passwordConfirmation"
-              >
-                Text Area
-              </label>
-              <textarea
-                id="textarea"
-                type="textarea"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-                defaultValue={""}
-              />
-            </div>
-            {/* <div>
-              <label className="block text-sm font-medium text-white">
-                Image
-              </label>
-              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                <div className="space-y-1 text-center">
-                  <svg
-                    className="mx-auto h-12 w-12 text-white"
-                    stroke="currentColor"
-                    fill="none"
-                    viewBox="0 0 48 48"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                      strokeWidth={2}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+            <div className="flex items-center justify-center gap-7">
+              {/* /////////////////////photo upload///////////////////// */}
+              {/* <div className="flex flex-col items-center gap-3 mb-5 mt-7">
+                {photo && (
+                  <figure className=" w-[60px] h-[60px] rounded-full border-2 border-solid border-primaryColor flex items-center justify-center ">
+                    <img
+                      src={URL.createObjectURL(photo)}
+                      alt=""
+                      className="w-full rounded-full"
                     />
-                  </svg>
-                  <div className="flex text-sm text-gray-600">
-                    <label
-                      htmlFor="file-upload"
-                      className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
-                    >
-                      <span className="">Upload a file</span>
-                      <input
-                        id="file-upload"
-                        name="file-upload"
-                        type="file"
-                        className="sr-only"
-                      />
-                    </label>
-                    <p className="pl-1 text-white">or drag and drop</p>
-                  </div>
-                  <p className="text-xs text-white">PNG, JPG, GIF up to 10MB</p>
+                  </figure>
+                )}
+
+                <div className="relative w-[160px] h-[50px]  ">
+                  <input
+                    type="file"
+                    name="photo"
+                    id="photo"
+                    onChange={handlePhotoInputChange}
+                    accept=".jpg,.png"
+                    className="absolute top-0 left-0 h-full opacity-0 cursor-pointer"
+                  />
+                  <label
+                    htmlFor="photo"
+                    className="absolute top-0 left-0 w-full h-fullflex items-center px-[0.75rem] py-[0.375rem] text-[15px] leading-6 overflow-hidden bg-[#0066ff46] text-headingColor 
+                    font-semibold rounded-lg truncate cursor-pointer flex justify-center "
+                  >
+                    Upload Photo
+                  </label>
                 </div>
-              </div>
-            </div> */}
+              </div> */}
+
+              {/* /////////////////////ceritificate upload///////////////////// */}
+
+              {/* <div className="flex flex-col items-center gap-3 mb-5 mt-7">
+                {certificate?.map((certificate, index) => (
+                  <figure
+                    key={index}
+                    className="w-[60px] h-[60px]  border-2 border-solid border-primaryColor flex items-center justify-center"
+                  >
+                    <img
+                      src={URL.createObjectURL(certificate)}
+                      alt={`Certificate ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </figure>
+                ))}
+
+                <div className="relative w-[160px] h-[50px]  ">
+                  <input
+                    type="file"
+                    name="certificate"
+                    id="certificate"
+                    onChange={handleCertificateInputChange}
+                    accept=".jpg,.png"
+                    multiple
+                    className="absolute top-0 left-0 h-full opacity-0 cursor-pointer"
+                  />
+                  <label
+                    htmlFor="certificate"
+                    className="absolute top-0 left-0 w-full h-fullflex items-center px-[0.75rem] py-[0.375rem] text-[15px] leading-6 overflow-hidden bg-[#0066ff46] text-headingColor 
+                    font-semibold rounded-lg truncate cursor-pointer flex justify-center "
+                  >
+                    Upload Certificate
+                  </label>
+                </div>
+              </div> */}
+            </div>
           </div>
           <div className="flex justify-end mt-6">
             <button
