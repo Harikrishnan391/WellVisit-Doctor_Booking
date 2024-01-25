@@ -1,22 +1,17 @@
 import React from "react";
 import { FormateDate } from "../../utils/FormateDate";
 
-const DoctorAbout = ({details}) => {
+const DoctorAbout = ({ details }) => {
   return (
     <div>
-      <h3 className="text-[20px]  leading-[30px] text-headingColor font-bold  flex items-center  gap-2">
+      <h3 className="text-[20px]  leading-[30px] text-headingColor font-bold  flex items-center   gap-2">
         About of
         <span className="tex[20px] text-irisBlueColor  font-bold text-[24px] leading-9   ">
-        {details.name}
+          {details.name}
         </span>
       </h3>
       <p className="text_para">
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate vel
-        ea voluptatem asperiores repellendus ex fugiat! Id odio nemo temporibus
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae fuga
-        dolore natus ab eveniet, maiores amet eaque voluptatum non, provident id
-        illo quisquam ratione deserunt! Suscipit voluptatem magnam voluptatibus
-        dignissimos?
+      {details.about}
       </p>
       <div className="mt-12 ">
         <h3 className="text-[20px] leading-[30px] text-headingColor font-semibold">
@@ -66,11 +61,11 @@ const DoctorAbout = ({details}) => {
               {FormateDate("09-04-2014")}- {FormateDate("12-04-2016")}
             </span>
             <p className="text-[16px] leading-6 font-medium text-textColor">
-                Sr.Surgeon
+              Sr.Surgeon
             </p>
             <p className="text-[14px] leading-5 font-medium text-textColor ">
               New Appolo Hospital ,New York
-            </p> 
+            </p>
           </li>
         </ul>
       </div>

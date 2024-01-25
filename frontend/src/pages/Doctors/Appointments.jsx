@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import DoctorFetchData from "../../hooks/DoctorFetchData";
 import { BASE_URL, docToken } from "../../config";
 const path = "http://localhost:5000/userMedia/";
+import { FcVideoCall } from "react-icons/fc";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Appointments = () => {
   const [Appointments, setAppointments] = useState([]);
@@ -11,6 +15,7 @@ const Appointments = () => {
     `${BASE_URL}/doctors/getMyAppointments`
   );
 
+  const navigate = useNavigate();
   useEffect(() => {
     if (error) {
       console.log(error);
@@ -19,11 +24,111 @@ const Appointments = () => {
     }
   }, [Appointments, data, loading]);
 
-  console.log(data, "from doctorFetch");
+  const handleCancel = async(BookingId) => {
+
+  
+    const confirmResult = await Swal.fire({
+      title: "Do you want to approve VideoCall?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      confirmButtonText: "Yes,do it!",
+      cancelButtonText: "Cancel it",
+    });
+
+
+    if(confirmResult.isConfirmed){
+      try{
+        const res=await fetch(`${BASE_URL}/doctors/CancellAppointment/${BookingId}`,{
+          method:"post",
+          headers:{
+            Authorization: `Bearer ${docToken}`
+          }
+        })
+
+        let result=await res.json()
+        
+        if(!res.ok){
+          throw new Error("Something went wrong")
+        }
+        Swal.fire({
+          title: "Done!",
+          text: "Your cancelled the appointment.",
+          icon: "success",
+        });
+        refetch()
+      }
+      catch(error){
+        console.log(error)
+        Swal.fire({
+          title: "error!",
+          text: "An error Occured while cancelling",
+          icon: "success",
+        });
+      }
+    }
+  };
+
+  const createRoom = async () => {
+    const { value: roomId } = await Swal.fire({
+      title: "CreateRoom",
+      text: "Enter a Room Id",
+      input: "text",
+      showCancelButton: true,
+      confirmButtonText: "Create",
+    });
+
+    if (roomId) {
+      navigate(`/doctors/room/${roomId}`);
+    }
+  };
+
+  const approveVideoCall = async (patientId, status) => {
+    const confirmResult = await Swal.fire({
+      title: "Do you want to approve VideoCall?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      confirmButtonText: "Yes,do it!",
+      cancelButtonText: "Cancel it",
+    });
+
+    if (confirmResult.isConfirmed) {
+      try {
+        const res = await fetch(
+          `${BASE_URL}/doctors/approveVideoCall/${patientId}?status=${status}`,
+          {
+            method: "post",
+            headers: {
+              Authorization: `Bearer ${docToken}`,
+            },
+          }
+        );
+
+        let result = res.json();
+
+        if (!res.ok) {
+          throw new Error(result.message);
+        }
+
+        Swal.fire({
+          title: "Done!",
+          text: "Your changed the doctor status",
+          icon: "success",
+        });
+
+        createRoom();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
   const currentAppointments = Appointments.slice(firstPostIndex, lastPostIndex);
+
+  console.log(currentAppointments, "currentAppointments");
 
   return (
     <>
@@ -37,7 +142,7 @@ const Appointments = () => {
                   <th className="px-4 py-3">Date</th>
                   <th className="px-4 py-3">Time</th>
                   <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Action</th>
+                  <th className="px-4 py-3">Action/VideoCall</th>
                 </tr>
               </thead>
               <tbody className="bg-white">
@@ -73,10 +178,33 @@ const Appointments = () => {
                       </td>
                       <td className="px-4 py-3 text-sm border">{el.slot}</td>
                       <td className="px-4 py-3 text-xs border">
-                        <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm">
+                        {el.isCancelled?(
+                        <span className="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-sm">
+                          {" "}
+                          Appointment Cancelled{" "}
+                        </span>
+                        ):(
+                          <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm">
                           {" "}
                           Acceptable{" "}
                         </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-ms font-semibold border">
+                        <div className="flex items-center ">
+                          <button
+                            onClick={() => handleCancel(el._id)}
+                            className="bg-red-500 hover:bg-pink-700 text-white font-bold py-2 px-4 border border-white-700 rounded"
+                          >
+                            Cancel 
+                          </button>
+                          <FcVideoCall
+                            onClick={() =>
+                              approveVideoCall(el.patient._id, true)
+                            }
+                            className="ml-2 text-2xl w-7 cursor-pointer"
+                          />
+                        </div>
                       </td>
                     </tr>
                   ))}

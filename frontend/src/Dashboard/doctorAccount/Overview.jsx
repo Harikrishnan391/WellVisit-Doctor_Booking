@@ -2,6 +2,7 @@
 import starIcon from "../../assets/images/Star.png";
 import DoctorAbout from "../../pages/Doctors/DoctorAbout";
 import { doctorPath } from "../../config";
+import { LiaCertificateSolid } from "react-icons/lia";
 console.log(doctorPath)
 function Overview({ userData }) {
   console.log(userData.photo,"user photo")
@@ -33,14 +34,15 @@ function Overview({ userData }) {
                     className="flex items-center gap-[6px] text-[14px] leading-5 lg:text-[16px] lg:leading-7 font-semibold 
                   text-headingColor  "
                   >
-                    <img src={starIcon} alt="" />
-                    4.8
+                    {/* <img src={starIcon} alt="" /> */}
+                    <LiaCertificateSolid className="w-12 h-8 bg-yellowColor" />
+                  
                   </span>
                   <span
                     className="text-[14px] leading-5 lg:text-[16px] lg:leading-7 font-semibold 
                   text-textColor "
                   >
-                    (272)
+                    {userData.degree}
                   </span>
                 </div>
                 <p className=" text__para text-[14px] leading-6 md:text-[15px] lg:max-w-[390px]  ">

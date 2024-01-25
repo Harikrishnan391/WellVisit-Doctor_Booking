@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { RiDeleteBin6Fill } from "react-icons/ri";
+import { RiDeleteBin6Fill, RiPictureInPictureExitLine } from "react-icons/ri";
 import { BASE_URL, docToken } from "../../config";
 import BeatLoader from "react-spinners/BeatLoader";
 import { toast } from "react-toastify";
 
 const DoctorProfileSettings = ({ data, refetch }) => {
-  console.log(data, "data");
   const [loading, setLoading] = useState(false);
-
   const [name, setName] = useState(data.name);
   const [email, setEmail] = useState(data.email);
   const [password, setPassword] = useState(data.password);
@@ -16,6 +14,21 @@ const DoctorProfileSettings = ({ data, refetch }) => {
   const [gender, setGender] = useState(data.gender);
   const [specialization, setSpecialization] = useState(data.specialization);
   const [fee, setFee] = useState(data.fee);
+  const [photo, setPhoto] = useState(null);
+  const [certificate, setCertificate] = useState(null);
+  const [formData, setFormData] = useState({});
+  const [about, setAbout] = useState(data.about);
+
+  const handlePhotoInputChange = (e) => {
+    const pic = e.target.files[0];
+    setPhoto(pic);
+  };
+
+  const handleCertificateInputChange = (e) => {
+    const certificate = e.target.files;
+    const filesArray = Array.from(certificate);
+    setCertificate(filesArray);
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -23,33 +36,38 @@ const DoctorProfileSettings = ({ data, refetch }) => {
     const dataToUpdate = {
       name,
       email,
-      password,
       phoneNumber,
       bio,
       gender,
       specialization,
       fee,
+      photo,
+      certificate,
+      about,
     };
 
-    console.log(dataToUpdate, "THe datas to Update.....");
-
-    setLoading(true);
     try {
-      // const formDataToSend=new FormData()
+      const formDataToSend = new FormData();
 
-      // for(const key in dataToUpdate){
-      //   formDataToSend.append(key,dataToUpdate[key])
-      // }
+      for (const key in dataToUpdate) {
+        formDataToSend.append(key, dataToUpdate[key]);
+      }
+      console.log([...formDataToSend.entries()], "initial");
+      if (dataToUpdate.certificate) {
+        for (let i = 0; i < dataToUpdate.certificate.length; i++) {
+          formDataToSend.append(`certificate`, dataToUpdate.certificate[i]);
+        }
+      }
 
       const res = await fetch(`${BASE_URL}/doctors/updateDoctor/${data._id}`, {
         method: "put",
         headers: {
           Authorization: `Bearer ${docToken}`,
-          "Content-Type": "application/json",
         },
-        body: JSON.stringify(dataToUpdate),
+        body: formDataToSend,
       });
 
+      const result = await res.json();
       if (!res.ok) {
         throw new Error(result.message);
       }
@@ -73,7 +91,7 @@ const DoctorProfileSettings = ({ data, refetch }) => {
         <h1 className="text-xl font-bold text-white capitalize dark:text-white">
           Account settings
         </h1>
-        <form onSubmit={submitHandler}>
+        <form onSubmit={submitHandler} encType="multipart/form-data">
           <div className="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
             <div>
               <label
@@ -83,8 +101,9 @@ const DoctorProfileSettings = ({ data, refetch }) => {
                 Name
               </label>
               <input
-                id="username"
+                id="name"
                 type="name"
+                name="name"
                 onChange={(e) => setName(e.target.value)}
                 value={name}
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
@@ -98,7 +117,7 @@ const DoctorProfileSettings = ({ data, refetch }) => {
                 Email Address
               </label>
               <input
-                name="floatemailing_password"
+                name="email"
                 id="email"
                 type="email"
                 onChange={(e) => setEmail(e.target.value)}
@@ -138,14 +157,14 @@ const DoctorProfileSettings = ({ data, refetch }) => {
               />
             </div>
 
-            <div>
+            <div className="mt-auto mb-0">
               <label className="text-white dark:text-gray-200">gender</label>
               <select
                 name="gender"
                 id="gender"
                 onChange={(e) => setGender(e.target.value)}
                 value={gender}
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-black-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
               >
                 <option value="" disabled selected>
                   Select gender
@@ -191,9 +210,9 @@ const DoctorProfileSettings = ({ data, refetch }) => {
               />
             </div>
 
-            <div className="flex items-center justify-center gap-7">
+            <div className="flex items-center justify-center gap-1">
               {/* /////////////////////photo upload///////////////////// */}
-              {/* <div className="flex flex-col items-center gap-3 mb-5 mt-7">
+              <div className="flex flex-col items-center gap-3 mb-5 mt-7">
                 {photo && (
                   <figure className=" w-[60px] h-[60px] rounded-full border-2 border-solid border-primaryColor flex items-center justify-center ">
                     <img
@@ -221,11 +240,10 @@ const DoctorProfileSettings = ({ data, refetch }) => {
                     Upload Photo
                   </label>
                 </div>
-              </div> */}
+              </div>
 
               {/* /////////////////////ceritificate upload///////////////////// */}
-
-              {/* <div className="flex flex-col items-center gap-3 mb-5 mt-7">
+              <div className="flex flex-col items-center gap-3 mb-5 mt-7">
                 {certificate?.map((certificate, index) => (
                   <figure
                     key={index}
@@ -252,12 +270,29 @@ const DoctorProfileSettings = ({ data, refetch }) => {
                   <label
                     htmlFor="certificate"
                     className="absolute top-0 left-0 w-full h-fullflex items-center px-[0.75rem] py-[0.375rem] text-[15px] leading-6 overflow-hidden bg-[#0066ff46] text-headingColor 
-                    font-semibold rounded-lg truncate cursor-pointer flex justify-center "
+                     font-semibold rounded-lg truncate cursor-pointer flex justify-center "
                   >
                     Upload Certificate
                   </label>
                 </div>
-              </div> */}
+              </div>
+            </div>
+
+            <div>
+              <label
+                className="text-white dark:text-gray-200"
+                htmlFor="passwordConfirmation"
+              >
+                About
+              </label>
+              <textarea
+                type="text"
+                onChange={(e) => setAbout(e.target.value)}
+                value={about}
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                defaultValue={""}
+                placeholder="write something about you"
+              />
             </div>
           </div>
           <div className="flex justify-end mt-6">

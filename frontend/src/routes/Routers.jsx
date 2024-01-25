@@ -29,20 +29,23 @@ import DoctorForgotPassword from "../pages/Doctors/DoctorForgotPassword";
 import DoctorResetPassword from "../pages/Doctors/DoctorResetPassword";
 import VideoCallRoom from "../pages/Admin/VideoCallRoom";
 import Appointments from "../pages/Doctors/Appointments";
-
+import BookingDetails from "../pages/BookingDetails";
+import DoctorVideoCallRoom from "../pages/Doctors/DoctorVideoCallRoom";
+import UserVideoCallRoom from "../pages/UserVideoCallRoom";
+import DoctorChat from "../pages/Doctors/DoctorChat";
 
 const Routers = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="users/home" element={<ProtectedRoute allowedRoles={["patient"]}><Home /></ProtectedRoute>} />
-      <Route path='/users' element={<Home />} />
-      <Route path="/users/doctors" element={<ProtectedRoute allowedRoles={["patient"]}><Doctors /></ProtectedRoute>} />
+      <Route path="/users/home"element={ <ProtectedRoute allowedRoles={["patient"]}><Home /></ProtectedRoute> }/>  
+      {/* <Route path="/users/home" element={<Home />} /> */}
+      <Route path="/users/doctors"element={ <ProtectedRoute allowedRoles={["patient"]}><Doctors /></ProtectedRoute>}/>
       <Route path="/doctors/:id" element={<DoctorDetails />} />
       <Route path="users/login" element={<Login />} />
       <Route path="/register" element={<Signup />} />
       <Route path="/contact" element={<Contact />} />
-      <Route path="/services" element={<ProtectedRoute allowedRoles={["patient"]}><Services /></ProtectedRoute>} />
+      <Route path="/services"element={ <ProtectedRoute allowedRoles={["patient"]}> <Services /></ProtectedRoute>}/>
       <Route
         path="/userProfile"
         element={
@@ -51,23 +54,33 @@ const Routers = () => {
           </ProtectedRoute>
         }
       />
-    <Route path="/users/doctorDetails/:id" element={<DoctorDetails />} />
-      <Route path="/verify-otp" element={<UserOtpPage />}  />
-      <Route path="/forgot-password" element={<UserForgotPassword/>} />
+      <Route path="/users/doctorDetails/:id" element={<DoctorDetails />} />
+      <Route path="/verify-otp" element={<UserOtpPage />} />
+      <Route path="/forgot-password" element={<UserForgotPassword />} />
       <Route path="/reset-password" element={<UserResetPassword />} />
       <Route path="/users/paymentSuccess" element={<PaymentSuccess />} />
       <Route path="/users/paymentFailed" element={<PaymentFailed />} />
+      <Route path="/users/BookingDetails/:id" element={<BookingDetails />} />
+      <Route path="/users/room/:roomId" element={<UserVideoCallRoom />} />
 
-
-      /** Doctor Routes */
+      {/*============================Doctor Routes=========================================*/}
       <Route path="/doctors/doctorSignup" element={<DoctorSignUp />} />
       <Route path="doctors/doctorOtp" element={<DoctorOtp />} />
       <Route path="doctors/login" element={<DoctorLogin />} />
-      <Route path="doctors/forgot-password" element={<DoctorForgotPassword />} />
+      <Route
+        path="doctors/forgot-password"
+        element={<DoctorForgotPassword />}
+      />
       <Route path="doctors/reset-password" element={<DoctorResetPassword />} />
-      <Route path="doctors/home" element={<ProtectedDoctorRoute allowedRoles={["doctor"]}><Home /></ProtectedDoctorRoute>} />
-      <Route path="/doctors/appointments" element={<Appointments />} />
-    
+      <Route
+        path="doctors/home"
+        element={
+          <ProtectedDoctorRoute allowedRoles={["doctor"]}>
+            <Home />
+          </ProtectedDoctorRoute>
+        }
+      />
+      <Route path="/doctors/appointments" element={<ProtectedDoctorRoute allowedRoles={["doctor"]}><Appointments /></ProtectedDoctorRoute>} />
       <Route
         path="/doctors/doctorProfile"
         element={
@@ -76,13 +89,36 @@ const Routers = () => {
           </ProtectedDoctorRoute>
         }
       />
-      /***** Admin Routes***/
-      <Route path="/admin/home" element={<ProtectedAdmin allowedTypes={["admin"]}><AdminHome/></ProtectedAdmin>} />
+      <Route path="/doctors/room/:roomId" element={<DoctorVideoCallRoom />} />
+      <Route path="/doctors/chats" element={<ProtectedDoctorRoute allowedRoles={["doctor"]}><DoctorChat /></ProtectedDoctorRoute>} />
+      {/*============================Admin Routes=========================================*/}
+      <Route
+        path="/admin/home"
+        element={
+          <ProtectedAdmin allowedTypes={["admin"]}>
+            <AdminHome />
+          </ProtectedAdmin>
+        }
+      />
       <Route path="/admin/login" element={<AdminLogin />} />
-      <Route path="/admin/users" element={<ProtectedAdmin allowedTypes={["admin"]}><AdminUsers /></ProtectedAdmin>} />
-      <Route path="/admin/doctors" element={<ProtectedAdmin allowedTypes={["admin"]}><AdminDoctors /></ProtectedAdmin>} />
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedAdmin allowedTypes={["admin"]}>
+            <AdminUsers />
+          </ProtectedAdmin>
+        }
+      />
+      <Route
+        path="/admin/doctors"
+        element={
+          <ProtectedAdmin allowedTypes={["admin"]}>
+            <AdminDoctors />
+          </ProtectedAdmin>
+        }
+      />
       <Route path="/admin/bookings" element={<CarouselDefault />} />
-      <Route path='/admin/room/:roomId' element={<VideoCallRoom />} />
+      <Route path="/admin/room/:roomId" element={<VideoCallRoom />} />
     </Routes>
   );
 };

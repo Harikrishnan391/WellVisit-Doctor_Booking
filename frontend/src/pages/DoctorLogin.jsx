@@ -8,14 +8,17 @@ import { setDoctorCredentials } from "../slices/doctorAuthSlice.js";
 import { PacmanLoader } from "react-spinners";
 
 const DoctorLogin = () => {
+  //State variables for Validation
+  const [errors, setErrors] = useState({});
+  const [isValid, setIsvalid] = useState(false);
   const navigate = useNavigate();
   const doctor = localStorage.getItem("doctorInfo");
 
-  // useEffect(() => {
-  //   if (doctor) {
-  //     navigate("/doctors/home");
-  //   }
-  // });
+  useEffect(() => {
+    if (doctor) {
+      navigate("/doctors/home");
+    }
+  });
 
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
@@ -29,8 +32,44 @@ const DoctorLogin = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    const errors = {};
+    //validate email
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    if (!formData.email.match(emailRegex)) {
+      errors.email = "Invalid email address";
+    } else {
+      delete errors.email;
+    }
+
+    //validate Password
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+    if (!formData.password.match(passwordRegex)) {
+      errors.password =
+        "Password must contain atleast one uppercase letter ,one lowercase letter ,one number ,one special character,and be atleast 6 character long";
+    } else {
+      delete errors.password;
+    }
+
+    //validate type
+
+    if (!formData.role) {
+      errors.role = "Please select your type(Doctor/Patient)";
+    } else {
+      delete errors.role;
+    }
+
+    setErrors(errors);
+    setIsvalid(Object.keys(errors).length === 0);
+  };
+
   const submitHandler = async (event) => {
     event.preventDefault();
+    validateForm();
+    if (!isValid) {
+      return;
+    }
 
     setLoading(true);
 
@@ -80,107 +119,6 @@ const DoctorLogin = () => {
 
   return (
     <>
-      {/* <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            className="mx-auto h-10 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            alt="Your Company"
-          />
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Sign in
-          </h2>
-        </div>
-
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form onSubmit={submitHandler}>
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Email address
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={FormData.email}
-                  onChange={handleInputChange}
-                  required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Password
-                </label>
-                <div className="text-sm">
-                  <a
-                    href="#"
-                    className="font-semibold text-indigo-600 hover:text-indigo-500"
-                  >
-                    Forgot password?
-                  </a>
-                </div>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  onChange={handleInputChange}
-                  required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-            <div className="mt-4">
-              <div className="flex items-center gap-4">
-                <label className="mr-4 text-sm text-slate-500">I am a:</label>
-                <label>
-                  <input
-                    type="radio"
-                    value="doctor"
-                    name="role"
-                    checked={formData.role === "doctor"}
-                    onChange={handleInputChange}
-                  />
-                  Doctor
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    value="patient"
-                    name="role"
-                    checked={formData.role === "patient"}
-                    onChange={handleInputChange}
-                  />
-                  Patient
-                </label>
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Sign in
-              </button>
-            </div>
-          </form>
-
-          <p className="mt-10 text-center text-sm text-gray-500"></p>
-        </div>
-      </div>    */}
-
       <div className="flex items-center min-h-screen p-4 bg-gray-100 lg:justify-center">
         <div className="flex flex-col overflow-hidden bg-white rounded-md shadow-lg max md:flex-row md:flex-1 lg:max-w-screen-md">
           <div className="p-4 py-6 text-white bg-blue-500 md:w-80 md:flex-shrink-0 md:flex md:flex-col md:items-center md:justify-evenly">
@@ -188,23 +126,12 @@ const DoctorLogin = () => {
               <a href="#">Well Visit</a>
             </div>
             <p className="mt-6 font-normal text-center text-gray-300 md:mt-0">
-              With the power of K-WD, you can now focus only on functionaries
-              for your digital products, while leaving the UI design on us!
+              "Healing starts with a click. Schedule today for better health."
             </p>
             <p className="flex flex-col items-center justify-center mt-10 text-center">
               <span>Don't have an account?</span>
               <a href="#" className="underline">
                 Get Started!
-              </a>
-            </p>
-            <p className="mt-6 text-sm text-center text-gray-300">
-              Read our{" "}
-              <a href="#" className="underline">
-                terms
-              </a>{" "}
-              and{" "}
-              <a href="#" className="underline">
-                conditions
               </a>
             </p>
           </div>
@@ -228,8 +155,13 @@ const DoctorLogin = () => {
                   onChange={handleInputChange}
                   required
                   autofocus=""
-                  className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
+                  className={`px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200 ${
+                    errors.email ? "border-red-500" : ""
+                  }`}
                 />
+                {errors.email && (
+                  <div className="text-sm text-red-500">{errors.email}</div>
+                )}
               </div>
               <div className="flex flex-col space-y-1">
                 <div className="flex items-center justify-between">
@@ -252,8 +184,13 @@ const DoctorLogin = () => {
                   type="password"
                   onChange={handleInputChange}
                   required
-                  className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
+                  className={`px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200 ${
+                    errors.password ? "border-red-500" : ""
+                  }`}
                 />
+                {errors.password && (
+                  <div className="text-sm text-red-500">{errors.password}</div>
+                )}
               </div>
 
               <div className="mt-4">
@@ -280,6 +217,9 @@ const DoctorLogin = () => {
                     Patient
                   </label>
                 </div>
+                {errors.role && (
+                  <div className="text-sm text-red-500">{errors.role}</div>
+                )}
               </div>
 
               <div>
@@ -287,7 +227,11 @@ const DoctorLogin = () => {
                   type="submit"
                   className="w-full px-4 py-2 text-lg font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
                 >
-                  {loading ? <PacmanLoader color="#36D7B7" size={15} margin={2} /> : "Login"}
+                  {loading ? (
+                    <PacmanLoader color="#36D7B7" size={15} margin={2} />
+                  ) : (
+                    "Login"
+                  )}
                 </button>
               </div>
               <div className="flex flex-col space-y-5">
@@ -298,7 +242,7 @@ const DoctorLogin = () => {
                   </span>
                   <span className="h-px bg-gray-400 w-14" />
                 </span>
-                <div className="flex flex-col space-y-4">
+                {/* <div className="flex flex-col space-y-4">
                   <a
                     href="#"
                     className="flex items-center justify-center px-4 py-2 space-x-2 transition-colors duration-300 border border-gray-800 rounded-md group hover:bg-gray-800 focus:outline-none"
@@ -338,7 +282,7 @@ const DoctorLogin = () => {
                       Twitter
                     </span>
                   </a>
-                </div>
+                </div>. */}
               </div>
             </form>
           </div>

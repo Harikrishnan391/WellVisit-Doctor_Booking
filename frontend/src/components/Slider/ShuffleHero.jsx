@@ -9,14 +9,14 @@ const ShuffleHero = () => {
           Better every day
         </span>
         <h3 className="text-4xl md:text-6xl font-semibold">
-          Let's change it up a bit
+        "Healing starts with a click. Schedule today for better health."
         </h3>
         <p className="text-base md:text-lg text-slate-700 my-4 md:my-6">
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nam nobis in
           error repellat voluptatibus ad.
         </p>
         <button className="bg-indigo-500 text-white font-medium py-2 px-4 rounded transition-all hover:bg-indigo-600 active:scale-95">
-          Find a class
+          Request Appointment
         </button>
       </div>
       <ShuffleGrid />

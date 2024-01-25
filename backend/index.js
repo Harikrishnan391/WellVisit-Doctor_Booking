@@ -11,6 +11,7 @@ import reviewRoute from "./Routes/review.js";
 import adminRoute from "./Routes/admin.js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import { Server } from "socket.io";
 
 dotenv.config();
 
@@ -23,14 +24,12 @@ app.use(cookieParser());
 
 const port = process.env.PORT || 8000;
 
-app.use(express.static(path.join(__dirname,"public")));
-
+app.use(express.static(path.join(__dirname, "public")));
 
 const corsOptions = {
   origin: true,
-  credentials:true
+  credentials: true,
 };
-
 
 app.get("/", (req, res) => {
   res.send("its working");
@@ -54,7 +53,67 @@ app.use("/api/v1/users", userRoute);
 app.use("/api/v1/doctors", DoctorRoute);
 app.use("/api/v1/reviews", reviewRoute);
 app.use("/api/v1/admin", adminRoute);
-app.listen(port, () => {
-  connectDB();
-  console.log("Server is running on port", port);
+
+const server = app.listen(port, () => {
+  try {
+    connectDB();
+    console.log("Server is running on port", port);
+  } catch (error) {
+    console.log(error);
+  }
 });
+
+const io = new Server(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: "http://localhost:5173",
+
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("connected with socket io", socket.id);
+
+  socket.on("setup", (user) => {
+    socket.join(user);
+    console.log(user, "userId");
+    socket.emit("connected");
+  });
+
+  socket.on("join_chat", (room) => {
+    socket.join(room);
+    console.log("user joined in the room", room);
+  });
+
+
+  socket.on("new Message",(newMessageRecived)=>{
+
+    console.log("newMessageRecevied",newMessageRecived)
+
+    var chat=newMessageRecived.room
+
+    if(!chat.user||!chat.doctor){
+      return console.log("chat.users  not defined  ")
+
+    }
+
+    socket.in(chat._id).emit("message recieved",newMessageRecived)
+
+    
+    if(chat.user._id ===newMessageRecived.sender._id){
+      socket.to(chat._id).emit("message recevied",newMessageRecived)
+    }
+
+    if(chat.doctor._id ===newMessageRecived.sender._id){
+      socket.to(chat._id).emit("message recevied",newMessageRecived)
+    }
+  })
+
+  socket.off("setup",()=>{
+    console.log("User Disconnected")
+    socket.leave(user)
+  })
+});
+
+

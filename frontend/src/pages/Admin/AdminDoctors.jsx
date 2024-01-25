@@ -5,7 +5,7 @@ import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
 import { RxDotFilled } from "react-icons/rx";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import Swal from "sweetalert2";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import Pagination from "../../components/pagination/Pagination";
 import { FcVideoCall } from "react-icons/fc";
 
@@ -22,7 +22,7 @@ const AdminDoctors = () => {
   console.log(postPerPage, "post per page");
 
   console.log(certificate, "state Certificate");
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const modalHandler = (certificate) => {
     setCarosal(true);
     const slides = certificate?.map((certificate) => ({
@@ -179,18 +179,18 @@ const AdminDoctors = () => {
     }
   };
 
-  const createRoom=async()=>{
-    const {value:roomId}=await Swal.fire({
-      title:"Create a Room",
-      text:"Enter a Room Id",
-      input:"text",
-      showCancelButton:true,
-      confirmButtonText:"Create"
-    })
-    if(roomId){
-      navigate(`/admin/room/${roomId}`)
+  const createRoom = async () => {
+    const { value: roomId } = await Swal.fire({
+      title: "Create a Room",
+      text: "Enter a Room Id",
+      input: "text",
+      showCancelButton: true,
+      confirmButtonText: "Create",
+    });
+    if (roomId) {
+      navigate(`/admin/room/${roomId}`);
     }
-  }
+  };
 
   const approveVideoCall = async (docId, status) => {
     try {
@@ -205,10 +205,9 @@ const AdminDoctors = () => {
       );
 
       let result = res.json();
-      console.log(result,"result")
-
+      console.log(result, "result");
     } catch (error) {
-      console.log(error,"error")
+      console.log(error, "error");
     }
   };
 
@@ -234,9 +233,6 @@ const AdminDoctors = () => {
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Specialization
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  video call
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Certificate
@@ -265,7 +261,7 @@ const AdminDoctors = () => {
                     <td className="px-6 py-4">{doctor.name}</td>
                     <td className="px-6 py-4">{doctor.email}</td>
                     <td className="px-6 py-4">{doctor.specialization}</td>
-
+                    {/* 
                     <td className="pl-12 cursor-pointer text-[26px] py-4">
                       <FcVideoCall onClick={()=>createRoom()} />
                       <div className="flex items-center mt-2">
@@ -285,8 +281,8 @@ const AdminDoctors = () => {
                           Fail
                         </button>
                       </div>
-                    </td>
-                    <td className="px-6 py-4">
+                    </td> */}
+                    {/* <td className="px-6 py-4">
                       <a
                         className="flex justify-center hover:text-blue-700 hover:font-medium cursor-pointer mb-2 font-semibold"
                         onClick={() => modalHandler(doctor.certificate)}
@@ -299,7 +295,7 @@ const AdminDoctors = () => {
                           doctor.certificateApprove ? "bg-green-500" : ""
                         }`}
                       >
-                        Pass
+                      Approve
                       </button>
 
                       <button
@@ -308,8 +304,37 @@ const AdminDoctors = () => {
                           !doctor.certificateApprove ? "bg-red-500" : ""
                         }`}
                       >
-                        Fail
+                      Reject
                       </button>
+                    </td> */}
+                    <td className="px-6 py-4">
+                      <div className="flex justify-center mb-2 font-semibold">
+                        <a
+                          className="hover:text-blue-700 hover:font-medium cursor-pointer"
+                          onClick={() => modalHandler(doctor.certificate)}
+                        >
+                          View
+                        </a>
+                      </div>
+                      <div className="flex">
+                        <button
+                          onClick={() => approveCertificate(doctor._id, true)}
+                          className={`bg-gray-500 p-1 rounded-lg text-[12px] text-white mr-2 hover:bg-green-500 ${
+                            doctor.certificateApprove ? "bg-green-500" : ""
+                          }`}
+                        >
+                          Approve
+                        </button>
+
+                        <button
+                          onClick={() => approveCertificate(doctor._id, false)}
+                          className={`bg-gray-500 p-1 rounded-lg text-[12px] text-white hover:bg-red-500${
+                            !doctor.certificateApprove ? " bg-red-500" : ""
+                          }`}
+                        >
+                          Reject
+                        </button>
+                      </div>
                     </td>
 
                     <td className="px-6 py-4 text-center">

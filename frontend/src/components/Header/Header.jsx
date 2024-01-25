@@ -1,4 +1,4 @@
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useRef, useContext, useState } from "react";
 import logo2 from "../../assets/images/logo5.png";
 import userImg from "../../assets/images/avatar-icon.png";
 import { NavLink, Link } from "react-router-dom";
@@ -33,7 +33,14 @@ const Header = () => {
   const menuRef = useRef(null);
   // const { user, role, token } = useContext(authContext);
 
-  const user = JSON.parse(localStorage.getItem("PatientInfo"));
+  // const user = JSON.parse(localStorage.getItem("PatientInfo"));
+  const [user, setUser] = useState(() => {
+    const storedUser = JSON.parse(localStorage.getItem("PatientInfo"));
+    return storedUser || {};
+  });
+
+  // const { role, token } = user;
+
   const role = user?.role;
   const token = user?.token;
   const path = role === "patient" ? userPath : doctorPath;
@@ -62,6 +69,11 @@ const Header = () => {
   const handleLogout = () => {
     dispatch(logoutPatient());
   };
+
+  // useEffect(() => {
+  //   const storedUser = JSON.parse(localStorage.getItem("PatientInfo"));
+  //   setUser(storedUser || {});
+  // }, [token]); // Update the user state when the token changes
 
   return (
     <header className="header flex items-center" ref={headerRef}>

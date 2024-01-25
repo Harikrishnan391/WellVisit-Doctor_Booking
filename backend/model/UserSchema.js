@@ -19,6 +19,10 @@ const UserSchema = new mongoose.Schema({
   isBlocked: { type: Boolean, default: false },
   appointments: [{ type: mongoose.Types.ObjectId, ref: "Appointment" }],
   verificationCode: { type: String },
+  VideoCallApprove: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export default mongoose.model("User", UserSchema);

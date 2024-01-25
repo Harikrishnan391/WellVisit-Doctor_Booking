@@ -8,10 +8,8 @@ const apiInstance=axios.create({
 apiInstance.interceptors.request.use(
 
     (config)=>{
-        console.log(config,"configurationnn")
         return config
-
-        
+    
     },
     (error)=>{
         return Promise.reject(error)

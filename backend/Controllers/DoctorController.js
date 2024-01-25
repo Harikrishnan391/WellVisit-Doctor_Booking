@@ -5,6 +5,7 @@ import generateOTP from "../utils/generateOtp.js";
 import generateMail from "../utils/generateMail.js";
 import Booking from "../model/bookingSchema.js";
 import bookingSchema from "../model/bookingSchema.js";
+import User from "../model/UserSchema.js";
 
 export const DoctorForgotPassword = async (req, res) => {
   try {
@@ -153,9 +154,26 @@ export const changeDoctorPassword = async (req, res) => {
 };
 
 export const updateDoctor = async (req, res) => {
-  console.log("hereeeeeeee");
+  console.log(req.files, "req.body");
+  
   const id = req.params.id;
-  const updateData = { ...req.body };
+  const photo=req.files?.photo?.[0].filename
+  let certificate=[]
+  const certificateFiles=req.files?.certificate
+
+  if(certificateFiles?.length>0){
+    for(let i=0;i<certificateFiles.length;i++){
+      certificate.push(certificateFiles[i].filename)
+    }
+  }else{
+
+    const exisitingDoctor =await Doctor.findById(id)
+    certificate =exisitingDoctor.certificate
+  }
+ 
+  const updateData = { ...req.body,photo,certificate };
+
+  // console.log(updateData, "from updateDoctor");
 
   try {
     const updateDoctor = await Doctor.findByIdAndUpdate(
@@ -163,7 +181,6 @@ export const updateDoctor = async (req, res) => {
       { $set: updateData },
       { new: true }
     );
-
     res.status(200).json({
       status: true,
       message: "Successfully Updated",
@@ -171,7 +188,7 @@ export const updateDoctor = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ status: false, message: "Failed to update" });
-  }
+   }
 };
 
 export const deleteDoctor = async (req, res) => {
@@ -413,17 +430,16 @@ export const getAppointments = async (req, res) => {
       {
         "patient.name": 1,
         "patient.photo": 1,
+        "patient._id": 1,
         IndianDate: 1,
         slot: 1,
         isCancelled: 1,
       }
     ).sort({ AppointmentDate: -1 });
-    console.log(bookings,"myBookings")
 
     if (bookings.length === 0) {
       throw new Error("Oops! you did't have any appointments yet");
     }
-
     res.status(200).json({
       success: true,
       message: "Appointments are getting",
@@ -441,30 +457,55 @@ export const getAppointments = async (req, res) => {
   }
 };
 
-/////getMyAppointments/////
+//// Approve VideoCall /////
+
+export const approveVideoCall = async (req, res) => {
+  const PatientId = req.params.id;
+  console.log(PatientId, "from approveVideoCall");
+  const status = req.query.status;
+  console.log(status, "status");
+
+  try {
+    const changeStatus = await User.findByIdAndUpdate(
+      PatientId,
+      { $set: { VideoCallApprove: status } },
+      { new: true }
+    );
+
+    console.log(changeStatus, "status Changes");
+
+    if (!changeStatus) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const doctor = await Doctor.findOne();
+    res.status(200).json({ status: true, message: "User status changed" });
+  } catch (error) {
+    res.status(500).json({ status: false, message: "Change status failed " });
+  }
+};
+
+////////Cancell Appointment /////////
+
+export const CancellAppointment = async (req, res) => {
+  const bookingId = req.params.id;
+  let booking = await Booking.findById(bookingId);
+  console.log(booking, "Booking");
+  try {
+    const cancel = await Booking.findByIdAndUpdate(
+      bookingId,
+      { $set: { isCancelled: true } },
+      { new: true }
+    );
+
+    if (!cancel) {
+      return res.status(404).json({ message: "Booking Not found" });
+    }
+    res.status(200).json({ success: true, message: "AppointmentCancelled " });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: true, message: "Booking cancellation failed" });
+  }
+};
 
 
-
-/**
- * 
- *  // const {email,passoword}=req.body
-  // console.log(req.body,"req.body")
-  // const doctor=await Doctor.findOne({email})
-  // const salt=await bcrypt.hash(passoword,salt)
-
-  // if(doctor){
-
-  //   doctor.password=hashPassword
-  //   await doctor.save()
-
-  //   res.status(200).json({
-  //   _id:doctor._id,
-  //     name:doctor.name,
-  //     email:doctor.email
-  //   })
-  // }else{
-
-  //   res.status(404).json({success:true,message:"Cant able to reset Password"})
-
-  // }
- */

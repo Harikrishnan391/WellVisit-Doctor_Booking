@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { setPatientCredentials } from "../slices/patientAuthSlice.js";
 import HashLoader from "react-spinners/HashLoader.js";
 import { setDoctorCredentials } from "../slices/doctorAuthSlice.js";
+import OAuth from "../components/GoogleAuth/OAuth.jsx"
 
 const Login = () => {
   const navigate = useNavigate();
@@ -198,6 +199,7 @@ console.log(user)
             >
               {loading ? <HashLoader size={25} color="#fff" /> : " Login"}
             </button>
+            <OAuth />
 
             <p className="mt-5 text-textColor text-center">
               Don&apos;t have an Account?

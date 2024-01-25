@@ -1,7 +1,7 @@
 import User from "../model/UserSchema.js";
 import Doctor from "../model/DoctorSchema.js";
 import generateOTP from "../utils/generateOtp.js";
-import Booking from "../model/bookingSchema.js"
+import Booking from "../model/bookingSchema.js";
 import generateMail from "../utils/generateMail.js";
 import bcrypt from "bcryptjs";
 import generatePatientToken from "../jwt/patient/patientjwt.js";
@@ -10,12 +10,10 @@ import bookingSchema from "../model/bookingSchema.js";
 
 export const updateUser = async (req, res) => {
   const id = req.userId;
-  const { name, email, number, role, gender, bloodType,address } =
-    req.body;
-console.log(req.body,"req.body")
-const pic = req.file?.filename;
-console.log(pic,"picture")
-
+  const { name, email, number, role, gender, bloodType, address } = req.body;
+  console.log(req.body, "req.body");
+  const pic = req.file?.filename;
+  console.log(pic, "picture");
 
   const updateData = {
     name,
@@ -25,8 +23,7 @@ console.log(pic,"picture")
     gender,
     bloodType,
     address,
-    photo:pic
-
+    photo: pic,
   };
   try {
     const updateUser = await User.findByIdAndUpdate(
@@ -252,36 +249,62 @@ export const getUserProfile = async (req, res) => {
 };
 
 export const getMyAppointments = async (req, res) => {
-  const userId=req.userId
- 
-  try {
+  const userId = req.userId;
 
-    const booking=await Booking.find(
-      {"patient._id":userId},
+  try {
+    const booking = await Booking.find(
+      { "patient._id": userId },
 
       {
-        "doctor.name":1,
-        "doctor.specialization":1,
-        "doctor.photo":1,
-        indianDate:1,
-        slot:1,
-        isCancelled:1,
-        cancelReason:1
+        "doctor.name": 1,
+        "doctor.specialization": 1,
+        "doctor.photo": 1,
+        IndianDate: 1,
+        slot: 1,
+        isCancelled: 1,
+        cancelReason: 1,
       }
-    ).sort({createdAt:-1})
+    ).sort({ createdAt: -1 });
 
-    if(booking.length ===0){
-      throw new Error("Oops ! you did't have any appointments yet!")
+    if (booking.length === 0) {
+      throw new Error("Oops ! you did't have any appointments yet!");
     }
 
     res.status(200).json({
-      success:true,
-      message:"Appointments are getting",
-      data:booking
-    })
-    
+      success: true,
+      message: "Appointments are getting",
+      data: booking,
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: "Something went wrong" });
+  }
+};
+
+//// getAppointmentsDetails///////
+
+export const getMyAppointmentDetails = async (req, res) => {
+  const bookingId = req.params.id;
+  console.log(bookingId, "bookingId");
+  try {
+    const bookings = await Booking.findById(bookingId);
+
+    if (!bookings) {
+      throw new Error("Oops ! you did't have any such appoitments !");
+    }
+    console.log(bookings);
+    res.status(200).json({
+      success: true,
+      message: "Appointments are getting",
+      data: bookings,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error.message
+        ? error.message
+        : "Something Went Wrong ,cannot get appointments",
+    });
   }
 };
 
@@ -374,5 +397,80 @@ export const filterDoctor = async (req, res) => {
   } catch (error) {
     console.error("Error in filter by Price", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+/////Make VideoCall//////
+export const MakeVideoCall = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findById(userId);
+
+    if (!user.VideoCallApprove) {
+      throw new Error("You are not approved for this Facility");
+    } else {
+      res.status(200).json({ message: "Video Call " });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ error: error.message });
+  }
+};
+
+////google Authentication //////
+
+export const googleAuth = async (req, res) => {
+  console.log("hariii");
+
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    console.log(user, "user");
+    if (user) {
+      const token = generatePatientToken(user._id, res);
+
+      const { password: hashedPassword, ...rest } = user._doc;
+      console.log(hashedPassword, "password");
+      const expiryDate = new Date(Date.now() + 3600000);
+      console.log(expiryDate, "expiryDate");
+
+      res
+        .cookie("jwt", token, {
+          httpOnly: true,
+          expires: expiryDate,
+        })
+        .status(200)
+        .json({...rest,token:token});
+    } else {
+      const generatePassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      console.log(generatePassword, "generatePassword");
+      const hashedPassword = bcrypt.hashSync(generatePassword, 10);
+      const newUser = new User({
+        name:
+          req.body.name.split("").join("").toLowerCase() +
+          Math.floor(Math.random * 10000).toString(),
+        email: req.body.email,
+        password: hashedPassword,
+        profilephoto: req.body.photo,
+      });
+
+      await newUser.save();
+      const token = jwt.sign(
+        { _id: newUser._id },
+        process.env.PATIENT_JWT_SECRET_KEY
+      );
+      const { password: hashedPassword2, ...rest } = newUser._doc;
+      const expiryDate = new Date(Date.now() + 3600000);
+      res
+        .cookie("access_token", token, {
+          httpOnly: true,
+          expires: expiryDate,
+        })
+        .status(200)
+        .json(rest);
+    }
+  } catch (error) {
+    console.log(error);
   }
 };

@@ -326,7 +326,7 @@ const Doctors = () => {
       <section>
         <div className="container">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5  lg:grid-cols-4">
-            <DoctorsList data={currentPosts} />
+            <DoctorsLidrst data={currentPosts} />
           </div>
         </div>
       </section>
@@ -351,16 +351,3 @@ const Doctors = () => {
 
 export default Doctors;
 
-// <div className="flex items-center  justify-end   space-x-4 ml-auto">
-//           <span className="text-sm">Sort:</span>
-//           {/* Add your sorting dropdowns or buttons here */}
-//           <select
-//             className="border py-2 px-4 rounded focus:outline-none"
-//             onChange={handleSortOptionChange}
-//             value={sortOption}
-//           >
-//             {/* Add sorting options as needed */}
-//             <option value="name">Name</option>
-//             {/* Add more options if required */}
-//           </select>
-//         </div>

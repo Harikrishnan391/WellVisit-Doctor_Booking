@@ -56,6 +56,7 @@ const DoctorSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  about: { type: String },
 
   isBlocked: {
     type: Boolean,

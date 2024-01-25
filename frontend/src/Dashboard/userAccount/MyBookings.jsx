@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { doctorPath } from "../../config";
 import Swal from "sweetalert2";
 import starIcon from "../../assets/images/Star.png";
+import { LiaCertificateSolid } from "react-icons/lia";
 const MyBookings = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage, setPostPerPage] = useState(6);
@@ -16,11 +17,26 @@ const MyBookings = () => {
     data: appointments,
     loading,
     error,
+    refetch
   } = userFetchData(`${BASE_URL}/users/getMyAppointments`);
+
+  const handleCancel=async(id)=>{
+    const confirmResutl=await Swal.fire({
+      title:"Are you Sure",
+      text:"you won't be able to revert this!",
+      icon:"warning",
+      showCancelButton:true,
+      confirmButtonColor:"#3085d6",
+      cancelButtonColor:"#d33",
+      confirmButtonText:"Yes cancel it!",
+      cancelButtonText:"No"
+    })
+  }
 
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
   const currentPosts = appointments.slice(firstPostIndex, lastPostIndex);
+  console.log(currentPosts,"currentPost")
   return (
     <>
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 mt-8 w-[750px] ">
@@ -53,12 +69,14 @@ const MyBookings = () => {
               <Link to={`/users/bookingDetails/${el._id}`} key={el._id}>
                 <div>
                   <div>
+                    
                     <img
-                      src={`${doctorPath}${el.doctor.photo}`}
+                      src={el.doctor.photo?`${doctorPath}${el.doctor.photo}`:starIcon}
                       alt=""
                       className="w-full"
                     />
                   </div>
+                
                   <h3 className="text-[18px] leading-[30px] lg:text-[20px] text-headingColor font-[700] mt-3 p-2">
                     Dr. {el.doctor.name}
                   </h3>
@@ -69,11 +87,12 @@ const MyBookings = () => {
                     </span>
                     <div className="flex items-center justify-end">
                       <span className="flex items-center gap-[1px] text-[12px] leading-6 lg:text-[15px] lg:leading-7 font-semibold text-headingColor">
-                        <img src={starIcon} className="w-5" alt="" />
-                        4.3
+                        {/* <img src={starIcon} className="w-5" alt="" /> */}
+                        <LiaCertificateSolid className="w-12 h-8 bg-yellowColor" />
+                          {el.doctor.degree}
                       </span>
                       <span className="text-[10px] ml-7 leading-6 lg:text-[12px] lg:leading-7 font-[400] text-headingColor">
-                        (282)
+                        {/* (282) */}
                       </span>
                     </div>
 
@@ -81,7 +100,7 @@ const MyBookings = () => {
                   </div>
                   <div className="flex justify-around">
                     <h3 className="text-[10px] mt-0 leading-7 lg:text-[13px] font-semibold text-headingColor p-2">
-                      {el.indianDate}
+                      {el.IndianDate}
                     </h3>
                     <h3 className="text-[10px] mt-0 leading-7 lg:text-[13px] font-semibold text-headingColor p-2">
                       {el.slot}

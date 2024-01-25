@@ -6,7 +6,6 @@ import Doctor from "../model/DoctorSchema.js";
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(password, "password ");
     const admin = await Admin.findOne({ email });
 
     if (!admin) {
@@ -107,9 +106,7 @@ export const approveCertificate = async (req, res) => {
 
 export const approveVideoCall = async (req, res) => {
   const docId = req.params.id;
-  console.log(docId, "from approveVideoCall");
   const status = req.query.status;
-
   try {
     const changeStatus = await Doctor.findByIdAndUpdate(
       docId,

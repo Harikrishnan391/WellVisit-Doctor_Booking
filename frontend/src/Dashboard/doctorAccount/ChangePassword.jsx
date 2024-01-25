@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { PacmanLoader } from "react-spinners";
 import { BASE_URL } from "../../config";
-import {toast}from "react-toastify"
+import { toast } from "react-toastify";
 import { logoutDoctor } from "../../slices/doctorAuthSlice.js";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -21,6 +20,16 @@ const ChangePassword = () => {
     newPassword,
     confirmPassword,
     email: user.email,
+  };
+
+  const clearFields = () => {
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+  };
+
+  const discardChanges = () => {
+    clearFields();
   };
 
   const dispatch = useDispatch();
@@ -64,11 +73,11 @@ const ChangePassword = () => {
       <div className="bg-gray-100 flex items-center ml-12 justify-center h-screen">
         <div className="bg-white p-8 py-12 rounded-lg mb-12 shadow-lg max-w-sm w-full mt-[-100px]">
           <div className="flex items-center space-x-4 mb-6">
-            <img
+            {/* <img
               src="https://unsplash.it/40/40?image=883"
               alt="Lock Icon"
               className="rounded-full"
-            />
+            /> */}
             <h1 className="text-xl font-semibold">Change Password</h1>
           </div>
           <p className="text-sm text-gray-600 mb-6">
@@ -138,7 +147,7 @@ const ChangePassword = () => {
             <div className="flex justify-between">
               <button
                 type="button"
-                onclick="discardChanges()"
+                onClick={discardChanges}
                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring focus:border-blue-300"
               >
                 Discard
@@ -151,7 +160,7 @@ const ChangePassword = () => {
                   <PacmanLoader color="#36D7B7" size={15} margin={2} />
                 ) : (
                   "ResetPassword"
-                )} 
+                )}
               </button>
             </div>
           </form>

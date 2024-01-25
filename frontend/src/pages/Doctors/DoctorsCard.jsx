@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { doctorPath } from "../../config";
 import starIcon from "../../assets/images/Star.png";
-
+import { LiaCertificateSolid } from "react-icons/lia";
 const DoctorsCard = (data) => {
   return (
     <>
@@ -32,11 +32,11 @@ const DoctorsCard = (data) => {
                   </span>
                   <div className="flex items-center ml-3  justify-end">
                     <span className="flex items-center gap-[1px] text-[12px] leading-6 lg:text-[15px] lg:leading-7 font-semibold text-headingColor">
-                      <img src={starIcon} className="w-5" alt="" />
-                      4.3
+                    <LiaCertificateSolid className="w-12 h-8 bg-yellowColor" />
+                    {el.degree}
                     </span>
                     <span className="text-[10px] ml-2 leading-6 lg:text-[12px] lg:leading-7 font-[400] text-headingColor">
-                      (282)
+                      
                     </span>
                   </div>
                 </div>

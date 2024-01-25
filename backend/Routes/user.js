@@ -16,7 +16,17 @@ import {
   getAvailableDates,
   filterDoctor,
   changePassword,
+  getMyAppointmentDetails,
+  MakeVideoCall,
+  googleAuth,
 } from "../Controllers/userController.js";
+
+import {
+  getRoomMessages,
+  getRoom,
+  createRoom,
+  sendChat,
+} from "../Controllers/chatController.js";
 import { authenticate, restrict } from "../auth/verifyToken.js";
 import { getSingleDoctor } from "../Controllers/DoctorController.js";
 import {
@@ -27,11 +37,6 @@ import { saveBookingData } from "../Controllers/BookingController.js";
 import { singleUpload } from "../multer/multer.js";
 
 const router = express.Router();
-
-// router.get("/:id", authenticate, restrict(["patient"]), getSingleUser);
-// router.get("/", authenticate, restrict(["admin"]), getAllUser);
-// router.delete("/:id", authenticate, restrict(["patient"]), deleteUser);
-
 router.put(
   "/updateUser/:id",
   authenticate,
@@ -39,19 +44,13 @@ router.put(
   singleUpload,
   updateUser
 );
-router.get("/userProfile", authenticate, restrict(["patient"]), getUserProfile);
-router.post("/forgot-password", forgotPassword);
-router.route("/reset-password").post(resetPasswordOtpVerify).put(resetPassword);
-router.post("/changePassword", changePassword);
 
-// router.get(
-//   "/appointments/my-appointments",
-//   authenticate,
-//   restrict(["patient"]),
-//   getMyAppointments
-// );
-
-router.get("/getAvailableSlots", getAvailableSlots);
+router.get(
+  "/getAvailableSlots",
+  authenticate,
+  restrict(["patient"]),
+  getAvailableSlots
+);
 router.get("/getSingleDoctor/:id", getSingleDoctor);
 router.get(
   "/getAvailableDates/:id",
@@ -60,8 +59,50 @@ router.get(
   getAvailableDates
 );
 router.post("/makePayment", authenticate, restrict(["patient"]), makepayment);
-router.get("/session-status", sessionStatus);
-router.post("/saveBookingData",saveBookingData)
+router.get(
+  "/session-status",
+  authenticate,
+  restrict(["patient"]),
+  sessionStatus
+);
+router.post(
+  "/saveBookingData",
+  authenticate,
+  restrict(["patient"]),
+  saveBookingData
+);
 router.get("/getDoctors/filter", filterDoctor);
-router.get("/getMyAppointments",authenticate,getMyAppointments)
+router.get("/getMyAppointments", authenticate, getMyAppointments);
+router.get("/getAppointmentsDetails/:id", getMyAppointmentDetails);
+router.get("/makeVideoCall/:id", MakeVideoCall);
+router.post("/google", googleAuth);
+router.get("/userProfile", authenticate, restrict(["patient"]), getUserProfile);
+router.post("/forgot-password", forgotPassword);
+router.route("/reset-password").post(resetPasswordOtpVerify).put(resetPassword);
+router.post("/changePassword", changePassword);
+
+router.get(
+  "/getRoomMessage/:roomId",
+  authenticate,
+  restrict(["patient"]),
+  getRoomMessages
+);
+router.get(
+  "/getRoom/:doctorId/:userId",
+  authenticate,
+  restrict(["patient"]),
+  getRoom
+);
+router.post(
+  "/createRoom/:doctorId/:userId",
+  authenticate,
+  restrict(["patient"]),
+  createRoom
+);
+router.post(
+  "/sendChat/:sender/:roomId/:type/:Id/:senderName",
+  authenticate,
+  restrict(["patient"]),
+  sendChat
+);
 export default router;

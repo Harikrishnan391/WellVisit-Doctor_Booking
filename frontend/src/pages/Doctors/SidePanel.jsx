@@ -58,7 +58,8 @@ const SidePanel = (details) => {
       <div className="flex items-center justify-between py-2">
         <p className="text_para mt-0 font-semibold"> Fees for Consultation:</p>
         <span className="text-[16px]  leading-7 lg:text-[22px] lg:leading-8 text-headingColor font-bold mr-9">
-          {`₹${details.details.fee}`}
+          {/* {`₹${details.details.fee}`} */}
+          {details.details.fee !== undefined ? `₹${details.details.fee}` : 'Not added'}
         </span>
       </div>
       <div className="mt-[30px]">

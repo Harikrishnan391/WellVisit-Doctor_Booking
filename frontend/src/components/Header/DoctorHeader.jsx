@@ -17,6 +17,10 @@ const navlinks = [
     path: "/doctors/appointments",
     display: "Appointments",
   },
+  {
+    path:"/doctors/chats",
+    display:"Chats"
+  },
 ];
 
 const DoctorHeader = () => {
@@ -55,10 +59,9 @@ const DoctorHeader = () => {
 
   const toggleMenu = () => menuref.current.classList.toggle("show_menu");
 
-  const handleLogout=()=>{
-
-    dispatch(logoutDoctor())
-  }
+  const handleLogout = () => {
+    dispatch(logoutDoctor());
+  };
 
   return (
     <header className="header flex items-center" ref={headerRef}>
@@ -105,7 +108,10 @@ const DoctorHeader = () => {
                 </Link>
 
                 <Link to="/doctors/login" className="flex items-center ml-5">
-                  <button onClick={handleLogout} className="bg-primaryColor py-2 px-6 text-white font-[600] h-[37px] flex items-center cursor-pointer justify-center rounded-[50px]">
+                  <button
+                    onClick={handleLogout}
+                    className="bg-primaryColor py-2 px-6 text-white font-[600] h-[37px] flex items-center cursor-pointer justify-center rounded-[50px]"
+                  >
                     Logout
                   </button>
                 </Link>
