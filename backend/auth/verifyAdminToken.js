@@ -14,10 +14,9 @@ export const authenticateAdmin = async (req, res, next) => {
 
   try {
     const token = authToken.split(" ")[1];
-    console.log(token)
+  
 
     const decoded = jwt.verify(token,process.env.ADMIN_JWT_SECRET_KEY);
-    console.log(decoded)
 
     req.userId = decoded.userId;
     req.role = decoded.role;

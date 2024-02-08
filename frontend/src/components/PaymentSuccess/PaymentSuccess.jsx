@@ -1,84 +1,73 @@
 import React from "react";
-import {BASE_URL,token} from "../../config"
+import { BASE_URL, token } from "../../config";
 import { useEffect } from "react";
 
 const PaymentSuccess = () => {
-  
+  useEffect(() => {
+    const queryString = window.location.search;
+    console.log(queryString);
+    const urlParams = new URLSearchParams(queryString);
+    console.log(urlParams, "urlParams");
+    const sessionId = urlParams.get("session_id");
 
-  useEffect(()=>{
+    console.log(sessionId, "sessionId");
 
-    const queryString =window.location.search;
-    console.log(queryString)
-     const urlParams=new URLSearchParams(queryString)
-    console.log(urlParams,"urlParams")
-     const sessionId=urlParams.get("session_id")
-
-     console.log(sessionId,"sessionId")
-
-
-     const  sendPaymentData=async()=>{
-
+    const sendPaymentData = async () => {
       try {
-
-        const res=await fetch(
+        const res = await fetch(
           `${BASE_URL}/users/session-status?session_id=${sessionId}`,
           {
-            method:"get",
-            headers:{
-              Authorization:`Bearer ${token}`
-            }
+            method: "get",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        )
+        );
 
-        let paymentResult=await res.json()
-       
-        if(!res.ok){
-          throw new Error(paymentResult.message)
+        let paymentResult = await res.json();
+
+        if (!res.ok) {
+          throw new Error(paymentResult.message);
         }
 
-        const bookingData=await JSON.parse(
+        const bookingData = await JSON.parse(
           localStorage.getItem("bookingData")
-        )
+        );
 
-        const dataToSave={
-          doctor:bookingData.doctor,
-          patient:bookingData.user,
-          fee:bookingData.doctor.details.fee,
-          paymentStatus:paymentResult.status,
-          appointmentDate:bookingData.date,
-          slot:bookingData.slot,
-          paymentId:paymentResult.paymentId
-        }
+        const dataToSave = {
+          doctor: bookingData.doctor,
+          patient: bookingData.user,
+          fee: bookingData.doctor.details.fee,
+          paymentStatus: paymentResult.status,
+          appointmentDate: bookingData.date,
+          slot: bookingData.slot,
+          paymentId: paymentResult.paymentId,
+        };
 
-
-        const bookingRes=await fetch(`${BASE_URL}/users/saveBookingData`,{
-          method:"post",
-          headers:{
-            Authorization:`Bearer ${token}`,
-            "Content-Type":"application/json"
+        const bookingRes = await fetch(`${BASE_URL}/users/saveBookingData`, {
+          method: "post",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
-          body:JSON.stringify(dataToSave)
-        })
+          body: JSON.stringify(dataToSave),
+        });
 
-        let bookingResult=await bookingRes.json()
+        let bookingResult = await bookingRes.json();
 
-        if(!res.ok){
-          throw new Error(bookingResult.message)
+        if (!res.ok) {
+          throw new Error(bookingResult.message);
         }
       } catch (error) {
-        console.log("error",error)
+        console.log("error", error);
       }
-     }
+    };
 
-     sendPaymentData()
-
-
-  },[])
-
-
+    sendPaymentData();
+  }, []);
 
   return (
-    <div className="bg-gray-100 h-screen">
+    <div className="bg-gray-100  h-full">
       <div className="bg-white p-6  md:mx-auto">
         <svg
           viewBox="0 0 24 24"

@@ -3,11 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
 import BeatLoader from "react-spinners/BeatLoader";
+import uploadImageCloudinary from "../../utils/uploadCloudinary.js";
 
 function DoctorSignup() {
   // const FormDataContext = createContext();
   const [loading, setLoading] = useState(false);
   const [validationError, setValidationError] = useState("");
+  const [previewURL, setPreviewURL] = useState("");
+  const [certificatepreviewURL, setCertificatePreviewURL] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -22,25 +25,39 @@ function DoctorSignup() {
     photo: null,
     certificate: null,
   });
+
+  const Userdata = {
+    name: "hari",
+  };
+
+  console.log(formData, "formData");
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handlePhotoInputChange = (e) => {
+  const handlePhotoInputChange = async (e) => {
     const pic = e.target.files[0];
+    console.log(pic, "picture");
+    const data = await uploadImageCloudinary(pic);
+    console.log(data, "data from the uploadi cloud");
+
+    setPreviewURL(data.url);
     setFormData({
       ...formData,
-      photo: pic,
+      photo: data.url,
     });
   };
 
-  const handleCertificateInputChange = (e) => {
+  const handleCertificateInputChange = async (e) => {
     const certificate = e.target.files[0];
+
+    const data = await uploadImageCloudinary(certificate);
+    setCertificatePreviewURL(data.url);
     setFormData({
       ...formData,
-      certificate: certificate,
+      certificate: data.url,
     });
   };
 
@@ -48,6 +65,7 @@ function DoctorSignup() {
 
   const validateForm = () => {
     const { name, email, number, password, photo, certificate } = formData;
+    console.log(certificate, "certificate");
 
     // Validate name
     if (!/^[a-zA-Z\s]+$/.test(name)) {
@@ -100,8 +118,13 @@ function DoctorSignup() {
       return false;
     }
 
-    // Validate photo and certificate extensions
-    if (photo && !/\.(jpg|jpeg|png)$/.test(photo.name.toLowerCase())) {
+    // // Validate photo and certificate extensions
+
+    if (
+      photo &&
+      typeof photo === "object" &&
+      !/\.(jpg|jpeg|png)$/.test(photo.name.toLowerCase())
+    ) {
       setValidationError(
         "Invalid photo file format. Supported formats: jpg, jpeg, png"
       );
@@ -110,6 +133,7 @@ function DoctorSignup() {
 
     if (
       certificate &&
+      typeof certificate === "object" &&
       !/\.(jpg|jpeg|png)$/.test(certificate.name.toLowerCase())
     ) {
       setValidationError(
@@ -125,10 +149,10 @@ function DoctorSignup() {
   const submitHandler = async (event) => {
     event.preventDefault();
 
-    if (!validateForm()) {
-      toast.error(validationError);
-      return; // Don't proceed with submission if validation fails
-    }
+    // if (!validateForm()) {
+    //   toast.error(validationError);
+    //   return; // Don't proceed with submission if validation fails
+    // }
 
     setLoading(true);
     try {
@@ -141,7 +165,10 @@ function DoctorSignup() {
 
       const res = await fetch(`${BASE_URL}/auth/doctorSendOtp`, {
         method: "post",
-        body: formDataToSend,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
 
       let { message, doctorData } = await res.json();
@@ -170,7 +197,7 @@ function DoctorSignup() {
     }
   };
   return (
-    <form encType="multipart/form-data" onSubmit={submitHandler}>
+    <form onSubmit={submitHandler}>
       <section className="h-screen flex flex-col lg:mt-[-10p5x]  md:flex-row justify-center  md:space-y-0 md:space-x-16 items-center my-2 mx-5 md:mx-0 md:my-0 mb-[6.5rem]">
         <div className="flex justify-center w-full gap-3 px-16 sm:flex-col lg:flex-row">
           <div className="w-1/3">
@@ -290,7 +317,7 @@ function DoctorSignup() {
                 {formData.photo && (
                   <figure className=" w-[60px] h-[60px] rounded-full border-2 border-solid border-primaryColor flex items-center justify-center ">
                     <img
-                      src={URL.createObjectURL(formData.photo)}
+                      src={previewURL}
                       alt=""
                       className="w-full rounded-full"
                     />
@@ -306,9 +333,9 @@ function DoctorSignup() {
                     className="absolute top-0 left-0 h-full opacity-0 cursor-pointer"
                   />
                   <label
-                    htmlFor="certificate"
+                    htmlFor="photo"
                     className="absolute top-0 left-0 w-full h-fullflex items-center px-[0.75rem] py-[0.375rem] text-[15px] leading-6 overflow-hidden bg-[#0066ff46] text-headingColor 
-          font-semibold rounded-lg truncate cursor-pointer flex justify-center "
+                    font-semibold rounded-lg truncate cursor-pointer flex justify-center "
                   >
                     Upload Photo
                   </label>
@@ -321,7 +348,7 @@ function DoctorSignup() {
                 {formData.certificate && (
                   <figure className=" w-[60px] h-[60px] rounded-full border-2 border-solid border-primaryColor flex items-center justify-center ">
                     <img
-                      src={URL.createObjectURL(formData.certificate)}
+                      src={certificatepreviewURL}
                       alt=""
                       className="w-full rounded-full"
                     />

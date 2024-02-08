@@ -21,7 +21,7 @@ const AdminDoctors = () => {
   const [postPerPage, setPostPerpage] = useState(5);
   console.log(postPerPage, "post per page");
 
-  console.log(certificate, "state Certificate");
+  console.log("doctor Certificate");
   const navigate = useNavigate();
   const modalHandler = (certificate) => {
     setCarosal(true);
@@ -58,8 +58,22 @@ const AdminDoctors = () => {
       console.log(error);
     } else if (!error && !loading) {
       setDoctors(data);
+      checkBlockedStatus(data);
     }
   }, [error, data, loading]);
+
+  const checkBlockedStatus = (doctors) => {
+    console.log(doctors, "doctors ");
+    doctors.forEach((doctor) => {
+      if (doctor.isBlocked) {
+        handleLogout();
+      }
+    });
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("doctorInfo");
+  };
 
   const approveCertificate = async (docId, status) => {
     try {
@@ -220,7 +234,7 @@ const AdminDoctors = () => {
       <section className="container">
         <div className="relative mx-5 overflow-x-auto shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500">
-            <thead className="text-xs text-gray-700 uppercase bg-[#FF7043]">
+            <thead className="text-xs text-white uppercase bg-gradient-to-r dark:from-cyan-500 dark:to-blue-500 from-indigo-500 via-purple-500 to-pink-500 rounded-md p-4">
               <tr>
                 <th scope="cold" className="px-6 py-3">
                   Sl.No
@@ -385,7 +399,7 @@ const AdminDoctors = () => {
       {openModal && (
         <div className="w-[400px] h-[350px] p-4 fixed inset-0 mx-auto my-auto bg-gray-300 drop-shadow-2xl">
           <div>
-            <img src={`${doctorPath}${certificate}`} alt="" />
+            <img src={`${doctors.certificate}`} alt="" />
           </div>
           <div>
             <button onClick={() => setOpenModal(false)}>Close</button>
@@ -402,7 +416,7 @@ const AdminDoctors = () => {
             />
             <div
               style={{
-                backgroundImage: `url(${doctorPath}${slides[currentIndex].certificate})`,
+                backgroundImage: `url(${slides[currentIndex].certificate})`,
               }}
               className="w-full h-full rounded-2xl bg-center bg-cover duration-500"
             ></div>

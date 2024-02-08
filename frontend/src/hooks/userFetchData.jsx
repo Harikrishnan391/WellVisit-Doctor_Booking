@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { token } from "../config.js";
+import { token} from "../config.js";
+console.log("token")
 
 const userFetchData = (url) => {
   const [data, setData] = useState([]);
@@ -15,7 +16,6 @@ const userFetchData = (url) => {
       });
     
       const result = await res.json();
-      console.log(result,"resultt")
 
       if (!res.ok) {
         throw new Error(result.message);

@@ -2,10 +2,6 @@ import React from "react";
 import { BASE_URL, token } from "../../config";
 
 const PayButton = ({ docDetails, date, slot }) => {
-  console.log(docDetails, "docotor details");
-  console.log(date, "date");
-  console.log(slot, "slot");
-
   const user = JSON.parse(localStorage.getItem("PatientInfo"));
 
   const bookingData = {

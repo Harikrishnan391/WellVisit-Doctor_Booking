@@ -2,6 +2,8 @@ import Admin from "../model/adminSchema.js";
 import generateAdminToken from "../jwt/admin/adminjwt.js";
 import User from "../model/UserSchema.js";
 import Doctor from "../model/DoctorSchema.js";
+import Booking from "../model/bookingSchema.js";
+import { CompositionSettingsContextImpl } from "twilio/lib/rest/video/v1/compositionSettings.js";
 
 export const login = async (req, res) => {
   try {
@@ -179,5 +181,78 @@ export const HandleBlock = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ status: false, message: "Something went wrong" });
+  }
+};
+
+export const getMonthlyBooking = async (req, res) => {
+  try {
+    const montlyData = await Booking.aggregate([
+      {
+        $group: {
+          _id: { $month: { $toDate: "$createdAt" } },
+          totalBookings: { $sum: 1 },
+          totalAmount: { $sum: "$fee" },
+        },
+      },
+    ]);
+
+    res.status(200).json({ data: montlyData });
+  } catch (error) {
+    res.status(404).json({ message: "Data not found" });
+  }
+};
+
+///// getting the user Data
+
+export const getBooking = async (req, res) => {
+  try {
+    const bookings = await Booking.find(
+      {},
+      {
+        "patient.name": 1,
+        "doctor.name": 1,
+        paymentStatus:1,
+        IndianDate: 1,
+        slot: 1,
+        isCancelled: 1,
+      }
+    );
+
+    console.log(bookings, "Bookings");
+    if (bookings.length === 0) {
+      throw new Error(" Not have any Bookings");
+    }
+
+    res
+      .status(200)
+      .json({ status: true, message: "getting the users", data: bookings });
+  } catch (error) {
+    console.log(error, "error");
+    res
+      .status(404)
+      .json({ status: false, message: "Unable to retrieve doctors" });
+  }
+};
+
+////Cancel Booking ////////
+
+export const cancelBooking = async (req, res) => {
+  try {
+    const bookingId = req.params.id;
+    const cancel = await Booking.findByIdAndUpdate(
+      bookingId,
+      { $set: { isCancelled: true } },
+      { new: true }
+    );
+
+    if (!cancel) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+    else{
+      res.status(200).json({status:true,message:"Booking cancelled successfullly"})
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({status:false,message:"Booking cancellation failed"})
   }
 };

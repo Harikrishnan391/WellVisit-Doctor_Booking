@@ -4,8 +4,11 @@ import userImg from "../../assets/images/avatar-icon.png";
 import { NavLink, Link } from "react-router-dom";
 import { BiMenu } from "react-icons/bi";
 import { doctorPath, userPath } from "../../config";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutPatient } from "../../slices/patientAuthSlice";
+import { IoIosNotifications } from "react-icons/io";
+import Notification from "../notification/Notification";
+
 // import { authContext } from "../../context/AuthContext";
 
 const navLinks = [
@@ -31,13 +34,11 @@ const Header = () => {
   const dispatch = useDispatch();
   const headerRef = useRef(null);
   const menuRef = useRef(null);
+  const [notification, setNotification] = useState(false);
   // const { user, role, token } = useContext(authContext);
 
   // const user = JSON.parse(localStorage.getItem("PatientInfo"));
-  const [user, setUser] = useState(() => {
-    const storedUser = JSON.parse(localStorage.getItem("PatientInfo"));
-    return storedUser || {};
-  });
+  const user = useSelector((state) => state.patientAuthReducer.PatientInfo);
 
   // const { role, token } = user;
 
@@ -82,7 +83,11 @@ const Header = () => {
           {/*===========Logo============== */}
 
           <div>
-            <img src={logo2} alt="" />
+            <Link to="/">
+              <img src={logo2} alt="" />
+            </Link>
+          
+
           </div>
 
           {/* ==============Menu=========== */}
@@ -110,11 +115,17 @@ const Header = () => {
           <div className="flex items-center gap-4">
             {token && user ? (
               <div className="flex">
+                <div
+                  onClick={() => setNotification(true)}
+                  className="flex items-center mr-6 cursor-pointer"
+                >
+                  <IoIosNotifications className="text-[20px]" />
+                </div>
                 <Link to="/userProfile">
                   <div className="flex items-center gap-4">
                     <figure className="w-[35px] h-[35px] rounded-full cursor-pointer">
                       <img
-                        src={`${path}${user.photo}`}
+                        src={`${user.photo}`}
                         className="w-full rounded-full"
                         alt=""
                       />
@@ -131,6 +142,13 @@ const Header = () => {
                     logout
                   </button>
                 </Link>
+                {/***Notification start */}
+
+                {notification&&(
+                  <Notification setNotification={setNotification} />
+                )}
+
+                {/**end */}
               </div>
             ) : (
               <Link to="/users/login">

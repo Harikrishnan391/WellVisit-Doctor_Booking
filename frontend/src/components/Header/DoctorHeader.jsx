@@ -5,8 +5,11 @@ import { NavLink, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { BiMenu } from "react-icons/bi";
 import { logoutDoctor } from "../../slices/doctorAuthSlice.js";
-
+import { useSelector } from "react-redux";
+import { IoIosNotifications } from "react-icons/io";
+import DoctorNotification from "../notification/DoctorNotification";
 import { userPath, doctorPath } from "../../config.js";
+
 
 const navlinks = [
   {
@@ -18,8 +21,8 @@ const navlinks = [
     display: "Appointments",
   },
   {
-    path:"/doctors/chats",
-    display:"Chats"
+    path: "/doctors/chats",
+    display: "Chats",
   },
 ];
 
@@ -28,8 +31,9 @@ const DoctorHeader = () => {
   let path;
   const headerRef = useRef(null);
   const menuref = useRef(null);
+  const [notification, setNotification] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem("doctorInfo"));
+  const user = useSelector((state) => state.doctorAuthReducer.doctorInfo);
 
   const role = user?.role;
   console.log(role);
@@ -94,11 +98,17 @@ const DoctorHeader = () => {
           <div className="flex items-center gap-4 mt-2 mb-2 ml-5">
             {token && user ? (
               <div className="flex">
+                <div
+                  onClick={() => setNotification(true)}
+                  className="flex items-center mr-6 cursor-pointer"
+                >
+                  <IoIosNotifications className="text-[20px]" />
+                </div>
                 <Link to={"/doctors/doctorProfile"}>
                   <div className="flex items-center gap-4">
                     <figure className="w-[40px] h-[35px] flex align-middle">
                       <img
-                        src={`${path}${user.photo}`}
+                        src={`${user.photo}`}
                         alt=""
                         className="rounded-full"
                       />
@@ -115,6 +125,10 @@ const DoctorHeader = () => {
                     Logout
                   </button>
                 </Link>
+
+                {notification&&(
+                  <DoctorNotification setNotification={setNotification} />
+                )}
               </div>
             ) : (
               <div className="flex items-center gap-4">

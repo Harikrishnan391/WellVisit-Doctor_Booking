@@ -22,7 +22,6 @@ function AdminFetchData(url) {
       }
 
       setData(result.data);
-      console.log("data", data);
 
       setLoading(false);
     } catch (fetchError) {

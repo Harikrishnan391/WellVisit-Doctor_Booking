@@ -6,7 +6,6 @@ import { LiaCertificateSolid } from "react-icons/lia";
 const DoctorsCard = (data) => {
   return (
     <>
-    
       {data.data.data.map((el) => (
         <Link to={`/users/doctorDetails/${el._id}`}>
         <article
@@ -14,7 +13,7 @@ const DoctorsCard = (data) => {
           key={el._id}
           className="mx-auto max-w-sm shadow-xl bg-cover bg-center h-96 transform duration-500 hover:-translate-y-2 cursor-pointer group rounded-xl overflow-hidden relative"
           style={{
-            backgroundImage: `url(${doctorPath}${el.photo})`,
+            backgroundImage: `url(${el.photo})`,
           }}
         >
           <div className="bg-black bg-opacity-20 h-full px-10 flex  mb-4 flex-wrap flex-col pt-36 hover:bg-opacity-75 transform duration-300 rounded-b-xl">
@@ -59,58 +58,3 @@ const DoctorsCard = (data) => {
 };
 
 export default DoctorsCard;
-
-
-  {/* {data.data.data.map((el)=>(
-<article
- key={el._id}
-  className="mx-auto max-w-sm shadow-xl bg-cover bg-center min-h-90 transform duration-500 hover:-translate-y-2 cursor-pointer group rounded-xl overflow-hidden"
-  style={{
-    backgroundImage:`url(${doctorPath}${el.photo})`
-  }}
->
-  <div className="bg-black bg-opacity-20  px-10 flex flex-wrap flex-col pt-36 hover:bg-opacity-75 transform duration-300 rounded-b-xl">
-  
-    <h1 className="text-white text-3xl mb-5 transform translate-y-10 group-hover:translate-y-0 duration-300">
-      
-      Dr.{el.name}
-    </h1>
-    <div className="w-16 h-2 bg-orange-500 rounded-full mb-5 transform translate-y-10 group-hover:translate-y-0 duration-300"></div>
-    <p className="opacity-0 text-white text-xl group-hover:opacity-80 transform duration-500">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, beatae!
-    </p>
-  </div>
-</article>
-))} */}
-
-// <>
-//   {data.data.data.map((el) => (
-//     <div
-//       key={el._id}
-//       className="mx-auto max-w-sm shadow-xl bg-cover bg-center min-h-50 transform duration-500 hover:-translate-y-2 cursor-pointer group rounded-xl overflow-hidden"
-//       style={{
-//         backgroundImage: `url(${doctorPath}${el.photo})`,
-//       }}
-//     >
-//       <Link to={`/users/doctorDetails/${el._id}`}>
-//         <div>
-//           <img
-//             src={`${doctorPath}${el.photo}`}
-//             alt=""
-//             className="w-full rounded-md"
-//           />
-//         </div>
-//         <h1 className="text-white text-3xl mb-5 transform translate-y-10 group-hover:translate-y-0 duration-300">
-//           Dr. {el.name}
-//         </h1>
-//       </Link>
-//       <div className="bg-black bg-opacity-20 min-h-90 px-10 flex flex-wrap flex-col pt-36 hover:bg-opacity-75 transform duration-300 rounded-b-xl">
-//         <div className="w-16 h-2 bg-orange-500 rounded-full mb-5 transform translate-y-10 group-hover:translate-y-0 duration-300"></div>
-//         <p className="opacity-0 text-white text-xl group-hover:opacity-80 transform duration-500">
-//           Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime,
-//           beatae!
-//         </p>
-//       </div>
-//     </div>
-//   ))}
-// </>

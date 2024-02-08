@@ -17,7 +17,7 @@ const BookingDetails = () => {
 
   const user = useSelector((state) => state.patientAuthReducer.PatientInfo);
 
- const navigate=useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBookingData = async () => {
@@ -60,9 +60,8 @@ const BookingDetails = () => {
       confirmButtonText: "Create",
     });
 
-    if(roomId){
-      navigate(`/users/room/${roomId}`)
-
+    if (roomId) {
+      navigate(`/users/room/${roomId}`);
     }
   };
   const MakeVideoCall = async (userId) => {
@@ -82,7 +81,8 @@ const BookingDetails = () => {
           text: result.error,
         });
       } else {
-        createRoom();
+        // createRoom();
+        navigate(`/users/room/${result.roomId}`);
       }
     } catch (error) {
       console.log(error);
@@ -97,7 +97,7 @@ const BookingDetails = () => {
               <span className="absolute right-0 m-3 h-3 w-3 rounded-full bg-green-500 ring-2 ring-green-300 ring-offset-2"></span>
               <img
                 className="mx-auto h-full w-full rounded-full object-cover"
-                src={`${doctorPath}${doctor.photo}`}
+                src={doctor.photo}
                 alt=""
               />
             </div>

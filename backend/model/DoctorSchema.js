@@ -11,7 +11,7 @@ const DoctorSchema = new mongoose.Schema({
   },
   degree: { type: String, required: true },
   certificate: { type: Array },
-  fee: { type: String },
+  fee: { type: Number },
   college: { type: String },
   photo: { type: String },
   ticketPrice: { type: Number },

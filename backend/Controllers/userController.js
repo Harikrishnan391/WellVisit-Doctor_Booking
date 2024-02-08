@@ -6,13 +6,13 @@ import generateMail from "../utils/generateMail.js";
 import bcrypt from "bcryptjs";
 import generatePatientToken from "../jwt/patient/patientjwt.js";
 import { format } from "date-fns";
-import bookingSchema from "../model/bookingSchema.js";
+import { v4 as uuidv4 } from "uuid";
 
 export const updateUser = async (req, res) => {
   const id = req.userId;
-  const { name, email, number, role, gender, bloodType, address } = req.body;
-  console.log(req.body, "req.body");
-  const pic = req.file?.filename;
+  const { name, email, number, role, gender, bloodType, address, photo } =
+    req.body.data;
+  const pic = photo;
   console.log(pic, "picture");
 
   const updateData = {
@@ -23,7 +23,7 @@ export const updateUser = async (req, res) => {
     gender,
     bloodType,
     address,
-    photo: pic,
+    photo,
   };
   try {
     const updateUser = await User.findByIdAndUpdate(
@@ -31,9 +31,16 @@ export const updateUser = async (req, res) => {
       { $set: updateData },
       { new: true }
     );
-    console.log("updateUser", updateUser);
 
-    res.status(200).json({ status: true, message: "successfully updated" });
+    const { password, appointments, ...rest } = updateUser._doc;
+    // Include the existing token in the response
+    const existingToken = req.headers.authorization.split(" ")[1];
+
+    res.status(200).json({
+      status: true,
+      message: "successfully updated",
+      data: { ...rest, token: existingToken },
+    });
   } catch (error) {
     res
       .status(500)
@@ -284,14 +291,13 @@ export const getMyAppointments = async (req, res) => {
 
 export const getMyAppointmentDetails = async (req, res) => {
   const bookingId = req.params.id;
-  console.log(bookingId, "bookingId");
+
   try {
     const bookings = await Booking.findById(bookingId);
 
     if (!bookings) {
       throw new Error("Oops ! you did't have any such appoitments !");
     }
-    console.log(bookings);
     res.status(200).json({
       success: true,
       message: "Appointments are getting",
@@ -339,6 +345,32 @@ export const getAvailableSlots = async (req, res) => {
   }
 };
 
+/**==============get Booked Slots======================== */
+
+export const getBookedSlots = async (req, res) => {
+  const { date, doctor } = req.query;
+  console.log(doctor);
+  try {
+    const indianDate = format(new Date(date), "dd/MM/yyyy");
+    console.log(indianDate, "indianDate");
+
+    const bookedSlots = await Booking.find({
+      "doctor._id": doctor,
+      IndianDate: indianDate,
+    });
+    const slots = bookedSlots.map((booking) => booking.slot);
+    console.log(slots, "slots");
+    // console.log(bookedSlots,"Booked slots")
+
+    res
+      .status(200)
+      .json({ success: true, message: "Booked slot", data: slots });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server Error" });
+  }
+};
+
 /**==============get Available Dates======================== */
 export const getAvailableDates = async (req, res) => {
   console.log("hi iam here");
@@ -372,7 +404,7 @@ export const filterDoctor = async (req, res) => {
 
     switch (query) {
       case "1-500":
-        filterOption = { fee: { $gt: 1, $lte: 500 } };
+        filterOption = { fee: { $gte: 1, $lte: 500 } };
         break;
 
       case "501-1000":
@@ -388,11 +420,8 @@ export const filterDoctor = async (req, res) => {
         break;
     }
 
-    console.log(filterOption);
-
     const doctors = await Doctor.find(filterOption);
     console.log(doctors);
-
     res.status(200).json({ success: true, doctors });
   } catch (error) {
     console.error("Error in filter by Price", error);
@@ -409,7 +438,9 @@ export const MakeVideoCall = async (req, res) => {
     if (!user.VideoCallApprove) {
       throw new Error("You are not approved for this Facility");
     } else {
-      res.status(200).json({ message: "Video Call " });
+      const roomId = `${uuidv4()}-${userId}`;
+      console.log(roomId, "roomId for making videocall");
+      res.status(200).json({ message: "Video Call", roomId });
     }
   } catch (error) {
     console.log(error);
@@ -439,7 +470,7 @@ export const googleAuth = async (req, res) => {
           expires: expiryDate,
         })
         .status(200)
-        .json({...rest,token:token});
+        .json({ ...rest, token: token });
     } else {
       const generatePassword =
         Math.random().toString(36).slice(-8) +
@@ -472,5 +503,39 @@ export const googleAuth = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+  }
+};
+
+//// cancelBooking //////
+
+export const CancelBooking = async (req, res) => {
+  const bookingId = req.params.id;
+
+  const booking = await Booking.findById(bookingId);
+  const doctor = await Doctor.findById(booking.doctor._id);
+
+  try {
+    const cancelBooking = await Booking.findByIdAndUpdate(
+      bookingId,
+      { $set: { isCancelled: true } },
+      { new: true }
+    );
+
+    // console.log(booking.IndianDate);
+    // const timeUpdate = await Doctor.updateOne(
+    //   { _id: booking.doctor._id, "timesSlots.indianDate": booking.IndianDate },
+    //   { $push: { "timeSlots.$.slots": booking.slot } }
+    // );
+
+    if (!cancel) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    res.status(200).json({ status: true, message: "Booking cancelled" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ status: false, message: "Booking cancellation failed" });
   }
 };

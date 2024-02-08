@@ -4,8 +4,10 @@ import generateMail from "../utils/generateMail.js";
 import bcrypt from "bcryptjs";
 
 export const doctorSendOtp = async (req, res) => {
+  console.log("hellooo");
+  console.log(req.body, "req.body");
+
   try {
-    console.log(req.body, "req.body");
     const {
       name,
       email,
@@ -16,9 +18,11 @@ export const doctorSendOtp = async (req, res) => {
       degree,
       specialization,
       college,
+      photo,
+      certificate,
     } = req.body;
-    const photPath = req.files?.photo[0].filename;
-    const certificatePath = req.files?.certificate[0].filename;
+    // const photPath = req.files?.photo[0].filename;
+    // const certificatePath = req.files?.certificate[0].filename;
     let user = null;
     user = await Doctor.findOne({ email });
 
@@ -34,10 +38,10 @@ export const doctorSendOtp = async (req, res) => {
       number,
       password: hashPassword,
       gender,
-      role: type,
+      role: type,   
       degree,
-      certificate: certificatePath,
-      photo: photPath,
+      certificate,
+      photo,  
       specialization,
       college,
       verificationCode,
@@ -48,10 +52,10 @@ export const doctorSendOtp = async (req, res) => {
 
     if (status?.success) {
       return res.status(200).json({
-        doctorData:{
-          name:user._doc.name,
-          email:user._doc.email,
-          phone:user._doc.number
+        doctorData: {
+          name: user._doc.name,
+          email: user._doc.email,
+          phone: user._doc.number,
         },
         status: 200,
         message: "Doctor Registered successfully .Check email for verfication",
@@ -70,25 +74,21 @@ export const doctorVerifyOtp = async (req, res) => {
   try {
     console.log("doctor Verify otp......");
     const { email, verificationCode } = req.body;
-    const doctor=await Doctor.findOne({email})
-    console.log(doctor.verificationCode,"verification code")
-    if(doctor.verificationCode !==verificationCode){
-      throw new Error("Otp is incorrect")
+    const doctor = await Doctor.findOne({ email });
+    console.log(doctor.verificationCode, "verification code");
+    if (doctor.verificationCode !== verificationCode) {
+      throw new Error("Otp is incorrect");
     }
-    doctor.isVerified=true
-    await doctor.save()
+    doctor.isVerified = true;
+    await doctor.save();
 
     return res.status(201).json({
-      _id:doctor._id,
-      name:doctor.name,
-      email:doctor.email,
-      message:"Account Verified successfully"
-
-    })
-    
+      _id: doctor._id,
+      name: doctor.name,
+      email: doctor.email,
+      message: "Account Verified successfully",
+    });
   } catch (error) {
-    res.status(500).json({message:error.message})
+    res.status(500).json({ message: error.message });
   }
 };
-
-

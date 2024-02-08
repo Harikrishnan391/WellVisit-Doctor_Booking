@@ -3,6 +3,9 @@ import { BASE_URL, token, doctorPath, userPath } from "../../config";
 import io from "socket.io-client";
 import { GrSend } from "react-icons/gr";
 import { toast } from "react-toastify";
+import { IoCheckmark } from "react-icons/io5";
+import { RiCheckDoubleFill } from "react-icons/ri";
+
 const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
 
@@ -13,11 +16,15 @@ function ChatUser({ onClose, doctor, user, photo, doctorPic, userName }) {
   const [messageSent, setMessageSent] = useState(false);
   const [room, setRoom] = useState({});
 
-  useEffect(() => {
-    socket = io(ENDPOINT);
-    socket.emit("setup", user);
-    socket.on("connection", () => setSocketConnected(true));
-  }, [ENDPOINT],user);
+  useEffect(
+    () => {
+      socket = io(ENDPOINT);
+      socket.emit("setup", user);
+      socket.on("connection", () => setSocketConnected(true));
+    },
+    [ENDPOINT],
+    user
+  );
 
   useEffect(() => {
     if (doctor && user) {
@@ -59,18 +66,17 @@ function ChatUser({ onClose, doctor, user, photo, doctorPic, userName }) {
           }
         );
 
-         let result=await res.json()
-         console.log(result,"RESULT FETCH MESSAGE")
+        let result = await res.json();
+        console.log(result, "RESULT FETCH MESSAGE");
 
-         if(!res.ok){
-            throw new Error(result.message)
-         }
+        if (!res.ok) {
+          throw new Error(result.message);
+        }
 
-         setChats(result)
-         setMessageSent(false)
-         socket.emit("join_chat",room._id)
-         selectedChatCompare=chats
-
+        setChats(result);
+        setMessageSent(false);
+        socket.emit("join_chat", room._id);
+        selectedChatCompare = chats;
       } catch (error) {
         console.log("error", error);
       }
@@ -94,7 +100,7 @@ function ChatUser({ onClose, doctor, user, photo, doctorPic, userName }) {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ content: content }),
+            body: JSON.stringify({ content: content, read: false }),
           }
         );
 
@@ -105,7 +111,7 @@ function ChatUser({ onClose, doctor, user, photo, doctorPic, userName }) {
 
         setContent("");
         setMessageSent(true);
-        socket.emit("new message", result);
+        socket.emit("new Message", result);
       } catch (error) {
         console.log("error", error);
       }
@@ -114,7 +120,7 @@ function ChatUser({ onClose, doctor, user, photo, doctorPic, userName }) {
   };
 
   useEffect(() => {
-    socket.on("message recived", (newMessageReceived) => {
+    socket.on("message received", (newMessageReceived) => {
       if (!selectedChatCompare || room._id !== newMessageReceived.room._id) {
       } else {
         setChats([...chats, newMessageReceived]);
@@ -122,11 +128,11 @@ function ChatUser({ onClose, doctor, user, photo, doctorPic, userName }) {
     });
   });
 
-  const formatChatTime=(createdAt)=>{
-    const date=new Date(createdAt)
-    const options={hour:"numeric",minute:"numeric",hour12:true}
-    return date.toLocaleDateString("en-US",options)
-  }
+  const formatChatTime = (createdAt) => {
+    const date = new Date(createdAt);
+    const options = { hour: "numeric", minute: "numeric", hour12: true };
+    return date.toLocaleDateString("en-US", options);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center w-[500px] min-h-[540px] text-gray-800 p-10">
@@ -143,18 +149,24 @@ function ChatUser({ onClose, doctor, user, photo, doctorPic, userName }) {
                 {chat.senderType === "User" ? (
                   <div className="flex w-full mt-2 space-x-3 max-w-xl ml-auto justify-end">
                     <div>
-                      <div className="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg ">
+                      <div className="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg relative ">
                         <p className="text-sm whitespace-normal">
                           {chat.content}
+                          {chat.read ? (
+                            <RiCheckDoubleFill className="absolute ml-10 top-1 right-1 text-sm text-black-500" />
+                          ) : (
+                            <IoCheckmark className="absolute ml-10 top-1 right-1 text-lg text-black-500" />
+                          )}
                         </p>
                       </div>
+
                       <span className="text-xs text-gray-500 leading-none">
                         {formatChatTime(chat.createdAt)}
                       </span>
                     </div>
                     <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 ">
                       <img
-                        src={`${userPath}${photo}`}
+                        src={photo}
                         alt=""
                         className=" rounded-full h-full w-full object-cover"
                       />
@@ -164,7 +176,7 @@ function ChatUser({ onClose, doctor, user, photo, doctorPic, userName }) {
                   <div className={`flex w-full mt-2 space-x-3 max-w-xs`}>
                     <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                       <img
-                        src={`${doctorPath}${doctorPic}`}
+                        src={doctorPic}
                         alt=""
                         className=" rounded-full h-full w-full object-cover"
                       />
@@ -196,7 +208,7 @@ function ChatUser({ onClose, doctor, user, photo, doctorPic, userName }) {
           />
           <button
             onClick={() => sendHandler()}
-            className="rounded-full flex items-center ml-2 hover:scale-105 transition duration-100 ease-in-out cursor-pointer justify-center w-1/5 bg-green-500"
+            className="rounded-full flex items-center ml-2 hover:scale-105 transition duration-100 ease-in-out cursor-pointer justify-center w-1/5 bg-[#8b5cf6]"
           >
             {/* Include your send icon component or SVG here */}
             <GrSend className="text-[22px]" />

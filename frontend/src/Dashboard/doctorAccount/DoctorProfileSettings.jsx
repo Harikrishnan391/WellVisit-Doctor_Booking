@@ -3,6 +3,9 @@ import { RiDeleteBin6Fill, RiPictureInPictureExitLine } from "react-icons/ri";
 import { BASE_URL, docToken } from "../../config";
 import BeatLoader from "react-spinners/BeatLoader";
 import { toast } from "react-toastify";
+import uploadImageCloudinary from "../../utils/uploadCloudinary";
+import { setDoctorCredentials } from "../../slices/doctorAuthSlice";
+import { useDispatch } from "react-redux";
 
 const DoctorProfileSettings = ({ data, refetch }) => {
   const [loading, setLoading] = useState(false);
@@ -18,20 +21,45 @@ const DoctorProfileSettings = ({ data, refetch }) => {
   const [certificate, setCertificate] = useState(null);
   const [formData, setFormData] = useState({});
   const [about, setAbout] = useState(data.about);
+  const [previewURL, setPreviewURL] = useState("");
+  const [certificatepreviewURL, setCertificatePreviewURL] = useState("");
+  const [validationError, setValidationError] = useState("");
+  const dispatch = useDispatch();
 
-  const handlePhotoInputChange = (e) => {
+  const handlePhotoInputChange = async (e) => {
     const pic = e.target.files[0];
-    setPhoto(pic);
+    const data = await uploadImageCloudinary(pic);
+    console.log(data, "cloudinary image");
+    setPreviewURL(data.url);
+    setPhoto(data.url);
+  };
+  const handleCertificateInputChange = async (e) => {
+    const certificate = e.target.files[0];
+    const filesArray = Array.from(certificate);
+    try {
+      const uploadCertificates = await Promise.all(
+        filesArray.map(async (file) => await uploadImageCloudinary(file))
+      );
+      // Assuming uploadCertificates is an array of objects with URLs
+      const certificateUrls = uploadCertificates.map((cert) => cert.url);
+      console.log(certificateUrls, "urls");
+      setCertificatePreviewURL(certificateUrls);
+
+      setCertificate(certificateUrls);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
-  const handleCertificateInputChange = (e) => {
-    const certificate = e.target.files;
-    const filesArray = Array.from(certificate);
-    setCertificate(filesArray);
-  };
+  // const handleCertificateInputChange = (e) => {
+  //   const certificate = e.target.files;
+  //   const filesArray = Array.from(certificate);
+  //   setCertificate(filesArray);
+  // };
 
   const submitHandler = async (e) => {
     e.preventDefault();
+
 
     const dataToUpdate = {
       name,
@@ -41,36 +69,55 @@ const DoctorProfileSettings = ({ data, refetch }) => {
       gender,
       specialization,
       fee,
-      photo,
-      certificate,
       about,
     };
 
+    // Validation checks
+    if (!name.trim() || /\d/.test(name)) {
+      toast.error("Invalid name");
+      return;
+    }
+
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    if (!emailRegex.test(email)) {
+      toast.error("Invalid email");
+      return;
+    }
+
+    if (!bio.trim() || bio.split(/\s+/).length > 50) {
+      toast.error("Invalid bio");
+      return;
+    }
+
+    if (!gender || !specialization || !fee) {
+      toast.error("Gender, specialization, and fee are required");
+      return;
+    }
+
+    if (photo) {
+      dataToUpdate.photo = photo;
+    }
+    if (certificate) {
+      dataToUpdate.certificate = certificate;
+    }
+
     try {
-      const formDataToSend = new FormData();
-
-      for (const key in dataToUpdate) {
-        formDataToSend.append(key, dataToUpdate[key]);
-      }
-      console.log([...formDataToSend.entries()], "initial");
-      if (dataToUpdate.certificate) {
-        for (let i = 0; i < dataToUpdate.certificate.length; i++) {
-          formDataToSend.append(`certificate`, dataToUpdate.certificate[i]);
-        }
-      }
-
       const res = await fetch(`${BASE_URL}/doctors/updateDoctor/${data._id}`, {
         method: "put",
         headers: {
           Authorization: `Bearer ${docToken}`,
+          "Content-Type": "application/json",
         },
-        body: formDataToSend,
+        body: JSON.stringify(dataToUpdate),
       });
 
       const result = await res.json();
+      console.log(result, "from doctor profile settings");
       if (!res.ok) {
         throw new Error(result.message);
       }
+
+      dispatch(setDoctorCredentials(result.data));
 
       setTimeout(() => {
         setLoading(false);
@@ -122,6 +169,7 @@ const DoctorProfileSettings = ({ data, refetch }) => {
                 type="email"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
+                readOnly
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
               />
             </div>
@@ -216,7 +264,7 @@ const DoctorProfileSettings = ({ data, refetch }) => {
                 {photo && (
                   <figure className=" w-[60px] h-[60px] rounded-full border-2 border-solid border-primaryColor flex items-center justify-center ">
                     <img
-                      src={URL.createObjectURL(photo)}
+                      src={previewURL}
                       alt=""
                       className="w-full rounded-full"
                     />
@@ -244,18 +292,19 @@ const DoctorProfileSettings = ({ data, refetch }) => {
 
               {/* /////////////////////ceritificate upload///////////////////// */}
               <div className="flex flex-col items-center gap-3 mb-5 mt-7">
-                {certificate?.map((certificate, index) => (
-                  <figure
-                    key={index}
-                    className="w-[60px] h-[60px]  border-2 border-solid border-primaryColor flex items-center justify-center"
-                  >
-                    <img
-                      src={URL.createObjectURL(certificate)}
-                      alt={`Certificate ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </figure>
-                ))}
+                {certificate &&
+                  certificate.map((certificatepreviewURL, index) => (
+                    <figure
+                      key={index}
+                      className="w-[60px] h-[60px]  border-2 border-solid border-primaryColor flex items-center justify-center"
+                    >
+                      <img
+                        src={certificatepreviewURL}
+                        alt={`Certificate ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </figure>
+                  ))}
 
                 <div className="relative w-[160px] h-[50px]  ">
                   <input

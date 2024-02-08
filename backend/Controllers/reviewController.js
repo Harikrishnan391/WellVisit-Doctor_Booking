@@ -18,23 +18,39 @@ export const getAllReviews = async (req, res) => {
 //create Review
 
 export const createReview = async (req, res) => {
-  if (!req.body.doctor) req.body.doctor = req.params.doctorId;
-  if (!req.body.user) req.body.user = req.params.userId;
+  const { rating, reviewText, user, doctor } = req.body.review;
 
-  const newReview = new Review(req.body);
+  const newReview = new Review(req.body.review);
 
   try {
-    const savedReview = await newReview.save();
+    const StoredReview = await newReview.save();
+    console.log();
 
-    await Doctor.findByIdAndUpdate(req.body.doctor, {
-      $push: { reviews: savedReview._id },
+    await Doctor.findByIdAndUpdate(doctor, {
+      $push: { reviews: StoredReview._id },
     });
-    res.status();
 
     res
       .status(200)
-      .json({ success: true, message: "Review Submitted", data: savedReview });
+      .json({ success: true, message: "Review added successfully" });
   } catch (error) {
-    res.status(500).json({ success: true, message: error.message });
+    res.status(500).json({ success: true, message: "Internal server Error" });
+    console.log(error, "Error");
+  }
+};
+
+export const getDoctorReviews = async (req, res) => {
+  const doctorId = req.params.id;
+  console.log(doctorId);
+  try {
+    const reviews = await Review.find({ doctor: doctorId }).populate({
+      path: "user",
+      select: "name photo",
+    });
+    console.log(reviews, "reviews");
+    res.status(200).json({success:true,message:"Successfull",data:reviews})
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({success:false,message:"Not found"})
   }
 };

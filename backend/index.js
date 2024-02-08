@@ -86,34 +86,28 @@ io.on("connection", (socket) => {
     console.log("user joined in the room", room);
   });
 
+  socket.on("new Message", (newMessageRecived) => {
+    console.log("newMessageRecevied", newMessageRecived);
 
-  socket.on("new Message",(newMessageRecived)=>{
+    var chat = newMessageRecived.room;
 
-    console.log("newMessageRecevied",newMessageRecived)
-
-    var chat=newMessageRecived.room
-
-    if(!chat.user||!chat.doctor){
-      return console.log("chat.users  not defined  ")
-
+    if (!chat.user || !chat.doctor) {
+      return console.log("chat.users  not defined  ");
     }
 
-    socket.in(chat._id).emit("message recieved",newMessageRecived)
+    socket.in(chat._id).emit("message received", newMessageRecived);
 
-    
-    if(chat.user._id ===newMessageRecived.sender._id){
-      socket.to(chat._id).emit("message recevied",newMessageRecived)
+    if (chat.user._id === newMessageRecived.sender._id) {
+      socket.to(chat._id).emit("message recevied", newMessageRecived);
     }
 
-    if(chat.doctor._id ===newMessageRecived.sender._id){
-      socket.to(chat._id).emit("message recevied",newMessageRecived)
+    if (chat.doctor._id === newMessageRecived.sender._id) {
+      socket.to(chat._id).emit("message recevied", newMessageRecived);
     }
-  })
+  });
 
-  socket.off("setup",()=>{
-    console.log("User Disconnected")
-    socket.leave(user)
-  })
+  socket.off("setup", () => {
+    console.log("User Disconnected");
+    socket.leave(user);
+  });
 });
-
-

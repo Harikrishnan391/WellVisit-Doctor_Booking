@@ -67,7 +67,6 @@ export const createRoom = async (req, res) => {
       select: "_id name specialization",
     });
 
-    console.log(roomDetails)
     res
       .status(200)
       .json({ message: "Chat room found or created", data: roomDetails });
@@ -80,8 +79,8 @@ export const createRoom = async (req, res) => {
 //// sendINg chat /////
 
 export const sendChat = async (req, res) => {
-  console.log("Haioooo");
-  const { content } = req.body;
+  const { content, read } = req.body;
+  console.log(read, "readddd");
 
   const { sender, roomId, type, Id, senderName } = req.params;
   console.log(req.params, "params");
@@ -93,6 +92,7 @@ export const sendChat = async (req, res) => {
     receiver: Id,
     content: content,
     senderName: senderName,
+    read: read,
   });
 
   await newMessage.save();
@@ -101,9 +101,14 @@ export const sendChat = async (req, res) => {
 
   if (chatRoom) {
     chatRoom.messages.push(newMessage._id);
-  }
 
-  await chatRoom.save();
+    // Update the latestMessageTimestamp to the current time
+    chatRoom.latestMessageTimestamp = newMessage.createdAt; // Assuming createdAt is the timestamp of the new message
+
+    // Save the updated chat room
+
+    await chatRoom.save();
+  }
 
   await newMessage.populate([
     { path: "sender", select: "_id name email" },
@@ -141,6 +146,50 @@ export const getDoctorRooms = async (req, res) => {
     }
   } catch (error) {
     console.error("Error fetching doctor rooms:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getNotification = async (req, res) => {
+  const userId = req.userId;
+
+  console.log(userId, "userId");
+
+  try {
+    const notification = await ChatMessage.find({
+      receiver: userId,
+      notificationSeen: false,
+    }).sort({
+      createdAt: -1,
+    });
+
+    if (notification) {
+      res.status(200).json(notification);
+    } else {
+      res.status(404).json({ message: "No message found for the  given room" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const clearNotification = async (req, res) => {
+  const userId = req.userId;
+  try {
+    const notificationSeen = await ChatMessage.updateMany(
+      { receiver: userId },
+      { $set: { notificationSeen: true } }
+    );
+    if (notificationSeen) {
+      res.status(200).json(notificationSeen);
+    } else {
+      res
+        .status(404)
+        .json({ message: "No messages found for the given room." });
+    }
+  } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

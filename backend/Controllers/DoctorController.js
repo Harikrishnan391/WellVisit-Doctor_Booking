@@ -6,6 +6,8 @@ import generateMail from "../utils/generateMail.js";
 import Booking from "../model/bookingSchema.js";
 import bookingSchema from "../model/bookingSchema.js";
 import User from "../model/UserSchema.js";
+import { v4 as uuidv4 } from "uuid";
+import ChatMessage from "../model/chatMessage.js";
 
 export const DoctorForgotPassword = async (req, res) => {
   try {
@@ -113,6 +115,7 @@ export const DoctorResetPassword = async (req, res) => {
 };
 
 export const changeDoctorPassword = async (req, res) => {
+  console.log(req.body, "req.body");
   const { currentPassword, newPassword, confirmPassword, email } = req.body;
 
   try {
@@ -154,26 +157,22 @@ export const changeDoctorPassword = async (req, res) => {
 };
 
 export const updateDoctor = async (req, res) => {
-  console.log(req.files, "req.body");
-  
+  console.log(req.body, "reqbody");
+
+  // console.log(req.body.data.certificate, "certificates");
   const id = req.params.id;
-  const photo=req.files?.photo?.[0].filename
-  let certificate=[]
-  const certificateFiles=req.files?.certificate
 
-  if(certificateFiles?.length>0){
-    for(let i=0;i<certificateFiles.length;i++){
-      certificate.push(certificateFiles[i].filename)
-    }
-  }else{
+  let certificates = [];
+  const certificateFiles = req.body.certificates;
 
-    const exisitingDoctor =await Doctor.findById(id)
-    certificate =exisitingDoctor.certificate
+  if (certificateFiles?.length > 0) {
+    certificates = certificateFiles.map((file) => ({ url: file }));
+  } else {
+    const exisitingDoctor = await Doctor.findById(id);
+    certificates = exisitingDoctor.certificate;
   }
- 
-  const updateData = { ...req.body,photo,certificate };
 
-  // console.log(updateData, "from updateDoctor");
+  const updateData = { ...req.body };
 
   try {
     const updateDoctor = await Doctor.findByIdAndUpdate(
@@ -181,14 +180,21 @@ export const updateDoctor = async (req, res) => {
       { $set: updateData },
       { new: true }
     );
+
+    console.log(updateDoctor, "update Doctorrr");
+    const { password, ...rest } = updateDoctor._doc;
+    const existingToken = req.headers.authorization.split(" ")[1];
+    console.log(existingToken);
+
     res.status(200).json({
       status: true,
       message: "Successfully Updated",
+      data: { ...rest, token: existingToken },
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({ status: false, message: "Failed to update" });
-   }
+  }
 };
 
 export const deleteDoctor = async (req, res) => {
@@ -477,8 +483,11 @@ export const approveVideoCall = async (req, res) => {
     if (!changeStatus) {
       return res.status(404).json({ message: "User not found" });
     }
+    const roomId = `${uuidv4()}-${PatientId}`;
     const doctor = await Doctor.findOne();
-    res.status(200).json({ status: true, message: "User status changed" });
+    res
+      .status(200)
+      .json({ status: true, message: "User status changed", roomId });
   } catch (error) {
     res.status(500).json({ status: false, message: "Change status failed " });
   }
@@ -508,4 +517,25 @@ export const CancellAppointment = async (req, res) => {
   }
 };
 
+///// Marking message As Read ///
 
+export const MarkMessageAsRead = async (req, res) => {
+  const roomId = req.params.id;
+
+  try {
+    const messages = await ChatMessage.find({ room: roomId });
+
+    await Promise.all(
+      messages.map(async (message) => {
+        (message.read = true), await message.save();
+      })
+    );
+  } catch (error) {
+    console.log("Error finding messages ", error);
+
+    res.status(500).json({
+      success: false,
+      message: "An error occured while finding the messages",
+    });
+  }
+};

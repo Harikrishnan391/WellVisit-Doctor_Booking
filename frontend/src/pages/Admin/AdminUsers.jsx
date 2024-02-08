@@ -88,7 +88,7 @@ const AdminUsers = () => {
     <section className="container">
       <div className="relative mx-5 overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left text-gray-500">
-          <thead className="text-xs text-gray-700 uppercase bg-[#81D4FA]">
+          <thead className="text-xs text-white uppercase bg-gradient-to-r dark:from-cyan-500 dark:to-blue-500 from-indigo-500 via-purple-500 to-pink-500">
             <tr>
               <th scope="col" className="px-6 py-3">
                 Name

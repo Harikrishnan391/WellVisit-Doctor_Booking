@@ -1,14 +1,47 @@
 import React, { useState } from "react";
 import { AiFillStar } from "react-icons/ai";
+import { BASE_URL, token } from "../../config";
+import { toast } from "react-toastify";
 
-const FeedbackForm = () => {
+const FeedbackForm = ({ details, setshowFeedbackForm }) => {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [reviewText, setReviewText] = useState(" ");
+  const user = JSON.parse(localStorage.getItem("PatientInfo"));
+  const reviewData = {
+    rating,
+    reviewText,
+    user: user._id,
+    doctor: details._id,
+  };
 
-  const handleSubmitReview=async e=>{
-    e.preventDefault( )
-  }
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch(`${BASE_URL}/reviews/createReview`, {
+        method: "post",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ review: reviewData }),
+      });
+
+      let result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.message);
+      }
+
+      setshowFeedbackForm(false);
+
+      toast.success(result.message);
+    } catch (error) {
+      console.log(error);
+      toast.error(result.message);
+    }
+  };
   return (
     <form action="">
       <div>
@@ -25,7 +58,7 @@ const FeedbackForm = () => {
                 type="button"
                 className={`${
                   index <= ((rating && hover) || hover)
-                    ? "text-yellowColor"
+                    ? "text-yellowColor animate-blink"
                     : "text-gray-400"
                 }bg-transperant border-none outline-none text-[22px] cursor-pointer`}
                 onClick={() => setRating(index)}
@@ -51,10 +84,12 @@ const FeedbackForm = () => {
           className="border border-solid border-[#0066f34] focus:outline outline-primaryColor w-full px-4 py-3 rounded-md "
           rows="5"
           placeholder="write your comment"
-          onChange={e=>setReviewText(e.target.value)}
+          onChange={(e) => setReviewText(e.target.value)}
         ></textarea>
       </div>
-      <button type="submit" className="btn" onClick={handleSubmitReview}>Submit Feedback</button>
+      <button type="submit" className="btn" onClick={handleSubmitReview}>
+        Submit Feedback
+      </button>
     </form>
   );
 };

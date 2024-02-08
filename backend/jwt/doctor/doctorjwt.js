@@ -5,7 +5,7 @@ dotenv.config();
 
 const generateDoctorToken = (userId, res) => {
   const token = jwt.sign(
-    { userId },
+    { userId, role: "doctor" },
 
     process.env.DOCTOR_JWT_SECRET_KEY,
     { expiresIn: "30d" }
@@ -20,3 +20,7 @@ const generateDoctorToken = (userId, res) => {
 };
 
 export default generateDoctorToken;
+
+
+
+let obj={}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Testimonial from "../../components/Testimonial/Testimonial";
 import DoctorsList from "./DoctorsList";
 import { useDispatch } from "react-redux";
@@ -61,45 +61,56 @@ const Doctors = () => {
     }
   }, [dispatch, data, loading, error, search]);
 
-
-
   useEffect(() => {
     const filteredDoctors = filterDoctors(docData);
     setFilteredResult(filteredDoctors);
   }, [docData, search]);
-
 
   const handlefilter = async (filterorder, e) => {
     e.preventDefault();
     console.log(filterorder, "filterorder");
 
     try {
-      const res = await apiInstance.get(`${BASE_URL}/users/getDoctors/filter`,{
-        params:{query:filterorder}
+      const res = await apiInstance.get(`${BASE_URL}/users/getDoctors/filter`, {
+        params: { query: filterorder },
       });
 
-      console.log(res,"response")
-      if(res.data&& res.data.doctors){
-        console.log(res.data.doctors,"courses")
+      console.log(res, "response");
+      if (res.data && res.data.doctors) {
+        console.log(res.data.doctors, "courses");
 
-        setDocData(res.data.doctors)
-
+        setDocData(res.data.doctors);
       }
 
-      setIsSidebarOpen(false)
-      
-      
-
+      setIsSidebarOpen(false);
     } catch (error) {}
   };
-
-
 
   const handleSearch = (event) => {
     setSearch(event.target.value);
     const filteredDoctors = filterDoctors(docData);
     setFilteredResult(filteredDoctors);
   };
+
+  const filterSectionRef = useRef(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (
+        filterSectionRef.current &&
+        !filterSectionRef.current.contains(event.target) &&
+        isSidebarOpen
+      ) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener("click", handleOutsideClick);
+
+    return () => {
+      window.removeEventListener("click", handleOutsideClick);
+    };
+  }, [isSidebarOpen]);
 
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
@@ -130,9 +141,10 @@ const Doctors = () => {
 
       {/** filter seciton */}
       {/* <div className="flex justify-end mr-8"> */}
-      <section className="mr-12">
+      <section className="mr-12" ref={filterSectionRef}>
         <div className="ml-1 flex justify-end mr-8">
           <RiFilterLine
+            id="filterIcon"
             className="cursor-pointer"
             size={24}
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -244,7 +256,7 @@ const Doctors = () => {
                             aria-expanded="false"
                           >
                             <span className="font-medium text-gray-900">
-                              Category
+                              {/* Category */}
                             </span>
                             <span className="ml-6 flex items-center">
                               <svg
@@ -270,40 +282,11 @@ const Doctors = () => {
                             </span>
                           </button>
                         </h3>
-                        <div className="pt-6" id="filter-section-mobile-1">
-                          <div className="space-y-6">
-                            <div className="flex items-center">
-                              <input
-                                id="filter-mobile-category-3"
-                                name="category[]"
-                                defaultValue="organization"
-                                type="checkbox"
-                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                              />
-                              <label
-                                htmlFor="filter-mobile-category-3"
-                                className="ml-3 min-w-0 flex-1 text-gray-500"
-                              >
-                                Organization
-                              </label>
-                            </div>
-                            <div className="flex items-center">
-                              <input
-                                id="filter-mobile-category-4"
-                                name="category[]"
-                                defaultValue="accessories"
-                                type="checkbox"
-                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                              />
-                              <label
-                                htmlFor="filter-mobile-category-4"
-                                className="ml-3 min-w-0 flex-1 text-gray-500"
-                              >
-                                Accessories
-                              </label>
-                            </div>
-                          </div>
-                        </div>
+                        {/***sorting sectionnnn */}
+                        <div
+                          className="pt-6"
+                          id="filter-section-mobile-1"
+                        ></div>
                       </div>
                       <div className="border-t border-gray-200 px-4 py-6">
                         <div
@@ -320,18 +303,22 @@ const Doctors = () => {
         </div>
 
         {/** sort */}
-        
       </section>
 
       <section>
         <div className="container">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5  lg:grid-cols-4">
-            <DoctorsLidrst data={currentPosts} />
+            <DoctorsList data={currentPosts} />
           </div>
         </div>
       </section>
 
-     <Pagination postPerPage={postPerPage} totalPosts={filteredResult.length} setCurrentPage={setCurrentPage}  currentPage={currentPage}  />
+      <Pagination
+        postPerPage={postPerPage}
+        totalPosts={filteredResult.length}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+      />
 
       {/* <section className="mt-11">
         <div className="container">
@@ -344,10 +331,9 @@ const Doctors = () => {
           </div>
           <Testimonial />
         </div>
-      </section> */}
+      </section>  */}
     </>
   );
 };
 
 export default Doctors;
-

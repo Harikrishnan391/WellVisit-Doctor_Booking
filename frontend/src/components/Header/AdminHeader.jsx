@@ -5,6 +5,10 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 const navlinks = [
   {
+    path: "/admin/Home",
+    display: "Home",
+  },
+  {
     path: "/admin/users",
     display: "Users",
   },
@@ -23,6 +27,7 @@ const AdminHeader = () => {
   const adminInfo = localStorage.getItem("adminInfo");
 
   const headerRef = useRef(null);
+  <img src={logo} alt="medicareLogo" />;
   const menuRef = useRef(null);
 
   const handlestickyHeader = () => {
@@ -53,7 +58,7 @@ const AdminHeader = () => {
 
   const toggleMenu = () => menuRef.current.classList.toggle("show_menu");
   return (
-    <header className="flex items-center header" ref={headerRef}>
+    <header className="header flex items-center " ref={headerRef}>
       <div className="container">
         <div className="flex items-center justify-between">
           <div>
@@ -73,9 +78,8 @@ const AdminHeader = () => {
                             : "text-textColor text-[16px] loading-7 font-[500] hover:text-primaryColor"
                         }
                       >
-                          {link.display}
+                        {link.display}
                       </NavLink>
-                    
                     </li>
                   ))}
                   <button

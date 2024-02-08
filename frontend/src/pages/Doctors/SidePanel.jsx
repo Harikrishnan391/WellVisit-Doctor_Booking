@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BASE_URL, token } from "../../config";
 import DatePicker from "react-datepicker";
 import PayButton from "../../components/PayButton/PayButton";
+import { toast } from "react-toastify";
 
 const SidePanel = (details) => {
   const [date, setDate] = useState(new Date());
@@ -36,21 +37,44 @@ const SidePanel = (details) => {
   };
 
   const searchSlots = async () => {
-    const res = await fetch(
-      `${BASE_URL}/users/getAvailableSlots?date=${date.toISOString()}&doctor=${
-        details.details._id
-      }`,
-      {
-        method: "get",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    let result = await res.json();
-    console.log("resutl", result);
-    setShowSlots(true);
-    setSlots(result.data);
+    try {
+      const res = await fetch(
+        `${BASE_URL}/users/getAvailableSlots?date=${date.toISOString()}&doctor=${
+          details.details._id
+        }`,
+        {
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      let result = await res.json();
+      console.log("resutl", result);
+
+      const bookedSlotsRes = await fetch(
+        `${BASE_URL}/users/getBookedSlots?date=${date.toISOString()}&doctor=${
+          details.details._id
+        }`,
+        {
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const bookedSlotsResult = await bookedSlotsRes.json();
+      const bookedSlots = bookedSlotsResult.data;
+      const availableSlots = result.data.filter(
+        (slot) => !bookedSlots.includes(slot)
+      );
+      setShowSlots(true);
+      setSlots(availableSlots);
+    } catch (error) {
+      console.log("An Error Occured", error.message);
+      toast.error(`Error:${error.message}`);
+    }
   };
 
   return (
@@ -59,7 +83,9 @@ const SidePanel = (details) => {
         <p className="text_para mt-0 font-semibold"> Fees for Consultation:</p>
         <span className="text-[16px]  leading-7 lg:text-[22px] lg:leading-8 text-headingColor font-bold mr-9">
           {/* {`₹${details.details.fee}`} */}
-          {details.details.fee !== undefined ? `₹${details.details.fee}` : 'Not added'}
+          {details.details.fee !== undefined
+            ? `₹${details.details.fee}`
+            : "Not added"}
         </span>
       </div>
       <div className="mt-[30px]">

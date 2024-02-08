@@ -1,6 +1,6 @@
 import userFetchData from "../../hooks/userFetchData";
 import { useState } from "react";
-import { BASE_URL } from "../../config";
+import { BASE_URL, token } from "../../config";
 import DoctorCard from "../../components/Doctors/DoctorCard";
 import Loading from "../../components/Loader/Loading";
 import Error from "../../components/Error/Error";
@@ -17,26 +17,54 @@ const MyBookings = () => {
     data: appointments,
     loading,
     error,
-    refetch
+    refetch,
   } = userFetchData(`${BASE_URL}/users/getMyAppointments`);
 
-  const handleCancel=async(id)=>{
-    const confirmResutl=await Swal.fire({
-      title:"Are you Sure",
-      text:"you won't be able to revert this!",
-      icon:"warning",
-      showCancelButton:true,
-      confirmButtonColor:"#3085d6",
-      cancelButtonColor:"#d33",
-      confirmButtonText:"Yes cancel it!",
-      cancelButtonText:"No"
-    })
-  }
+  const handleCancel = async (id) => {
+    const confirmResult = await Swal.fire({
+      title: "Are you Sure",
+      text: "you won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes cancel it!",
+      cancelButtonText: "No",
+    });
+
+    if (confirmResult.isConfirmed) {
+      try {
+        const res = await fetch(`${BASE_URL}/users/cancelBooking/${id}`, {
+          method: "put",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const result = await res.json();
+         // Display success message
+         Swal.fire({
+          title: "Cancelled!",
+          text: "Your Booking has been cancelled.",
+          icon: "success",
+        });
+
+        // Perform any additional actions (e.g., refetch data)
+        refetch();
+        if(!res.ok){
+          throw new Error(result.message)
+        }
+        console.log(result, "result");
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  };
 
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
   const currentPosts = appointments.slice(firstPostIndex, lastPostIndex);
-  console.log(currentPosts,"currentPost")
+  console.log(currentPosts, "currentPost");
   return (
     <>
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-3 mt-8 w-[750px] ">
@@ -69,14 +97,13 @@ const MyBookings = () => {
               <Link to={`/users/bookingDetails/${el._id}`} key={el._id}>
                 <div>
                   <div>
-                    
                     <img
-                      src={el.doctor.photo?`${doctorPath}${el.doctor.photo}`:starIcon}
+                      src={el.doctor.photo ? `${el.doctor.photo}` : starIcon}
                       alt=""
                       className="w-full"
                     />
                   </div>
-                
+
                   <h3 className="text-[18px] leading-[30px] lg:text-[20px] text-headingColor font-[700] mt-3 p-2">
                     Dr. {el.doctor.name}
                   </h3>
@@ -89,7 +116,7 @@ const MyBookings = () => {
                       <span className="flex items-center gap-[1px] text-[12px] leading-6 lg:text-[15px] lg:leading-7 font-semibold text-headingColor">
                         {/* <img src={starIcon} className="w-5" alt="" /> */}
                         <LiaCertificateSolid className="w-12 h-8 bg-yellowColor" />
-                          {el.doctor.degree}
+                        {el.doctor.degree}
                       </span>
                       <span className="text-[10px] ml-7 leading-6 lg:text-[12px] lg:leading-7 font-[400] text-headingColor">
                         {/* (282) */}
@@ -120,9 +147,8 @@ const MyBookings = () => {
           </div>
         ))}
       </div>
-  
-    
-{/* 
+
+      {/* 
       <div className=" flex justify-between lg:grid-cols-3 mt-8 w-[750px]">
         {currentPosts.map((el) => (
           <div

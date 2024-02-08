@@ -3,24 +3,24 @@ import Doctor from "../model/DoctorSchema.js";
 import User from "../model/UserSchema.js";
 
 export const authenticate = async (req, res, next) => {
-  //get token from headers
-  const authToken = req.headers.authorization;
-
-  //check token is exist
-  if (!authToken || !authToken.startsWith("Bearer ")) {
-    return res
-      .status(401)
-      .json({ success: false, message: "No Token ,authorization denied" });
-  }
   try {
-    const token = authToken.split(" ")[1];
+    const authToken = req.headers.authorization;
+    
+    if (!authToken) {
+      return res.status(401).json({ message: "Token not provided" });
+    }
 
-    // verify token
+    const token = authToken.split(" ")[1];
     const decoded = jwt.verify(token, process.env.PATIENT_JWT_SECRET_KEY);
+
+    if (decoded.role !== "user") {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
     req.userId = decoded.userId;
     req.role = decoded.role;
-
     next();
+
   } catch (err) {
     if (err.name === "TokenExpiredError") {
       return res.status(401).json({ message: "Token is expired" });

@@ -1,7 +1,4 @@
 import express from "express";
-import multer from "multer";
-const upload = multer();
-
 import {
   updateUser,
   deleteUser,
@@ -19,6 +16,8 @@ import {
   getMyAppointmentDetails,
   MakeVideoCall,
   googleAuth,
+  getBookedSlots,
+  CancelBooking,
 } from "../Controllers/userController.js";
 
 import {
@@ -26,6 +25,8 @@ import {
   getRoom,
   createRoom,
   sendChat,
+  getNotification,
+  clearNotification,
 } from "../Controllers/chatController.js";
 import { authenticate, restrict } from "../auth/verifyToken.js";
 import { getSingleDoctor } from "../Controllers/DoctorController.js";
@@ -34,16 +35,10 @@ import {
   sessionStatus,
 } from "../Controllers/paymentController.js";
 import { saveBookingData } from "../Controllers/BookingController.js";
-import { singleUpload } from "../multer/multer.js";
 
 const router = express.Router();
-router.put(
-  "/updateUser/:id",
-  authenticate,
-  restrict(["patient"]),
-  singleUpload,
-  updateUser
-);
+
+router.put("/updateUser/:id", authenticate, restrict(["patient"]), updateUser);
 
 router.get(
   "/getAvailableSlots",
@@ -51,7 +46,9 @@ router.get(
   restrict(["patient"]),
   getAvailableSlots
 );
-router.get("/getSingleDoctor/:id", getSingleDoctor);
+
+router.get("/getBookedSlots", getBookedSlots);
+router.get("/getSingleDoctor/:id",authenticate, getSingleDoctor);
 router.get(
   "/getAvailableDates/:id",
   authenticate,
@@ -73,10 +70,14 @@ router.post(
 );
 router.get("/getDoctors/filter", filterDoctor);
 router.get("/getMyAppointments", authenticate, getMyAppointments);
-router.get("/getAppointmentsDetails/:id", getMyAppointmentDetails);
+router.get(
+  "/getAppointmentsDetails/:id",
+  authenticate,
+  getMyAppointmentDetails
+);
 router.get("/makeVideoCall/:id", MakeVideoCall);
 router.post("/google", googleAuth);
-router.get("/userProfile", authenticate, restrict(["patient"]), getUserProfile);
+router.get("/userProfile", authenticate, getUserProfile);
 router.post("/forgot-password", forgotPassword);
 router.route("/reset-password").post(resetPasswordOtpVerify).put(resetPassword);
 router.post("/changePassword", changePassword);
@@ -105,4 +106,7 @@ router.post(
   restrict(["patient"]),
   sendChat
 );
+router.put("/cancelBooking/:id", authenticate, CancelBooking);
+router.get("/getUserNotifications", authenticate, getNotification);
+router.post("/clearNotification", authenticate, clearNotification);
 export default router;

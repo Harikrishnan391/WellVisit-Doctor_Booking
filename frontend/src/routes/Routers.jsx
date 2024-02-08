@@ -33,25 +33,48 @@ import BookingDetails from "../pages/BookingDetails";
 import DoctorVideoCallRoom from "../pages/Doctors/DoctorVideoCallRoom";
 import UserVideoCallRoom from "../pages/UserVideoCallRoom";
 import DoctorChat from "../pages/Doctors/DoctorChat";
+import ErrorPage from "../components/404/ErrorPage"
 
 const Routers = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/users/home"element={ <ProtectedRoute allowedRoles={["patient"]}><Home /></ProtectedRoute> }/>  
+      <Route
+        path="/users/home"
+        element={
+          <ProtectedRoute allowedRoles={["patient"]}>
+            <Home />
+          </ProtectedRoute>
+        }
+      />
       {/* <Route path="/users/home" element={<Home />} /> */}
-      <Route path="/users/doctors"element={ <ProtectedRoute allowedRoles={["patient"]}><Doctors /></ProtectedRoute>}/>
+      <Route
+        path="/users/doctors"
+        element={
+          <ProtectedRoute allowedRoles={["patient"]}>
+            <Doctors />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/doctors/:id" element={<DoctorDetails />} />
       <Route path="users/login" element={<Login />} />
       <Route path="/register" element={<Signup />} />
       <Route path="/contact" element={<Contact />} />
-      <Route path="/services"element={ <ProtectedRoute allowedRoles={["patient"]}> <Services /></ProtectedRoute>}/>
+      <Route
+        path="/services"
+        element={
+          <ProtectedRoute allowedRoles={["patient"]}>
+            {" "}
+            <Services />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/userProfile"
         element={
-          <ProtectedRoute allowedRoles={["patient"]}>
-            <MyAccount />
-          </ProtectedRoute>
+          // <ProtectedRoute allowedRoles={["patient"]}>
+          <MyAccount />
+          // </ProtectedRoute>
         }
       />
       <Route path="/users/doctorDetails/:id" element={<DoctorDetails />} />
@@ -61,7 +84,7 @@ const Routers = () => {
       <Route path="/users/paymentSuccess" element={<PaymentSuccess />} />
       <Route path="/users/paymentFailed" element={<PaymentFailed />} />
       <Route path="/users/BookingDetails/:id" element={<BookingDetails />} />
-      <Route path="/users/room/:roomId" element={<UserVideoCallRoom />} />
+      <Route path="/users/room/:roomId" element={<ProtectedRoute allowedRoles={["patient"]}><UserVideoCallRoom /></ProtectedRoute>} />
 
       {/*============================Doctor Routes=========================================*/}
       <Route path="/doctors/doctorSignup" element={<DoctorSignUp />} />
@@ -80,7 +103,14 @@ const Routers = () => {
           </ProtectedDoctorRoute>
         }
       />
-      <Route path="/doctors/appointments" element={<ProtectedDoctorRoute allowedRoles={["doctor"]}><Appointments /></ProtectedDoctorRoute>} />
+      <Route
+        path="/doctors/appointments"
+        element={
+          <ProtectedDoctorRoute allowedRoles={["doctor"]}>
+            <Appointments />
+          </ProtectedDoctorRoute>
+        }
+      />
       <Route
         path="/doctors/doctorProfile"
         element={
@@ -89,8 +119,15 @@ const Routers = () => {
           </ProtectedDoctorRoute>
         }
       />
-      <Route path="/doctors/room/:roomId" element={<DoctorVideoCallRoom />} />
-      <Route path="/doctors/chats" element={<ProtectedDoctorRoute allowedRoles={["doctor"]}><DoctorChat /></ProtectedDoctorRoute>} />
+      <Route path="/doctors/room/:roomId" element={<ProtectedDoctorRoute allowedRoles={["doctor"]}><DoctorVideoCallRoom /></ProtectedDoctorRoute>} />
+      <Route
+        path="/doctors/chats"
+        element={
+          <ProtectedDoctorRoute allowedRoles={["doctor"]}>
+            <DoctorChat />
+          </ProtectedDoctorRoute>
+        }
+      />
       {/*============================Admin Routes=========================================*/}
       <Route
         path="/admin/home"
@@ -119,6 +156,7 @@ const Routers = () => {
       />
       <Route path="/admin/bookings" element={<CarouselDefault />} />
       <Route path="/admin/room/:roomId" element={<VideoCallRoom />} />
+      <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
 };

@@ -1,9 +1,9 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import userImg from "../../assets/images/doctor-img01.png";
 import MyBookings from "./MyBookings";
 import Profile from "./Profile";
 import useGetProfile from "../../hooks/userFetchData";
-import { BASE_URL, type,userPath } from "../../config";
+import { BASE_URL, type, userPath } from "../../config";
 import Loading from "../../components/Loader/Loading";
 import Error from "../../components/Error/Error";
 import PasswordReset from "./PasswordReset";
@@ -29,7 +29,10 @@ const MyAccount = () => {
       console.log("Error in Doctor profile fetching data");
     }
   }, [error, userData, loading, userData]);
- 
+
+
+  console.log(userData.photo,"photos")
+
   return (
     <section>
       <div className="max-w-[1170px] px-5 mx-auto">
@@ -42,7 +45,7 @@ const MyAccount = () => {
               <div className="flex itmes-center justify-center">
                 <figure className="w-[100px] h-[100px] rounded-full border-2 border-solid border-primaryColor">
                   <img
-                    src={`${userPath}${userData.photo}`}
+                    src={`${userData.photo}`}
                     alt=""
                     className=" w-full h-full rounded-full"
                   />
@@ -64,11 +67,11 @@ const MyAccount = () => {
               </div>
               <div className="mt-[50px] md:mt-[100px] ">
                 <div>
-                  <button 
-                  onClick={()=>setTab("password-reset")}
-                  className="w-full   bg-[#3568ce] p-3 text-[16px] leading-7  rounded-md  text-white ">
+                  <button
+                    onClick={() => setTab("password-reset")}
+                    className="w-full   bg-[#3568ce] p-3 text-[16px] leading-7  rounded-md  text-white "
+                  >
                     Change Your Password
-
                   </button>
                   <button
                     className="w-full   bg-red-600 mt-4 p-3 text-[16px] leading-7  rounded-md text-white"
@@ -76,7 +79,6 @@ const MyAccount = () => {
                   >
                     Delete Account{" "}
                   </button>
-             
                 </div>
               </div>
             </div>
@@ -106,7 +108,7 @@ const MyAccount = () => {
               {tab === "settings" && (
                 <Profile user={userData} refetch={refetch} />
               )}
-              {tab === "password-reset" && <PasswordReset /> }
+              {tab === "password-reset" && <PasswordReset />}
             </div>
           </div>
         )}

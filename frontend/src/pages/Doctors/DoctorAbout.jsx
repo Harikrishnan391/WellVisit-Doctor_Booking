@@ -2,6 +2,8 @@ import React from "react";
 import { FormateDate } from "../../utils/FormateDate";
 
 const DoctorAbout = ({ details }) => {
+
+  
   return (
     <div>
       <h3 className="text-[20px]  leading-[30px] text-headingColor font-bold  flex items-center   gap-2">

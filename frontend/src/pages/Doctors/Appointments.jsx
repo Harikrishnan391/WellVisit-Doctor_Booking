@@ -24,11 +24,9 @@ const Appointments = () => {
     }
   }, [Appointments, data, loading]);
 
-  const handleCancel = async(BookingId) => {
-
-  
+  const handleCancel = async (BookingId) => {
     const confirmResult = await Swal.fire({
-      title: "Do you want to approve VideoCall?",
+      title: "Do you want to Cancel This appointment?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -36,30 +34,31 @@ const Appointments = () => {
       cancelButtonText: "Cancel it",
     });
 
-
-    if(confirmResult.isConfirmed){
-      try{
-        const res=await fetch(`${BASE_URL}/doctors/CancellAppointment/${BookingId}`,{
-          method:"post",
-          headers:{
-            Authorization: `Bearer ${docToken}`
+    if (confirmResult.isConfirmed) {
+      try {
+        const res = await fetch(
+          `${BASE_URL}/doctors/CancellAppointment/${BookingId}`,
+          {
+            method: "post",
+            headers: {
+              Authorization: `Bearer ${docToken}`,
+            },
           }
-        })
+        );
 
-        let result=await res.json()
-        
-        if(!res.ok){
-          throw new Error("Something went wrong")
+        let result = await res.json();
+
+        if (!res.ok) {
+          throw new Error("Something went wrong");
         }
         Swal.fire({
           title: "Done!",
           text: "Your cancelled the appointment.",
           icon: "success",
         });
-        refetch()
-      }
-      catch(error){
-        console.log(error)
+        refetch();
+      } catch (error) {
+        console.log(error);
         Swal.fire({
           title: "error!",
           text: "An error Occured while cancelling",
@@ -105,7 +104,8 @@ const Appointments = () => {
           }
         );
 
-        let result = res.json();
+        let result = await res.json();
+        console.log(result, "result");
 
         if (!res.ok) {
           throw new Error(result.message);
@@ -116,8 +116,9 @@ const Appointments = () => {
           text: "Your changed the doctor status",
           icon: "success",
         });
+        const roomId = result.roomId;
 
-        createRoom();
+        navigate(`/doctors/room/${result.roomId}`);
       } catch (error) {
         console.log(error);
       }
@@ -178,16 +179,16 @@ const Appointments = () => {
                       </td>
                       <td className="px-4 py-3 text-sm border">{el.slot}</td>
                       <td className="px-4 py-3 text-xs border">
-                        {el.isCancelled?(
-                        <span className="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-sm">
-                          {" "}
-                          Appointment Cancelled{" "}
-                        </span>
-                        ):(
+                        {el.isCancelled ? (
+                          <span className="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-sm">
+                            {" "}
+                            Appointment Cancelled{" "}
+                          </span>
+                        ) : (
                           <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm">
-                          {" "}
-                          Acceptable{" "}
-                        </span>
+                            {" "}
+                            Acceptable{" "}
+                          </span>
                         )}
                       </td>
                       <td className="px-4 py-3 text-ms font-semibold border">
@@ -196,7 +197,7 @@ const Appointments = () => {
                             onClick={() => handleCancel(el._id)}
                             className="bg-red-500 hover:bg-pink-700 text-white font-bold py-2 px-4 border border-white-700 rounded"
                           >
-                            Cancel 
+                            Cancel
                           </button>
                           <FcVideoCall
                             onClick={() =>

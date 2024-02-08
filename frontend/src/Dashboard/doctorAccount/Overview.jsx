@@ -5,7 +5,7 @@ import { doctorPath } from "../../config";
 import { LiaCertificateSolid } from "react-icons/lia";
 console.log(doctorPath)
 function Overview({ userData }) {
-  console.log(userData.photo,"user photo")
+    
   return (
     <div>
       <section className="max-w-[1170px] px-5 mx-auto ">
@@ -14,7 +14,7 @@ function Overview({ userData }) {
             <div className="flex flex-col items-center gap-5 md:flex-row ">
               <figure className="max-w-[300px] max-h-[200px]  ">
                 <img
-                  src={`${doctorPath}${userData.photo}`}
+                  src={`${userData.photo}`}
                   alt=""
                   className="w-full rounded-lg "
                 />

@@ -148,7 +148,7 @@ export const resendOtp = async (req, res) => {
 export const login = async (req, res) => {
   let token;
   try {
-    const { email, password, role } = req.body;
+    const { email, password, role } = req.body;  
     const userModel = role === "patient" ? User : Doctor;
     const user = await userModel.findOne({ email: email });
     if (!user) {
@@ -179,6 +179,7 @@ export const login = async (req, res) => {
             // console.log("tokennnmmmmm", token);
             // res.cookie("jwtPatient", token, { httpOnly: true, maxAge: maxAge * 1000 });
             const { password, appointments, ...rest } = user._doc;
+          
             res.status(200).json({
               status: true,
               message: "Login Successful!!",
