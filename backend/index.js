@@ -31,9 +31,10 @@ const corsOptions = {
   credentials: true,
 };
 
-app.get("/", (req, res) => {
-  res.send("its working");
-});
+//configuring middlewares
+const currentWorkingDir = path.resolve();
+const parentDir = path.dirname(currentWorkingDir);
+console.log("parentDir", parentDir);
 
 //database connection
 mongoose.set("strictQuery", false);
@@ -53,6 +54,18 @@ app.use("/api/v1/users", userRoute);
 app.use("/api/v1/doctors", DoctorRoute);
 app.use("/api/v1/reviews", reviewRoute);
 app.use("/api/v1/admin", adminRoute);
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(parentDir, "/frontend/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(parentDir, "frontend", "dist", "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running...");
+  });
+}
 
 const server = app.listen(port, () => {
   try {
