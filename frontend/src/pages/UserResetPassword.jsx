@@ -23,7 +23,7 @@ const UserResetPassword = () => {
       return navigate("/forgot-password");
     }
     const { email } = user;
-    console.log(email)
+    console.log(email);
 
     try {
       const res = await fetch(`${BASE_URL}/users/reset-password`, {
@@ -66,20 +66,6 @@ const UserResetPassword = () => {
           className="space-y-6"
           onSubmit={submitHandler}
         >
-          {/* <div>
-          <label
-            htmlFor="currentPassword"
-            className="text-sm font-medium text-gray-700 block mb-2"
-          >
-            Current Password *
-          </label>
-          <input
-            type="password"
-            id="currentPassword"
-            className="password-input form-input block w-full border border-gray-300 rounded-md shadow-sm"
-            required=""
-          />
-        </div> */}
           <div>
             <label
               htmlFor="newPassword"

@@ -24,7 +24,6 @@ export const createReview = async (req, res) => {
 
   try {
     const StoredReview = await newReview.save();
-    console.log();
 
     await Doctor.findByIdAndUpdate(doctor, {
       $push: { reviews: StoredReview._id },
@@ -41,16 +40,71 @@ export const createReview = async (req, res) => {
 
 export const getDoctorReviews = async (req, res) => {
   const doctorId = req.params.id;
-  console.log(doctorId);
   try {
     const reviews = await Review.find({ doctor: doctorId }).populate({
       path: "user",
       select: "name photo",
     });
-    console.log(reviews, "reviews");
-    res.status(200).json({success:true,message:"Successfull",data:reviews})
+
+    res
+      .status(200)
+      .json({ success: true, message: "Successfull", data: reviews });
   } catch (error) {
     console.log(error);
-    res.status(404).json({success:false,message:"Not found"})
+    res.status(404).json({ success: false, message: "Not found" });
+  }
+};
+
+/////  Edit the Revieww /////
+
+export const EditReview = async (req, res) => {
+  const { rating, reviewText } = req.body;
+  const reviewId = req.params.id;
+
+  try {
+    const updatedReview = await Review.findByIdAndUpdate(
+      reviewId,
+      {
+        rating,
+        reviewText,
+      },
+      { new: true }
+    );
+
+    if (!updatedReview) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Review Not found" });
+    }
+
+    res
+      .status(200)
+      .json({ success: true, message: "Review updated Successfully" });
+  } catch (error) {
+    console.log("Error updating Review", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+///// Delete Review /////
+
+export const DeleteReview = async (req, res) => {
+  const reviewId = req.params.id;
+
+  try {
+    const DeleteReview = await Review.findByIdAndDelete(reviewId);
+
+    if (!DeleteReview) {
+      res
+        .status(404)
+        .json({ success: false, message: "Unable to delete Review" });
+    } else {
+      res
+        .status(200)
+        .json({ success: true, message: "Review Deleted Successfully" });
+    }
+  } catch (error) {
+    console.log("Error updating Review", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };

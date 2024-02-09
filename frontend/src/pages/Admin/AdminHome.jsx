@@ -8,7 +8,8 @@ const AdminHome = () => {
   const [users, setUsers] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [booking, setBookings] = useState([]);
-  console.log(booking, "booking");
+  const [chartPie, setChartPie] = useState(null);
+  const [yearlyBookings, setYearlyBookings] = useState([]);
 
   useEffect(() => {
     const fetchMonthlyData = async () => {
@@ -22,7 +23,6 @@ const AdminHome = () => {
 
         const result = await response.json();
         const data = result.data;
-        console.log(data, "data");
 
         // Sort data by month ID in ascending order
         const sortedData = data.sort((a, b) => a._id - b._id);
@@ -135,14 +135,57 @@ const AdminHome = () => {
 
         const result = await res.json();
         setBookings(result.data);
-
-        console.log(result, "result from total Booking");
       } catch (error) {
         console.log(error, "error");
       }
     };
     totalBookings();
   }, []);
+
+  useEffect(() => {
+    const fetchYearlyData = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/admin/YearlyBooking`, {
+          method: "get",
+        });
+
+        const result = await response.json();
+        setYearlyBookings(result.data);
+      } catch (error) {}
+    };
+
+    fetchYearlyData();
+  }, []);
+
+  useEffect(() => {
+    if (chartPie) {
+      chartPie.destroy();
+    }
+
+    if (yearlyBookings.length > 0) {
+      const ctx = document.getElementById("chartPie");
+      const newChartPie = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: yearlyBookings.map((item) => item._id),
+          datasets: [
+            {
+              label: "Yearly Bookings",
+              data: yearlyBookings.map((item) => item.totalBookings),
+              backgroundColor: [
+                "rgb(255, 99, 132)",
+                "rgb(54, 162, 235)",
+                "rgb(255, 205, 86)",
+                "rgb(75, 192, 192)",
+                "rgb(153, 102, 255)",
+              ],
+            },
+          ],
+        },
+      });
+      setChartPie(newChartPie);
+    }
+  }, [yearlyBookings]);
 
   return (
     <>
@@ -284,7 +327,15 @@ const AdminHome = () => {
 
         <div className="shadow-lg rounded-lg overflow-hidden">
           <div className="py-3 px-5 bg-gray-50">Monthly Sales</div>
-          <canvas className="p-10" id="chartBar"></canvas>
+          <canvas className="p-5  " id="chartBar"></canvas>
+        </div>
+
+        <div className="flex  justify-center shadow-lg rounded-lg overflow-hidden mt-6 ">
+          <div className="py-3 px-5 bg-gray-50">Yearly Bookings</div>
+          <canvas
+            className="p-10 md:p-2 max-w-md max-h-96 f"
+            id="chartPie"
+          ></canvas>
         </div>
       </div>
     </>

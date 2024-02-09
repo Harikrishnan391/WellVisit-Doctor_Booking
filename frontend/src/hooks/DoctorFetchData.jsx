@@ -5,6 +5,7 @@ const DoctorFetchData = (url) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [result, setResult] = useState([]);
 
   const fetchData = async () => {
     try {
@@ -22,6 +23,7 @@ const DoctorFetchData = (url) => {
       }
 
       setData(result.data);
+      setResult(result);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -42,6 +44,7 @@ const DoctorFetchData = (url) => {
     error,
     fetchData,
     refetch,
+    result,
   };
 };
 

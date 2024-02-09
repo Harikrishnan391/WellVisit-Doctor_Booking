@@ -34,7 +34,7 @@ export const register = async (req, res) => {
     const verificationCode = generateOTP();
 
     if (role === "patient") {
-      user = await  User.create({
+      user = await User.create({
         name,
         email,
         number,
@@ -45,19 +45,17 @@ export const register = async (req, res) => {
       });
     }
     if (role === "doctor") {
-      user = await  Doctor.create({
+      user = await Doctor.create({
         name,
         email,
         password: hashPassword,
         gender,
         role,
         verificationCode,
-        
       });
     }
 
     const status = await generateMail(verificationCode, email);
-    console.log(status);
 
     if (status?.success) {
       return res.status(200).json({
@@ -148,7 +146,7 @@ export const resendOtp = async (req, res) => {
 export const login = async (req, res) => {
   let token;
   try {
-    const { email, password, role } = req.body;  
+    const { email, password, role } = req.body;
     const userModel = role === "patient" ? User : Doctor;
     const user = await userModel.findOne({ email: email });
     if (!user) {
@@ -158,7 +156,6 @@ export const login = async (req, res) => {
         res.status(401).json({ message: "User is blocked" });
       } else {
         const isPasswordMatch = await bcrypt.compare(password, user.password);
-        console.log(isPasswordMatch);
         if (!isPasswordMatch) {
           res.status(400).json({ message: "Invalid email or password" });
         } else {
@@ -170,8 +167,6 @@ export const login = async (req, res) => {
             if (role === "patient") {
               token = generatePatientToken(user._id, res);
             } else if (role === "doctor") {
-              console.log("user._id", user._id);
-
               token = generateDoctorToken(user._id, res);
             }
             // const token = generateToken(user);
@@ -179,7 +174,7 @@ export const login = async (req, res) => {
             // console.log("tokennnmmmmm", token);
             // res.cookie("jwtPatient", token, { httpOnly: true, maxAge: maxAge * 1000 });
             const { password, appointments, ...rest } = user._doc;
-          
+
             res.status(200).json({
               status: true,
               message: "Login Successful!!",

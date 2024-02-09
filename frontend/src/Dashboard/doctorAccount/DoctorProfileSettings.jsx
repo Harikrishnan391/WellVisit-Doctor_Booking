@@ -24,6 +24,9 @@ const DoctorProfileSettings = ({ data, refetch }) => {
   const [previewURL, setPreviewURL] = useState("");
   const [certificatepreviewURL, setCertificatePreviewURL] = useState("");
   const [validationError, setValidationError] = useState("");
+  const [experience, setExperiences] = useState([]);
+  const [education, setEducations] = useState([]);
+
   const dispatch = useDispatch();
 
   const handlePhotoInputChange = async (e) => {
@@ -51,6 +54,10 @@ const DoctorProfileSettings = ({ data, refetch }) => {
     }
   };
 
+  const setExperience = () => {};
+
+  const setEducation = () => {};
+
   // const handleCertificateInputChange = (e) => {
   //   const certificate = e.target.files;
   //   const filesArray = Array.from(certificate);
@@ -59,7 +66,6 @@ const DoctorProfileSettings = ({ data, refetch }) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
 
     const dataToUpdate = {
       name,

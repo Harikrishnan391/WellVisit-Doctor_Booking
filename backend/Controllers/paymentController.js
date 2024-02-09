@@ -13,17 +13,6 @@ var customer = await stripe.customers.create({
 });
 
 export const makepayment = async (req, res) => {
-  // const unit_amout = req.body.doctor.details.name;
-  // const userId = req.body.user._id;
-  // const user=  await User.findById(userId)
-  // console.log(user,"user");
-  // customerInfo= {
-  //   name: user.name,
-  //   address: {
-  //       line1: user.address,
-  //     },
-  //  }
-  // console.log("data in payment",req.body)
   const indianDate = format(new Date(req.body.date), "dd/MM/yyyy");
   try {
     const unit_amount = req.body.doctor.details.fee * 100;

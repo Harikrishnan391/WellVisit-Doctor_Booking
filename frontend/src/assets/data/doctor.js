@@ -1,11 +1,11 @@
-import doctorImg01 from "../images/doctor-img01.png";
-import doctorImg02 from "../images/doctor-img02.png";
-import doctorImg03 from "../images/doctor-img03.png";
+import doctorImg01 from "../images/doctor3.jpg";
+import doctorImg02 from "../images/doctor03.jpg";
+import doctorImg03 from "../images/doctor01.jpg";
 
 export const doctors = [
   {
     id: "01",
-    name: "Dr. Alfaz Ahmed",
+    name: "Dr.Sruthy Reddy",
     specialty: "Surgeon",
     avgRating: 4.8,
     totalRating: 272,
@@ -25,7 +25,7 @@ export const doctors = [
   },
   {
     id: "03",
-    name: "Dr. Farid Uddin",
+    name: "Dr.Christeena",
     specialty: "Dermatologist",
     avgRating: 4.8,
     totalRating: 272,

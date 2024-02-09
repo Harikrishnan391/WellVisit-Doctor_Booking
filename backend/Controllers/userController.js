@@ -13,7 +13,6 @@ export const updateUser = async (req, res) => {
   const { name, email, number, role, gender, bloodType, address, photo } =
     req.body.data;
   const pic = photo;
-  console.log(pic, "picture");
 
   const updateData = {
     name,
@@ -81,9 +80,9 @@ export const forgotPassword = async (req, res) => {
     }
 
     const verificationCode = generateOTP();
-    console.log(verificationCode, "verification code ");
+
     const status = await generateMail(verificationCode, user.email);
-    console.log(status);
+
     if (status.success) {
       user.verificationCode = verificationCode;
       await user.save();
@@ -95,7 +94,6 @@ export const forgotPassword = async (req, res) => {
         },
       });
     }
-    console.log(user._doc.name, "usernameee");
   } catch (error) {
     res
       .status(500)
@@ -149,7 +147,6 @@ export const getSingleUser = async (req, res) => {
 /**======================Reset password  User not Logged in ============================= */
 export const resetPassword = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, "Email of the user");
   const user = await User.findOne({ email });
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(password, salt);
@@ -349,18 +346,15 @@ export const getAvailableSlots = async (req, res) => {
 
 export const getBookedSlots = async (req, res) => {
   const { date, doctor } = req.query;
-  console.log(doctor);
+
   try {
     const indianDate = format(new Date(date), "dd/MM/yyyy");
-    console.log(indianDate, "indianDate");
 
     const bookedSlots = await Booking.find({
       "doctor._id": doctor,
       IndianDate: indianDate,
     });
     const slots = bookedSlots.map((booking) => booking.slot);
-    console.log(slots, "slots");
-    // console.log(bookedSlots,"Booked slots")
 
     res
       .status(200)
@@ -373,7 +367,6 @@ export const getBookedSlots = async (req, res) => {
 
 /**==============get Available Dates======================== */
 export const getAvailableDates = async (req, res) => {
-  console.log("hi iam here");
   const docId = req.params.id;
 
   try {
@@ -384,7 +377,7 @@ export const getAvailableDates = async (req, res) => {
     }
 
     const dates = doctor.timeSlots.map((timeslot) => timeslot.uniDate);
-    console.log(dates, "dates");
+
     res.status(200).json({ data: dates });
   } catch (error) {
     console.error(error);
@@ -395,7 +388,6 @@ export const getAvailableDates = async (req, res) => {
 /**==============get Available filter doctors======================== */
 
 export const filterDoctor = async (req, res) => {
-  console.log("Hello filter doctor");
   try {
     const { query } = req.query;
     console.log(query);
@@ -421,7 +413,7 @@ export const filterDoctor = async (req, res) => {
     }
 
     const doctors = await Doctor.find(filterOption);
-    console.log(doctors);
+
     res.status(200).json({ success: true, doctors });
   } catch (error) {
     console.error("Error in filter by Price", error);
@@ -439,7 +431,7 @@ export const MakeVideoCall = async (req, res) => {
       throw new Error("You are not approved for this Facility");
     } else {
       const roomId = `${uuidv4()}-${userId}`;
-      console.log(roomId, "roomId for making videocall");
+
       res.status(200).json({ message: "Video Call", roomId });
     }
   } catch (error) {
@@ -451,18 +443,15 @@ export const MakeVideoCall = async (req, res) => {
 ////google Authentication //////
 
 export const googleAuth = async (req, res) => {
-  console.log("hariii");
-
   try {
     const user = await User.findOne({ email: req.body.email });
-    console.log(user, "user");
+
     if (user) {
       const token = generatePatientToken(user._id, res);
 
       const { password: hashedPassword, ...rest } = user._doc;
-      console.log(hashedPassword, "password");
+
       const expiryDate = new Date(Date.now() + 3600000);
-      console.log(expiryDate, "expiryDate");
 
       res
         .cookie("jwt", token, {
@@ -475,7 +464,7 @@ export const googleAuth = async (req, res) => {
       const generatePassword =
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
-      console.log(generatePassword, "generatePassword");
+
       const hashedPassword = bcrypt.hashSync(generatePassword, 10);
       const newUser = new User({
         name:

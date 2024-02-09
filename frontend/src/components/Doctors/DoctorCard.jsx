@@ -14,9 +14,9 @@ const DoctorCard = ({ doctor }) => {
     hospital,
   } = doctor;
   return (
-    <div p-6 lg:p-5>
+    <div className="doctor-card-container hover:scale-105 transition duration-300 ease-in-out">
       <div>
-        <img src={photo} className="w-full" alt="" />
+        <img src={photo} className="w-50 h-50 " alt="" />
         <h2 className="text-[18px] leading-[30px] lg:text-[26px] lg:leading-9 text-headingColor font-[700] mt-3 lg:mt-5">
           {name}
         </h2>
@@ -35,19 +35,14 @@ const DoctorCard = ({ doctor }) => {
           </div>
         </div>
 
-        < div className="mt-[18px] lg:t-5 flex items-center justify-between">
+        {/* <div className="mt-[18px] lg:5 flex items-center justify-end">
           <div>
             <h3 className="text-[16px] leading-7 lg:text-[18px] lg:leading-[30px] font-semibold text-headingColor">
               + 1300patients
             </h3>
           </div>
-          <p className="text-[14px]  leading-6 font-[400] text-textColor">
-            At
-          </p>
-        </div>
-
-
-      
+          <p className="text-[14px]  leading-6 font-[400] text-textColor">At</p>
+        </div> */}
       </div>
     </div>
   );

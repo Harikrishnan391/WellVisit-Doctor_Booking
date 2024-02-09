@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 import nodemailer from "nodemailer"
 dotenv.config();
 
-console.log(process.env.PORT);
 
 const client = new Twilio(
   process.env.TWILIO_SID,

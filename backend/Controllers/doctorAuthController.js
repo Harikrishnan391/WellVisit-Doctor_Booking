@@ -48,7 +48,7 @@ export const doctorSendOtp = async (req, res) => {
     });
 
     const status = await generateMail(verificationCode, email);
-    console.log(status);
+   
 
     if (status?.success) {
       return res.status(200).json({

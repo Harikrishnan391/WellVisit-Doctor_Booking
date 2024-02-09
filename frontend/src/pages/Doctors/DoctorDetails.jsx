@@ -105,6 +105,10 @@ const DoctorDetails = () => {
     }
   };
 
+  const handleReviewUpdate = (updatedReviews) => {
+    setReviews(updatedReviews);
+  };
+
   return (
     <div>
       {isLoading && (
@@ -125,10 +129,10 @@ const DoctorDetails = () => {
                     className="w-full rounded-lg "
                   />
                 </figure>
-                <div>
+                <div className="mt-7">
                   <span
                     className="bg-[#CCF0F3] text-irisBlueColor py-1 lg:py-2 lg:px-6
-                     text-[12px] leading-4 lg:text-[16px] lg:leading-7 font-semibold rounded  "
+                     text-[12px] leading-4 lg:text-[16px] lg:leading-7 font-semibold rounded "
                   >
                     {details.specialization}
                   </span>
@@ -155,14 +159,17 @@ const DoctorDetails = () => {
                   <div className="flex items-center gap-[6px] ">
                     <div className="flex gap-1 mt-3 h-6">
                       {[...Array(details.reviews).keys()].map((_, index) => (
-                        <AiFillStar key={index}  className="text-2xl text-yellow-500" />
+                        <AiFillStar
+                          key={index}
+                          className="text-2xl text-yellow-500"
+                        />
                       ))}
                     </div>
                     <span
                       className="text-[14px] leading-8 mt-3 lg:text-[16px] lg:leading-7 font-semibold 
                       text-textColor "
                     >
-                     ({details.averageRating}) 
+                      ({details.averageRating})
                     </span>
                   </div>
 
@@ -201,7 +208,7 @@ const DoctorDetails = () => {
             <div>
               <SidePanel details={details} />
             </div>
-            {isScrolled && (   
+            {isScrolled && (
               <div className="fixed bottom-10 right-6">
                 <button
                   onClick={() => chatHandler()}

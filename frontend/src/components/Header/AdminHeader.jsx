@@ -58,7 +58,7 @@ const AdminHeader = () => {
 
   const toggleMenu = () => menuRef.current.classList.toggle("show_menu");
   return (
-    <header className="header flex items-center " ref={headerRef}>
+    <header className="header flex items-center" ref={headerRef}>
       <div className="container">
         <div className="flex items-center justify-between">
           <div>
@@ -67,7 +67,7 @@ const AdminHeader = () => {
           {adminInfo && (
             <>
               <div className="navigation" ref={menuRef} onClick={toggleMenu}>
-                <ul className="menu flex items-center gap-[2.7rem]">
+                <ul className="menu flex items-center justify-center  gap-[2.7rem]">
                   {navlinks.map((link, index) => (
                     <li key={index}>
                       <NavLink
@@ -82,14 +82,16 @@ const AdminHeader = () => {
                       </NavLink>
                     </li>
                   ))}
-                  <button
-                    onClick={handleLogout}
-                    className="bg-primaryColor py-2 px-6 text-white font-[600] h-[37px] flex items-center cursor-pointer justify-center rounded-[50px]"
-                  >
-                    Logout
-                  </button>
                 </ul>
               </div>
+
+              <button
+                onClick={handleLogout}
+                className="bg-primaryColor py-2 px-6 text-white font-[600] h-[44px] flex items-center cursor-pointer justify-center rounded-[50px] "
+              >
+                Logout
+              </button>
+
               <span className="md:hidden" onClick={toggleMenu}>
                 <BiMenu className="w-6 h-6 cursor-pointer" />
               </span>

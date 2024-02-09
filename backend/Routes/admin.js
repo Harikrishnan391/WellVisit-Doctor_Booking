@@ -12,7 +12,9 @@ import {
   approveVideoCall,
   getMonthlyBooking,
   getBooking,
-  cancelBooking
+  cancelBooking,
+  YearlyBooking,
+
 } from "../Controllers/AdminController.js";
 
 const router = express.Router();
@@ -30,6 +32,8 @@ router.post("/approveVideoCall/:id", authenticateAdmin, approveVideoCall);
 router.get("/MonthlyBooking",authenticateAdmin,getMonthlyBooking)
 router.get("/getBooking",authenticateAdmin,getBooking)
 router.put("/cancelBooking/:id",authenticateAdmin,cancelBooking)
+router.get("/YearlyBooking",YearlyBooking)
+
 
 
 export default router;

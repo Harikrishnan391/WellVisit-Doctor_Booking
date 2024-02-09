@@ -3,7 +3,6 @@ import generateAdminToken from "../jwt/admin/adminjwt.js";
 import User from "../model/UserSchema.js";
 import Doctor from "../model/DoctorSchema.js";
 import Booking from "../model/bookingSchema.js";
-import { CompositionSettingsContextImpl } from "twilio/lib/rest/video/v1/compositionSettings.js";
 
 export const login = async (req, res) => {
   try {
@@ -14,7 +13,6 @@ export const login = async (req, res) => {
       return res.status(404).json({ message: "Invalid admin" });
     } else {
       const isPasswordMatch = admin.password === password;
-      console.log(password);
 
       if (!isPasswordMatch) {
         return res.status(400).json({ message: "Invalid email or password" });
@@ -129,7 +127,6 @@ export const approveVideoCall = async (req, res) => {
 export const HandleApprove = async (req, res) => {
   try {
     const docId = req.params.id;
-    console.log(docId);
 
     const doctor = await Doctor.findById(docId);
 
@@ -138,7 +135,7 @@ export const HandleApprove = async (req, res) => {
     }
 
     doctor.isApproved = !doctor.isApproved;
-    console.log(doctor.isApproved);
+
     const updateDoc = await Doctor.updateOne(
       { _id: docId },
       { $set: { isApproved: doctor.isApproved } }
@@ -164,25 +161,23 @@ export const HandleBlock = async (req, res) => {
     }
 
     doctor.isBlocked = !doctor.isBlocked;
-    console.log(doctor.isBlocked);
 
     const updateDoctorBlock = await Doctor.updateOne(
       { _id: doctorId },
       { $set: { isBlocked: doctor.isBlocked } }
     );
 
-    console.log(updateDoctorBlock);
     res.status(200).json({
       status: true,
       message: `Doctor is ${doctor.isBlocked ? "Blocked" : "unblocked"}`,
     });
-
-    console.log(doctor);
   } catch (error) {
     console.log(error);
     res.status(500).json({ status: false, message: "Something went wrong" });
   }
 };
+
+//// getting Monthly Data
 
 export const getMonthlyBooking = async (req, res) => {
   try {
@@ -202,6 +197,40 @@ export const getMonthlyBooking = async (req, res) => {
   }
 };
 
+//// getting yearly Data   /////
+
+export const YearlyBooking = async (req, res) => {
+  try {
+    const yearlyData = await Booking.aggregate([
+      {
+        $project: {
+          year: {
+            $year: {
+              $dateFromString: {
+                dateString: "$IndianDate",
+                format: "%d/%m/%Y",
+              },
+            },
+          },
+
+          fee: 1,
+        },
+      },
+      {
+        $group: {
+          _id: "$year",
+          totalBookings: { $sum: 1 },
+          totalAmount: { $sum: "$fee" },
+        },
+      },
+    ]);
+
+    res.status(200).json({ data: yearlyData });
+  } catch (error) {
+    res.status(404).json({ message: "Data not found" });
+  }
+};
+
 ///// getting the user Data
 
 export const getBooking = async (req, res) => {
@@ -211,14 +240,13 @@ export const getBooking = async (req, res) => {
       {
         "patient.name": 1,
         "doctor.name": 1,
-        paymentStatus:1,
+        paymentStatus: 1,
         IndianDate: 1,
         slot: 1,
         isCancelled: 1,
       }
     );
 
-    console.log(bookings, "Bookings");
     if (bookings.length === 0) {
       throw new Error(" Not have any Bookings");
     }
@@ -247,12 +275,15 @@ export const cancelBooking = async (req, res) => {
 
     if (!cancel) {
       return res.status(404).json({ message: "Booking not found" });
-    }
-    else{
-      res.status(200).json({status:true,message:"Booking cancelled successfullly"})
+    } else {
+      res
+        .status(200)
+        .json({ status: true, message: "Booking cancelled successfullly" });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({status:false,message:"Booking cancellation failed"})
+    res
+      .status(500)
+      .json({ status: false, message: "Booking cancellation failed" });
   }
 };

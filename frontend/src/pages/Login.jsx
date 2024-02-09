@@ -7,18 +7,18 @@ import { useDispatch } from "react-redux";
 import { setPatientCredentials } from "../slices/patientAuthSlice.js";
 import HashLoader from "react-spinners/HashLoader.js";
 import { setDoctorCredentials } from "../slices/doctorAuthSlice.js";
-import OAuth from "../components/GoogleAuth/OAuth.jsx"
+import OAuth from "../components/GoogleAuth/OAuth.jsx";
 
 const Login = () => {
   const navigate = useNavigate();
   const user = localStorage.getItem("PatientInfo");
-console.log(user)
+  console.log(user);
   useEffect(() => {
     if (user) {
-      console.log(user)
+      console.log(user);
       navigate("/users/home");
     }
-  },[]);
+  }, []);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -114,7 +114,7 @@ console.log(user)
         }
       }, 1000);
     } catch (error) {
-      console.log(error,"error");
+      console.log(error, "error");
       setTimeout(() => {
         toast.error(error.message);
         setLoading(false);
@@ -190,6 +190,11 @@ console.log(user)
             {errors.role && (
               <div className="text-sm text-red-500">{errors.role}</div>
             )}
+            <div className="flex  justify-end">
+              <Link to="/forgot-password" className="text-primaryColor">
+                Forgot Password?
+              </Link>
+            </div>
           </div>
 
           <div className="mt-7">

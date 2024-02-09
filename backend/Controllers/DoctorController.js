@@ -24,12 +24,11 @@ export const DoctorForgotPassword = async (req, res) => {
 
     const verificationCode = generateOTP();
     const status = await generateMail(verificationCode, doctor.email);
-    console.log(status, "status");
+
     if (status.success) {
       doctor.verificationCode = verificationCode;
     }
     await doctor.save();
-    console.log(doctor, "doctor");
 
     res.status(200).json({
       message: "Verification OTP sended to email",
@@ -47,7 +46,7 @@ export const DoctorForgotPassword = async (req, res) => {
 export const resetPasswordOtpVerify = async (req, res) => {
   try {
     const { email, verificationCode } = req.body;
-    console.log(email, "email  ");
+
     const doctor = await Doctor.findOne({ email, verificationCode });
     if (!doctor) {
       res.status(404).json({ status: false, message: "User not found" });
@@ -75,11 +74,9 @@ export const resendOtp = async (req, res) => {
 
   const verificationCode = generateOTP();
   const status = await generateMail(verificationCode, doctor.email);
-  console.log(status);
 
   if (status.success) {
     doctor.verificationCode = verificationCode;
-    console.log(doctor, "doctor after setting verification Code");
     await doctor.save();
 
     res.status(200).json({
@@ -115,7 +112,6 @@ export const DoctorResetPassword = async (req, res) => {
 };
 
 export const changeDoctorPassword = async (req, res) => {
-  console.log(req.body, "req.body");
   const { currentPassword, newPassword, confirmPassword, email } = req.body;
 
   try {
@@ -157,8 +153,6 @@ export const changeDoctorPassword = async (req, res) => {
 };
 
 export const updateDoctor = async (req, res) => {
-  console.log(req.body, "reqbody");
-
   // console.log(req.body.data.certificate, "certificates");
   const id = req.params.id;
 
@@ -181,10 +175,8 @@ export const updateDoctor = async (req, res) => {
       { new: true }
     );
 
-    console.log(updateDoctor, "update Doctorrr");
     const { password, ...rest } = updateDoctor._doc;
     const existingToken = req.headers.authorization.split(" ")[1];
-    console.log(existingToken);
 
     res.status(200).json({
       status: true,
@@ -215,7 +207,7 @@ export const deleteDoctor = async (req, res) => {
 
 export const getSingleDoctor = async (req, res) => {
   const id = req.params.id;
-  console.log(id);
+
   try {
     const doctor = await Doctor.findById(id).select("-password");
 
@@ -262,7 +254,6 @@ export const getAllDoctor = async (req, res) => {
 export const addTimeSlots = async (req, res) => {
   const docId = req.userId;
 
-  console.log(req.body, "req.body......");
   try {
     const doctor = await Doctor.findOne({ _id: docId });
 
@@ -342,8 +333,6 @@ export const getAvailableSlots = async (req, res) => {
       (slot) => slot.indianDate == indianDate
     );
 
-    console.log(timeSlots, "timeSolotss");
-
     if (!timeSlots) {
       return res
         .status(404)
@@ -363,7 +352,6 @@ export const removeSlots = async (req, res) => {
   const date = req.query.selectedDate;
   const indianDate = format(new Date(date), "dd/MM/yyyy");
   const slot = req.query.slot;
-  console.log(slot, "slottt");
 
   try {
     const doctor = await Doctor.findById(docId);
@@ -390,7 +378,6 @@ export const removeSlots = async (req, res) => {
     );
 
     if (result.Modified === 1) {
-      console.log("result", result);
       return res.status(200).json({ message: "Slot removed successfully" });
     } else {
       return res.status(404).json({ message: "Slot not found" });
@@ -440,16 +427,35 @@ export const getAppointments = async (req, res) => {
         IndianDate: 1,
         slot: 1,
         isCancelled: 1,
+        fee: 1,
       }
     ).sort({ AppointmentDate: -1 });
 
     if (bookings.length === 0) {
       throw new Error("Oops! you did't have any appointments yet");
     }
+
+    //calculate total appointments
+    const totalAppointments = bookings.length;
+
+    //calcualte total earning
+    const totalEarnings = bookings.reduce(
+      (total, booking) => total + booking.fee,
+      0
+    );
+
+    // Calculate cancelled appointments
+    const cancelledAppointments = bookings.filter(
+      (booking) => booking.isCancelled
+    ).length;
+
     res.status(200).json({
       success: true,
       message: "Appointments are getting",
       data: bookings,
+      totalAppointments: totalAppointments,
+      totalEarnings: totalEarnings,
+      cancelledAppointments: cancelledAppointments,
     });
   } catch (error) {
     console.log(error);
@@ -467,9 +473,8 @@ export const getAppointments = async (req, res) => {
 
 export const approveVideoCall = async (req, res) => {
   const PatientId = req.params.id;
-  console.log(PatientId, "from approveVideoCall");
+
   const status = req.query.status;
-  console.log(status, "status");
 
   try {
     const changeStatus = await User.findByIdAndUpdate(
@@ -477,8 +482,6 @@ export const approveVideoCall = async (req, res) => {
       { $set: { VideoCallApprove: status } },
       { new: true }
     );
-
-    console.log(changeStatus, "status Changes");
 
     if (!changeStatus) {
       return res.status(404).json({ message: "User not found" });
@@ -498,7 +501,7 @@ export const approveVideoCall = async (req, res) => {
 export const CancellAppointment = async (req, res) => {
   const bookingId = req.params.id;
   let booking = await Booking.findById(bookingId);
-  console.log(booking, "Booking");
+
   try {
     const cancel = await Booking.findByIdAndUpdate(
       bookingId,
@@ -532,7 +535,6 @@ export const MarkMessageAsRead = async (req, res) => {
     );
   } catch (error) {
     console.log("Error finding messages ", error);
-
     res.status(500).json({
       success: false,
       message: "An error occured while finding the messages",
