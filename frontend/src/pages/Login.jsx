@@ -186,15 +186,18 @@ const Login = () => {
                 />
                 Patient
               </label>
+              <div>
+                <Link
+                  to="/forgot-password"
+                  className="text-primaryColor ml-20 "
+                >
+                  Forgot Password?
+                </Link>
+              </div>
             </div>
             {errors.role && (
               <div className="text-sm text-red-500">{errors.role}</div>
             )}
-            <div className="flex  justify-end">
-              <Link to="/forgot-password" className="text-primaryColor">
-                Forgot Password?
-              </Link>
-            </div>
           </div>
 
           <div className="mt-7">

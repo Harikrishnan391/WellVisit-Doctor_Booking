@@ -14,7 +14,6 @@ import { dirname } from "path";
 import { Server } from "socket.io";
 
 dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();
@@ -34,8 +33,8 @@ const corsOptions = {
 //configuring middlewares
 const currentWorkingDir = path.resolve();
 const parentDir = path.dirname(currentWorkingDir);
-console.log("parentDir", parentDir);
-
+const dum = path.join(parentDir, "/frontend/dist");
+console.log(dum, "DUMMY");
 //database connection
 mongoose.set("strictQuery", false);
 const connectDB = async () => {
@@ -56,8 +55,8 @@ app.use("/api/v1/reviews", reviewRoute);
 app.use("/api/v1/admin", adminRoute);
 
 if (process.env.NODE_ENV === "production") {
+  const __dirname = path.resolve();
   app.use(express.static(path.join(parentDir, "/frontend/dist")));
-
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(parentDir, "frontend", "dist", "index.html"));
   });
