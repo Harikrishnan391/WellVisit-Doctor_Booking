@@ -13,7 +13,6 @@ const Profile = ({ user, refetch }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewURL, setPreviewURL] = useState("");
   const [validationError, setValidationError] = useState("");
-  console.log(selectedFile, "selected file");
 
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();

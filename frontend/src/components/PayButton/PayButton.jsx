@@ -31,7 +31,8 @@ const PayButton = ({ docDetails, date, slot }) => {
       if (res.ok) {
         localStorage.setItem("bookingData", JSON.stringify(bookingData));
         const data = await res.json();
-        console.log(data,"data.urlllll")
+
+        console.log(data.url, "url after payment ");
         if (data.url) {
           window.location.href = data.url;
         }

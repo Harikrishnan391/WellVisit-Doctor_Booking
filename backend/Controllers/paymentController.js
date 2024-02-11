@@ -7,10 +7,12 @@ var customer = await stripe.customers.create({
   name: "Dummy Name",
   address: {
     line1: "Dummy Address",
-
     country: "US",
   },
 });
+
+const clientURL = process.env.CLIENT_URL;
+console.log(clientURL, "client URL");
 
 export const makepayment = async (req, res) => {
   const indianDate = format(new Date(req.body.date), "dd/MM/yyyy");
@@ -52,12 +54,12 @@ export const makepayment = async (req, res) => {
   }
 };
 
-export const sessionStatus=async (req,res)=>{
-  const session=await stripe.checkout.sessions.retrieve(req.query.session_id)
+export const sessionStatus = async (req, res) => {
+  const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
 
   res.send({
-    status:session.status,
-    paymentId:session.id,
-    customer_email:session.customer_details.email
-  })
-}
+    status: session.status,
+    paymentId: session.id,
+    customer_email: session.customer_details.email,
+  });
+};
