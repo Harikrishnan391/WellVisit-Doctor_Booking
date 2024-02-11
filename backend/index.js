@@ -48,11 +48,11 @@ const connectDB = async () => {
 };
 
 app.use(cors(corsOptions));
-app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/users", userRoute);
-app.use("/api/v1/doctors", DoctorRoute);
-app.use("/api/v1/reviews", reviewRoute);
-app.use("/api/v1/admin", adminRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/users", userRoute);
+app.use("/api/doctors", DoctorRoute);
+app.use("/api/reviews", reviewRoute);
+app.use("/api/admin", adminRoute);
 
 if (process.env.NODE_ENV === "production") {
   const __dirname = path.resolve();
