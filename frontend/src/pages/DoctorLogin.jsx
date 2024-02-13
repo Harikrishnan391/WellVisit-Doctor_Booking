@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { setPatientCredentials } from "../slices/patientAuthSlice.js";
 import { setDoctorCredentials } from "../slices/doctorAuthSlice.js";
 import { PacmanLoader } from "react-spinners";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const DoctorLogin = () => {
   //State variables for Validation
@@ -13,6 +14,7 @@ const DoctorLogin = () => {
   const [isValid, setIsvalid] = useState(false);
   const navigate = useNavigate();
   const doctor = localStorage.getItem("doctorInfo");
+  const [showPassword, setShowPassword] = useState(false); // State variable to track password visibility
 
   useEffect(() => {
     if (doctor) {
@@ -178,16 +180,25 @@ const DoctorLogin = () => {
                     Forgot Password?
                   </Link>
                 </div>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  onChange={handleInputChange}
-                  required
-                  className={`px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200 ${
-                    errors.password ? "border-red-500" : ""
-                  }`}
-                />
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    onChange={handleInputChange}
+                    required
+                    className={`px-4 py-2  w-full  transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200 ${
+                      errors.password ? "border-red-500" : ""
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center px-2 focus:outline-none"
+                  >
+                    {showPassword ? <FaEye /> : <FaEyeSlash />}
+                  </button>
+                </div>
                 {errors.password && (
                   <div className="text-sm text-red-500">{errors.password}</div>
                 )}

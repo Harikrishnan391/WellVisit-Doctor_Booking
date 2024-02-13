@@ -17,7 +17,7 @@ const DoctorResetPassword = () => {
       return toast.error("Password not match");
     }
 
-    const user = JSON.parse(localStorage.getItem("DocotorData"));
+    const user = JSON.parse(localStorage.getItem("DoctorData"));
     console.log(user, "userr");
 
     if (!user) {
@@ -38,14 +38,13 @@ const DoctorResetPassword = () => {
         }),
       });
       const { status, ...rest } = res;
-      localStorage.removeItem("DocotorData")
+      localStorage.removeItem("DocotorData");
 
       if (res?.status == 200) {
         toast.success("Password Updated Successfully");
-        navigate("/users/login");
+        navigate("/doctors/login");
       }
     } catch (error) {
-
       console.log(error, "erroor");
     }
   };

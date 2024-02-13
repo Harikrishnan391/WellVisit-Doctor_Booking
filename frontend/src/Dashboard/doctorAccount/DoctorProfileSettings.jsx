@@ -24,8 +24,12 @@ const DoctorProfileSettings = ({ data, refetch }) => {
   const [previewURL, setPreviewURL] = useState("");
   const [certificatepreviewURL, setCertificatePreviewURL] = useState("");
   const [validationError, setValidationError] = useState("");
-  const [experience, setExperiences] = useState([]);
-  const [education, setEducations] = useState([]);
+  // Existing state variables...
+  const [education, setEducation] = useState([]);
+  const [experience, setExperience] = useState([]);
+
+  console.log(education, "education");
+  console.log(experience, "experience");
 
   const dispatch = useDispatch();
 
@@ -54,15 +58,55 @@ const DoctorProfileSettings = ({ data, refetch }) => {
     }
   };
 
-  const setExperience = () => {};
-
-  const setEducation = () => {};
-
   // const handleCertificateInputChange = (e) => {
   //   const certificate = e.target.files;
   //   const filesArray = Array.from(certificate);
   //   setCertificate(filesArray);
   // };
+
+  const addEducation = () => {
+    const newEducation = {
+      start: "",
+      end: "",
+      course: "",
+      college: "",
+    };
+    setEducation([...education, newEducation]);
+  };
+
+  const addExperience = () => {
+    const newExperience = {
+      start: "",
+      end: "",
+      position: "",
+      department: "",
+    };
+    setExperience([...experience, newExperience]);
+  };
+
+  const updateEducation = (index, field, value) => {
+    const updatedEducation = [...education];
+    updatedEducation[index][field] = value;
+    setEducation(updatedEducation);
+  };
+
+  const updateExperience = (index, field, value) => {
+    const updatedExperience = [...experience];
+    updatedExperience[index][field] = value;
+    setExperience(updatedExperience);
+  };
+
+  const removeEducation = (index) => {
+    const updatedEducation = [...education];
+    updatedEducation.splice(index, 1);
+    setEducation(updatedEducation);
+  };
+
+  const removeExperience = (index) => {
+    const updatedExperience = [...experience];
+    updatedExperience.splice(index, 1);
+    setExperience(updatedExperience);
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -105,6 +149,14 @@ const DoctorProfileSettings = ({ data, refetch }) => {
     }
     if (certificate) {
       dataToUpdate.certificate = certificate;
+    }
+
+    // Only update education and experience if they are not empty
+    if (education && education.length > 0) {
+      dataToUpdate.education = education;
+    }
+    if (experience && experience.length > 0) {
+      dataToUpdate.experience = experience;
     }
 
     try {
@@ -192,7 +244,6 @@ const DoctorProfileSettings = ({ data, refetch }) => {
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
               />
             </div>
-
             <div>
               <label
                 className="text-white dark:text-gray-200"
@@ -210,7 +261,6 @@ const DoctorProfileSettings = ({ data, refetch }) => {
                 defaultValue={""}
               />
             </div>
-
             <div className="mt-auto mb-0">
               <label className="text-white dark:text-gray-200">gender</label>
               <select
@@ -227,7 +277,6 @@ const DoctorProfileSettings = ({ data, refetch }) => {
                 <option value="female">Female</option>
               </select>
             </div>
-
             <div>
               <label
                 className="text-white dark:text-gray-200"
@@ -245,13 +294,12 @@ const DoctorProfileSettings = ({ data, refetch }) => {
                 <option value="" disabled selected>
                   Select specialization
                 </option>
-                <option value="Cardiologist">Cardiologist</option>
-                <option value="Neurologist">Neurologist</option>
-                <option value="pediatrician">pediatrician</option>
-                <option value="phychiatrist">phychiatrist</option>
+                <option value="Cardiology">Cardiologist</option>
+                <option value="Neurology">Neurologist</option>
+                <option value="Pediatrics">pediatrician</option>
+                <option value="Deramtology">Deramtologist</option>
               </select>
             </div>
-
             <div>
               <label className="text-white dark:text-gray-200">Fee</label>
               <input
@@ -263,7 +311,6 @@ const DoctorProfileSettings = ({ data, refetch }) => {
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
               />
             </div>
-
             <div className="flex items-center justify-center gap-1">
               {/* /////////////////////photo upload///////////////////// */}
               <div className="flex flex-col items-center gap-3 mb-5 mt-7">
@@ -332,7 +379,6 @@ const DoctorProfileSettings = ({ data, refetch }) => {
                 </div>
               </div>
             </div>
-
             <div>
               <label
                 className="text-white dark:text-gray-200"
@@ -348,6 +394,207 @@ const DoctorProfileSettings = ({ data, refetch }) => {
                 defaultValue={""}
                 placeholder="write something about you"
               />
+            </div>
+
+            {education.map((edu, index) => (
+              <div key={index} className="flex flex-col gap-3">
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor={`education-${index}-start`}
+                    className="text-white dark:text-gray-200"
+                  >
+                    Start Date
+                  </label>
+                  <input
+                    type="date"
+                    id={`education-${index}-start`}
+                    value={edu.start}
+                    onChange={(e) =>
+                      updateEducation(index, "start", e.target.value)
+                    }
+                    className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor={`education-${index}-end`}
+                    className="text-white dark:text-gray-200"
+                  >
+                    End Date
+                  </label>
+                  <input
+                    type="date"
+                    id={`education-${index}-end`}
+                    value={edu.end}
+                    onChange={(e) =>
+                      updateEducation(index, "end", e.target.value)
+                    }
+                    className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor={`education-${index}-course`}
+                    className="text-white dark:text-gray-200"
+                  >
+                    Course
+                  </label>
+                  <input
+                    type="text"
+                    id={`education-${index}-course`}
+                    value={edu.course}
+                    onChange={(e) =>
+                      updateEducation(index, "course", e.target.value)
+                    }
+                    className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor={`education-${index}-college`}
+                    className="text-white dark:text-gray-200"
+                  >
+                    College
+                  </label>
+                  <input
+                    type="text"
+                    id={`education-${index}-college`}
+                    value={edu.college}
+                    onChange={(e) =>
+                      updateEducation(index, "college", e.target.value)
+                    }
+                    className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeEducation(index)}
+                  className="text-white dark:text-gray-200 bg-red-500 px-3 py-1 rounded-md"
+                >
+                  Remove Education
+                </button>
+              </div>
+            ))}
+
+            {experience.map((exp, index) => (
+              <div key={index} className="flex flex-col gap-3">
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor={`experience-${index}-start`}
+                    className="text-white dark:text-gray-200"
+                  >
+                    Start Date
+                  </label>
+                  <input
+                    type="date"
+                    id={`experience-${index}-start`}
+                    value={exp.start}
+                    onChange={(e) =>
+                      updateExperience(index, "start", e.target.value)
+                    }
+                    className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor={`experience-${index}-end`}
+                    className="text-white dark:text-gray-200"
+                  >
+                    End Date
+                  </label>
+                  <input
+                    type="date"
+                    id={`experience-${index}-end`}
+                    value={exp.end}
+                    onChange={(e) =>
+                      updateExperience(index, "end", e.target.value)
+                    }
+                    className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor={`experience-${index}-position`}
+                    className="text-white dark:text-gray-200"
+                  >
+                    Position
+                  </label>
+                  <input
+                    type="text"
+                    id={`experience-${index}-position`}
+                    value={exp.position}
+                    onChange={(e) =>
+                      updateExperience(index, "position", e.target.value)
+                    }
+                    className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor={`experience-${index}-department`}
+                    className="text-white dark:text-gray-200"
+                  >
+                    Department
+                  </label>
+                  <input
+                    type="text"
+                    id={`experience-${index}-department`}
+                    value={exp.department}
+                    onChange={(e) =>
+                      updateExperience(index, "department", e.target.value)
+                    }
+                    className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeExperience(index)}
+                  className="text-white dark:text-gray-200 bg-red-500 px-3 py-1 rounded-md"
+                >
+                  Remove Experience
+                </button>
+              </div>
+            ))}
+
+            <div className="flex justify-end mt-6 space-x-4 ">
+              <button
+                type="button"
+                onClick={addEducation}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <svg
+                  className="-ml-1 mr-2 h-5 w-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 12a1 1 0 0 1-1 1H5a1 1 0 0 1 0-2h4a1 1 0 0 1 1 1zM5 8a1 1 0 1 1 0-2h10a1 1 0 1 1 0 2H5z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Add Education
+              </button>
+              <button
+                type="button"
+                onClick={addExperience}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <svg
+                  className="-ml-1 mr-2 h-5 w-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 12a1 1 0 0 1-1 1H5a1 1 0 0 1 0-2h4a1 1 0 0 1 1 1zM5 8a1 1 0 1 1 0-2h10a1 1 0 1 1 0 2H5z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Add Experience
+              </button>
             </div>
           </div>
           <div className="flex justify-end mt-6">

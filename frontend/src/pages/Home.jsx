@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useSpring, animated } from "react-spring";
 import heroImg01 from "../assets/images/Doctor1.png";
-import heroImg02 from "../assets/images/hero-img02.png";
-import heroImg03 from "../assets/images/hero-img03.png";
+import heroImg02 from "../assets/images/glob.jpg";
+import heroImg03 from "../assets/images/glob3.jpg";
 import icon01 from "../assets/images/icon01.png";
 import icon02 from "../assets/images/icon02.png";
 import icon03 from "../assets/images/icon03.png";
@@ -14,14 +14,13 @@ import faqImg from "../assets/images/faq-img.png";
 import { Link } from "react-router-dom";
 import { BsArrowRight } from "react-icons/bs";
 import About from "../components/About/About";
-import  ShuffleHero from "../components/Slider/ShuffleHero";
+import ShuffleHero from "../components/Slider/ShuffleHero";
 import ServiceList from "../components/Services/ServiceList";
 import FaqList from "../components/Faq/FaqList";
 import Testimonial from "../components/Testimonial/Testimonial";
 import DoctorList from "../components/Doctors/DoctorList";
 import { Carousel } from "@material-tailwind/react";
 import { Parallax, ParallaxLayer } from "@react-spring/parallax";
-
 
 const Home = () => {
   // const [activeIndex, setActiveIndex] = useState(0);
@@ -67,7 +66,7 @@ const Home = () => {
   return (
     <>
       {/**Section for moving currosals   */}
-{/*     
+      {/*     
         <div className="rounded-xl overflow-hidden relative h-96">
           {images.map((image, index) => (
             <img
@@ -101,7 +100,7 @@ const Home = () => {
                   a Latin professor at Hampden-Sydney College in Virginia,
                   looked up one of the more obscure Latin words, consectetur,
                 </p>
-                <button className="btn">Request An appointment</button>
+                {/* <button className="btn">Request An appointment</button> */}
               </div>
               {/*===hero Counter===== */}
               <div className="mt-[30px] lg:mt-[70px] flex  flex-col lg:flex-row lg:items-center gap-5 lg:gap-[30px]">
@@ -134,15 +133,15 @@ const Home = () => {
             <div className="flex  justify-end ">
               <div>
                 <img
-                  className="width-full h-47 object-cover"
-                  src={heroImg01}
+                  className="width-full  h-full object-cover"
+                  src={heroImg03}
                   alt=""
                 />
               </div>
               <div>
                 <img
-                  className="width-full h-47 object-cover"
-                  src={heroImg01}
+                  className="width-full   object-cover"
+                  src={heroImg02}
                   alt=""
                 />
               </div>
@@ -150,9 +149,8 @@ const Home = () => {
           </div>
         </div>
       </section>
-         {/** framer animation */}
+      {/** framer animation */}
 
-         
       {/**=======hero section end==== */}
 
       <section>
@@ -237,9 +235,9 @@ const Home = () => {
       </section>
 
       {/*================About section start===========*/}
-     
-        <About/>
-    
+
+      <About />
+
       {/* ============services section======= */}
       {/* <section>
         <div className="container">
@@ -256,9 +254,8 @@ const Home = () => {
       {/* ============services end============ */}
 
       {/** Docots section */}
-   
-        <DoctorList />
-  
+
+      <DoctorList />
 
       {/*====Feature section start================== */}
 

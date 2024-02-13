@@ -2,14 +2,7 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { IoIosArrowRoundForward } from "react-icons/io";
 
 function Pagination({ postPerPage, totalPosts, setCurrentPage, currentPage }) {
-  console.log(postPerPage, "postPerpage");
-  console.log(totalPosts, "totalpost");
-  //  console.log(setCurrentPage,"setCurrentPage");
-  console.log(currentPage, "currentPage");
-
   let pages = [];
-
-  console.log(pages);
 
   for (let i = 1; i <= Math.ceil(totalPosts / postPerPage); i++) {
     pages.push(i);

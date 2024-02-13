@@ -60,6 +60,7 @@ export const resetPasswordOtpVerify = async (req, res) => {
       status: true,
     });
   } catch (error) {
+     console.log(error)
     res.status(500).json({ message: error.message });
   }
 };
@@ -500,12 +501,13 @@ export const approveVideoCall = async (req, res) => {
 
 export const CancellAppointment = async (req, res) => {
   const bookingId = req.params.id;
+  const cancellReason = req.body.reason;
   let booking = await Booking.findById(bookingId);
 
   try {
     const cancel = await Booking.findByIdAndUpdate(
       bookingId,
-      { $set: { isCancelled: true } },
+      { $set: { isCancelled: true, cancelReason: cancellReason } },
       { new: true }
     );
 

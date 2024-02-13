@@ -3,23 +3,23 @@ import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../config";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-// import { authContext } from "../context/AuthContext.jsx";
 import { setPatientCredentials } from "../slices/patientAuthSlice.js";
 import HashLoader from "react-spinners/HashLoader.js";
 import { setDoctorCredentials } from "../slices/doctorAuthSlice.js";
 import OAuth from "../components/GoogleAuth/OAuth.jsx";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { FaUser, FaEnvelope, FaPhone, FaLock } from "react-icons/fa"; // Import required icons fot input filed
 
 const Login = () => {
   const navigate = useNavigate();
   const user = localStorage.getItem("PatientInfo");
-  console.log(user);
+
   useEffect(() => {
     if (user) {
-      console.log(user);
       navigate("/users/home");
     }
   }, []);
-
+  //// Taking each values from Input field /////
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -27,18 +27,22 @@ const Login = () => {
   });
 
   const [loading, setLoading] = useState(false);
-
   //State variables for Validation
-
   const [errors, setErrors] = useState({});
   const [isValid, setIsvalid] = useState(false);
-
   const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  //// Function for password Visitbitlity
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  //// code for Validation////
   const validateForm = () => {
     const errors = {};
     //validate email
@@ -130,14 +134,17 @@ const Login = () => {
           back
         </h3>
         <form className="py-4 md:py-0" onSubmit={submitHandler}>
-          <div className="mb-5">
+          <div className="mb-5 relative">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+              <FaEnvelope className="text-gray-500" />
+            </span>
             <input
               type="email"
               placeholder="Enter Your Email"
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className={`w-full  py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16 px] loading-7 text-headingColor placeholder:text-textColor rounded-md ${
+              className={`w-full pl-10 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16 px] loading-7 text-headingColor placeholder:text-textColor rounded-md ${
                 errors.email ? "border-red-500" : ""
               }`}
             />
@@ -146,7 +153,7 @@ const Login = () => {
             )}
           </div>
 
-          <div className="mb-5">
+          {/* <div className="mb-5">
             <input
               type="Password"
               placeholder="Password"
@@ -157,15 +164,50 @@ const Login = () => {
                 errors.password ? "border-red-500" : ""
               }`}
             />
+            <button>
+            {showPassword ? <FiEye />:<FiEyeOff />}
+            </button>
+          
 
+            {errors.password && (
+              <div className="text-sm text-red-500">{errors.password}</div>
+            )}
+          </div> */}
+          <div className="mb-5 relative">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+              <FaLock className="text-gray-500" />
+            </span>
+            <input
+              type={showPassword ? "text" : "password"} // Conditional rendering of input type
+              placeholder="Password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              className={`w-full pl-10 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16 px] loading-7 text-headingColor placeholder:text-textColor rounded-md ${
+                errors.password ? "border-red-500" : ""
+              }`}
+            />
+            {/* Icon for toggling password visibility */}
+            <button
+              type="button"
+              className="absolute inset-y-0 right-0 flex items-center px-3"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? <FiEyeOff /> : <FiEye />}
+            </button>
+            {errors.password && (
+              <div className="text-sm text-red-500">{errors.password}</div>
+            )}
             {errors.password && (
               <div className="text-sm text-red-500">{errors.password}</div>
             )}
           </div>
 
           <div className="mt-4">
-            <div className="flex items-center gap-4">
-              <label className="mr-4 text-sm text-slate-500">I am a:</label>
+            <div className="flex items-center justify-between gap-4">
+              <label className="mr-4 text-sm text-slate-500 font-semibold">
+                I am a:
+              </label>
               <label>
                 <input
                   type="radio"
@@ -186,7 +228,7 @@ const Login = () => {
                 />
                 Patient
               </label>
-              <div>
+              <div className="ml-auto">
                 <Link
                   to="/forgot-password"
                   className="text-primaryColor ml-20 "

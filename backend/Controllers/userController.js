@@ -499,6 +499,7 @@ export const googleAuth = async (req, res) => {
 
 export const CancelBooking = async (req, res) => {
   const bookingId = req.params.id;
+  const cancelReason = req.body.reason;
 
   const booking = await Booking.findById(bookingId);
   const doctor = await Doctor.findById(booking.doctor._id);
@@ -506,7 +507,7 @@ export const CancelBooking = async (req, res) => {
   try {
     const cancelBooking = await Booking.findByIdAndUpdate(
       bookingId,
-      { $set: { isCancelled: true } },
+      { $set: { isCancelled: true, cancelReason: cancelReason } },
       { new: true }
     );
 
@@ -526,5 +527,22 @@ export const CancelBooking = async (req, res) => {
     res
       .status(500)
       .json({ status: false, message: "Booking cancellation failed" });
+  }
+};
+
+////filter doctor by specialization
+
+export const filterDoctorBYSpecialization = async (req, res) => {
+  try {
+    const { specialization } = req.query;
+
+    const doctors = await Doctor.find({ specialization });
+
+    console.log(doctors,"doctors")
+
+    res.status(200).json({ success: true, doctors });
+  } catch (error) {
+    console.error("Error in filter by Specialization", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };

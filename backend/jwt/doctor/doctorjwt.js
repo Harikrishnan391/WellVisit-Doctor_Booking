@@ -14,13 +14,9 @@ const generateDoctorToken = (userId, res) => {
   res.cookie("jwtDoctor", token, {
     httpOnly: true,
     sameSite: "strict",
-    maxAge: 30 * 24 * 60 * 100,
+    maxAge: 30 * 24 * 60 * 60 * 100,
   });
   return token;
 };
 
 export default generateDoctorToken;
-
-
-
-let obj={}

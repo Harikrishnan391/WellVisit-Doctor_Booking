@@ -10,9 +10,11 @@ import { doctorPath } from "../../config";
 import Swal from "sweetalert2";
 import starIcon from "../../assets/images/Star.png";
 import { LiaCertificateSolid } from "react-icons/lia";
+import Pagination from "../../components/pagination/Pagination";
+
 const MyBookings = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [postPerPage, setPostPerPage] = useState(6);
+  const [postPerPage, setPostPerPage] = useState(3);
   const {
     data: appointments,
     loading,
@@ -21,29 +23,39 @@ const MyBookings = () => {
   } = userFetchData(`${BASE_URL}/users/getMyAppointments`);
 
   const handleCancel = async (id) => {
-    const confirmResult = await Swal.fire({
+    const { value: reason } = await Swal.fire({
       title: "Are you Sure",
+      input: "text",
+      inputLabel1: "Reason for Cancellation",
+      inputPlaceholder: "Enter your Reason for Cancellation",
       text: "you won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes cancel it!",
-      cancelButtonText: "No",
+      cancelButtonText: "close",
+      inputValidator: (value) => {
+        if (!value) {
+          return "You need to Provide reaseon";
+        }
+      },
     });
 
-    if (confirmResult.isConfirmed) {
+    if (reason) {
       try {
         const res = await fetch(`${BASE_URL}/users/cancelBooking/${id}`, {
           method: "put",
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
+          body: JSON.stringify({ reason }),
         });
 
         const result = await res.json();
-         // Display success message
-         Swal.fire({
+        // Display success message
+        Swal.fire({
           title: "Cancelled!",
           text: "Your Booking has been cancelled.",
           icon: "success",
@@ -51,12 +63,11 @@ const MyBookings = () => {
 
         // Perform any additional actions (e.g., refetch data)
         refetch();
-        if(!res.ok){
-          throw new Error(result.message)
+        if (!res.ok) {
+          throw new Error(result.message);
         }
-        console.log(result, "result");
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
   };
@@ -77,7 +88,7 @@ const MyBookings = () => {
               onClick={() =>
                 Swal.fire({
                   html: `<div style="text-align: center;">
-                <h2 style="color: red; margin-bottom: 10px; font-size: 1.5em;">Booking Cancelled by the Doctor!</h2>
+                <h2 style="color: red; margin-bottom: 10px; font-size: 1.5em;">Booking has been Cancelled  !</h2>
                 <span style="font-size: 15px;">Reason: ${el.cancelReason}</span>
                 <p style="font-weight: bold; margin-top: 10px;">Your money will be credited to the wallet</p>
               </div>`,
@@ -147,52 +158,14 @@ const MyBookings = () => {
           </div>
         ))}
       </div>
-
-      {/* 
-      <div className=" flex justify-between lg:grid-cols-3 mt-8 w-[750px]">
-        {currentPosts.map((el) => (
-          <div
-            key={el._id}
-            className={`h-72 mx-4 w-72 bg-blue-400 rounded-3xl shadow-md sm:w-80 sm:mx-0 mt-8 ${
-              el.isCancelled ? "opacity-50 pointer-events-none" : ""
-            }`}
-          >
-            <div className="h-1/2 w-full flex justify-between items-baseline px-3 py-5">
-              <h1 className="text-white">Profile</h1>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="white"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1}
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-            </div>
-            <div className="bg-white h-1/2 w-full rounded-3xl flex flex-col justify-around items-center">
-              <div className="w-full h-1/2 flex justify-between items-center px-3 pt-2">
-                <div className="flex flex-col justify-center items-center">
-                  <h1 className="text-gray-500 text-xs">Orders</h1>
-                  <h1 className="text-gray-600 text-sm">340</h1>
-                </div>
-                <div className="flex flex-col justify-center items-center">
-                  <h1 className="text-gray-500 text-xs">Spent</h1>
-                  <h1 className="text-gray-600 text-sm">$2,004</h1>
-                </div>
-              </div>
-              <div className="w-full h-1/2 flex flex-col justify-center items-center">
-                <h1 className="text-gray-700 font-bold">Maria R.</h1>
-                <h1 className="text-gray-500 text-sm">New York, USA</h1>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div> */}
+      <div className="mt-20">
+        <Pagination
+          postPerPage={postPerPage}
+          totalPosts={appointments.length}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+        />
+      </div>
     </>
   );
 };

@@ -88,8 +88,9 @@ const BookingDetails = () => {
       console.log(error);
     }
   };
+  
   return (
-    <div className="grid  grid-cols-3 p-7 ">
+    <div className="flex justify-center ">
       <div>
         <div className="m-10 max-w-sm ">
           <div className="rounded-lg border bg-white px-4 pt-8 pb-10 shadow-lg">

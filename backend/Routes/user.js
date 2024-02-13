@@ -18,6 +18,7 @@ import {
   googleAuth,
   getBookedSlots,
   CancelBooking,
+  filterDoctorBYSpecialization
 } from "../Controllers/userController.js";
 
 import {
@@ -48,7 +49,7 @@ router.get(
 );
 
 router.get("/getBookedSlots", getBookedSlots);
-router.get("/getSingleDoctor/:id",authenticate, getSingleDoctor);
+router.get("/getSingleDoctor/:id", authenticate, getSingleDoctor);
 router.get(
   "/getAvailableDates/:id",
   authenticate,
@@ -69,6 +70,7 @@ router.post(
   saveBookingData
 );
 router.get("/getDoctors/filter", filterDoctor);
+router.get("/filterBySpecialization", filterDoctorBYSpecialization);
 router.get("/getMyAppointments", authenticate, getMyAppointments);
 router.get(
   "/getAppointmentsDetails/:id",

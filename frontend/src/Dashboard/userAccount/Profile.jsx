@@ -41,6 +41,7 @@ const Profile = ({ user, refetch }) => {
       bloodType: user.bloodType,
       photo: user.photo,
     });
+  
   }, [user]);
 
   const handleInputChange = (e) => {

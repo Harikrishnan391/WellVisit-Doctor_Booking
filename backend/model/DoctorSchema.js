@@ -25,6 +25,14 @@ const DoctorSchema = new mongoose.Schema({
     type: Array,
   },
 
+  experience: {
+    type: Array,
+  },
+
+  education: {
+    type: Array,
+  },
+
   bio: { type: String, maxLength: 500 },
 
   about: { type: String },

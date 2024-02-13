@@ -6,6 +6,7 @@ import { FcVideoCall } from "react-icons/fc";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Pagination from "../../components/pagination/Pagination";
 
 const Appointments = () => {
   const [Appointments, setAppointments] = useState([]);
@@ -34,16 +35,24 @@ const Appointments = () => {
   }, [Appointments, data, loading]);
 
   const handleCancel = async (BookingId) => {
-    const confirmResult = await Swal.fire({
+    const { value: reason } = await Swal.fire({
       title: "Do you want to Cancel This appointment?",
+      input: "text",
+      inputLabel: "Reason for Cancellation",
+      inputPlaceholder: "Enter the Reason for Cancellation",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       confirmButtonText: "Yes,do it!",
       cancelButtonText: "Cancel it",
+      inputValidator: (value) => {
+        if (!value) {
+          return "You need to Provide reason";
+        }
+      },
     });
 
-    if (confirmResult.isConfirmed) {
+    if (reason) {
       try {
         const res = await fetch(
           `${BASE_URL}/doctors/CancellAppointment/${BookingId}`,
@@ -51,7 +60,9 @@ const Appointments = () => {
             method: "post",
             headers: {
               Authorization: `Bearer ${docToken}`,
+              "Content-Type": "application/json",
             },
+            body: JSON.stringify({ reason }),
           }
         );
 
@@ -181,12 +192,14 @@ const Appointments = () => {
               <div className=" flex items-center  justify-between p-4  rounded-lg bg-white shadow-indigo-50 shadow-md">
                 <div>
                   <h2 className="text-gray-900 text-lg font-bold">
-                  Cancelled Appointments
+                    Cancelled Appointments
                   </h2>
                 </div>
                 <div className="bg-gradient-to-tr from-red-500 to-red-400 w-32 h-32  rounded-full shadow-2xl shadow-red-400 border-white  border-dashed border-2  flex justify-center items-center ">
                   <div>
-                    <h1 className="text-white text-2xl">{CancellAppointment?CancellAppointment:'0'}</h1>
+                    <h1 className="text-white text-2xl">
+                      {CancellAppointment ? CancellAppointment : "0"}
+                    </h1>
                   </div>
                 </div>
               </div>
@@ -257,16 +270,29 @@ const Appointments = () => {
                         <div className="flex items-center ">
                           <button
                             onClick={() => handleCancel(el._id)}
-                            className="bg-red-500 hover:bg-pink-700 text-white font-bold py-2 px-4 border border-white-700 rounded"
+                            className={`bg-red-500 hover:bg-pink-700 text-white font-bold py-2 px-4 border border-white-700 rounded ${
+                              el.isCancelled
+                                ? "opacity-50 curor-not-allowed"
+                                : ""
+                            }`}
+                            disabled={el.isCancelled}
                           >
                             Cancel
                           </button>
-                          <FcVideoCall
+                          {/* <FcVideoCall
                             onClick={() =>
                               approveVideoCall(el.patient._id, true)
                             }
                             className="ml-2 text-2xl w-7 cursor-pointer"
-                          />
+                          /> */}
+                          {!el.isCancelled && (
+                            <FcVideoCall
+                              onClick={() =>
+                                approveVideoCall(el.patient._id, true)
+                              }
+                              className="ml-2 text-2xl w-7 cursor-pointer"
+                            />
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -274,6 +300,14 @@ const Appointments = () => {
               </tbody>
             </table>
           </div>
+        </div>
+        <div className="mt-20">
+          <Pagination
+            postPerPage={postPerPage}
+            totalPosts={Appointments.length}
+            setCurrentPage={setCurrentPage}
+            currentPage={currentPage}
+          />
         </div>
       </section>
     </>

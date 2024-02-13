@@ -169,7 +169,8 @@ const DoctorDetails = () => {
                       className="text-[14px] leading-8 mt-3 lg:text-[16px] lg:leading-7 font-semibold 
                       text-textColor "
                     >
-                      ({details.averageRating})
+                      {/* ({details.averageRating}) */}(
+                      {parseFloat(details.averageRating).toFixed(2)})
                     </span>
                   </div>
 

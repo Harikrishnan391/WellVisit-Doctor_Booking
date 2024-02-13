@@ -17,6 +17,17 @@ const FeedbackForm = ({ details, setshowFeedbackForm }) => {
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
+    if (rating === 0) {
+      console.log("hASGhj");
+      toast.error("Please provide a rating");
+      return;
+    }
+
+    // Validate reviewText
+    if (reviewText.trim() === "" || reviewText.length > 200) {
+      toast.error("Review text must be between 1 and 200 characters");
+      return;
+    }
 
     try {
       const res = await fetch(`${BASE_URL}/reviews/createReview`, {

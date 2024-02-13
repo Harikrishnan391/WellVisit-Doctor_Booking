@@ -5,6 +5,7 @@ import uploadImageCloudinary from "../utils/uploadCloudinary";
 import { BASE_URL } from "../config.js";
 import { toast } from "react-toastify";
 import HashLoader from "react-spinners/HashLoader";
+import { FaUser, FaEnvelope, FaPhone, FaLock } from "react-icons/fa"; // Import required icons
 
 const Signup = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -91,15 +92,15 @@ const Signup = () => {
         body: JSON.stringify(formData),
       });
 
-      const { message,userData } = await res.json();
+      const { message, userData } = await res.json();
 
       if (!res.ok) {
         throw new Error(message);
       }
 
-      setLoading(false)
+      setLoading(false);
       toast.success(message);
-      console.log(userData,"responseed")
+      console.log(userData, "responseed");
       localStorage.setItem("userData", JSON.stringify(userData));
       navigate(`/verify-otp?email=${formData.email}`);
     } catch (error) {
@@ -121,48 +122,60 @@ const Signup = () => {
 
           {/*** ===============signup Form */}
           <div className="rounded-l-lg  lg:pl-16  py-10">
-            <h3 className="text-headingColor text-[22px ] leading-9 font-bold mb-10">
+            <h3 className="text-headingColor text-2xl leading-9 font-bold mb-6">
               Create an <span className="text-primaryColor">account</span>
             </h3>
             <form onSubmit={submitHandler}>
-              <div className="mb-5">
+              <div className="mb-5 relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <FaUser className="text-gray-500" />
+                </span>
                 <input
                   type="text"
                   placeholder="Enter Full Name"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full pr-4  py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16 px] loading-7 text-headingColor placeholder:text-textColor rounded-md "
+                  className="w-full pr-4 pl-10  py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16 px] loading-7 text-headingColor placeholder:text-textColor rounded-md "
                 />
               </div>
-              <div className="mb-5">
+              <div className="mb-5 relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <FaEnvelope className="text-gray-500" />
+                </span>
                 <input
                   type="email"
                   placeholder="Enter Your Email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full pr-4  py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16 px] loading-7 text-headingColor placeholder:text-textColor rounded-md "
+                  className="w-full pr-4 pl-10  py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16 px] loading-7 text-headingColor placeholder:text-textColor rounded-md "
                 />
               </div>
-              <div className="mb-5">
+              <div className="mb-5 relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <FaPhone className="text-gray-500" />
+                </span>
                 <input
                   type="number"
                   placeholder="Enter phone Number"
                   name="number"
                   value={formData.number}
                   onChange={handleInputChange}
-                  className="w-full pr-4  py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16 px] loading-7 text-headingColor placeholder:text-textColor rounded-md "
+                  className="w-full pr-4 pl-10  py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16 px] loading-7 text-headingColor placeholder:text-textColor rounded-md "
                 />
               </div>
-              <div className="mb-5">
+              <div className="mb-5 relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <FaLock className="text-gray-500" />
+                </span>
                 <input
                   type="Password"
                   placeholder="Enter your Password"
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="w-full pr-4  py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16 px] loading-7 text-headingColor placeholder:text-textColor rounded-md "
+                  className="w-full pr-4 pl-10 py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16 px] loading-7 text-headingColor placeholder:text-textColor rounded-md "
                 />
               </div>
 
@@ -171,7 +184,7 @@ const Signup = () => {
                   htmlFor=" "
                   className="text-headingColor  font-semibold text-[16px] leading-7"
                 >
-                  Are you a:
+                  Are you a :
                   <select
                     name="role"
                     value={formData.role}
@@ -184,7 +197,7 @@ const Signup = () => {
                 </label>
 
                 <label className="text-textColor  font-semibold text-[16px] leading-7">
-                  Gender
+                  Gender :
                   <select
                     name="gender"
                     value={formData.age}

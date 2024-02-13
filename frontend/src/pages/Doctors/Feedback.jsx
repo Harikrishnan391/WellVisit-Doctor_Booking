@@ -10,6 +10,7 @@ import { MdDeleteSweep } from "react-icons/md";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import Pagination from "../../components/pagination/Pagination";
 const Feedback = ({ details }) => {
   const [showFeedbackForm, setshowFeedbackForm] = useState(false);
   const [reviews, setReview] = useState([]);
@@ -257,6 +258,14 @@ const Feedback = ({ details }) => {
             </button>
           </div>
         </Modal>
+        <div className="mt-20 flex justify-start">
+          <Pagination
+            postPerPage={postPerPage}
+            totalPosts={reviews.length}
+            setCurrentPage={setCurrentPage}
+            currentPage={currentPage}
+          />
+        </div>
       </div>
     </>
   );
