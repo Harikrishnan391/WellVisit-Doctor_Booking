@@ -6,10 +6,10 @@ import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 function UserVideoCallRoom() {
   const { roomId } = useParams();
   const user = useSelector((state) => state.patientAuthReducer.PatientInfo);
-  
+
   const myMeeting = async (element) => {
-    const appID = 1114462933;
-    const serverSecret = "a24df36c34f6f5e1a0800e5d95b5fa0d";
+    const appID = 1547747293;
+    const serverSecret = "9cbfd805a91a9ddf5b516d9c3170be3c";
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
       appID,
       serverSecret,
