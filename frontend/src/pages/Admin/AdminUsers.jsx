@@ -6,6 +6,9 @@ import { BiTrophy } from "react-icons/bi";
 import Swal from "sweetalert2";
 import Pagination from "../../components/pagination/Pagination"
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logoutPatient } from "../../slices/patientAuthSlice";
+import { useSelector } from "react-redux";
 
 const AdminUsers = () => {
   
@@ -13,6 +16,9 @@ const AdminUsers = () => {
   const { data, error, loading, refetch } = userFetchData(
     `${BASE_URL}/admin/getAllUser`
   );
+
+  const dispatch=useDispatch()
+  const user = useSelector((state) => state.patientAuthReducer.PatientInfo);
 
   const navigate=useNavigate()
 
@@ -36,8 +42,7 @@ const AdminUsers = () => {
 
   const handleLogout=()=>{
 
-    localStorage.removeItem("PatientInfo")
-
+    dispatch(logoutPatient());
   }
 
   const handleBlock = async (userId) => {

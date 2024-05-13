@@ -34,7 +34,7 @@ const corsOptions = {
 const currentWorkingDir = path.resolve();
 const parentDir = path.dirname(currentWorkingDir);
 const dum = path.join(parentDir, "/frontend/dist");
-console.log(dum, "DUMMY");
+
 //database connection
 mongoose.set("strictQuery", false);
 const connectDB = async () => {
@@ -78,8 +78,8 @@ const server = app.listen(port, () => {
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "https://www.wellvisit.online, https://wellvisit.online",
-    // origin: "http://localhost:5173",
+    // origin: "https://www.wellvisit.online, https://wellvisit.online",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"],
   },
 });

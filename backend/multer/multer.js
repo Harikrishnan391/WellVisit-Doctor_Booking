@@ -16,7 +16,6 @@ export const multipleUpload = upload.fields([
   { name: "certificate", maxCount: 10 },
 ]);
 
-console.log("multerrrr");
 
 const userStorage = multer.diskStorage({
   destination: function (req, file, cb) {

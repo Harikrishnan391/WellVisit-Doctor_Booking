@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 import HashLoader from "react-spinners/HashLoader";
 
 const Profile = ({ user, refetch }) => {
-  console.log(user, "userrrrrrrrrrrrrrrrrrrrrrrrr");
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewURL, setPreviewURL] = useState("");
   const [validationError, setValidationError] = useState("");

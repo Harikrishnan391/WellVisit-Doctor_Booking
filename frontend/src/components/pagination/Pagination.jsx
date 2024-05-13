@@ -15,8 +15,6 @@ function Pagination({ postPerPage, totalPosts, setCurrentPage, currentPage }) {
   };
 
   const next = async () => {
-    console.log(currentPage, "currentPage");
-    console.log(pages.length, "page.length");
     if (currentPage < pages.length) {
       setCurrentPage(currentPage + 1);
     }

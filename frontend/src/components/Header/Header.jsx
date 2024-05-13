@@ -9,8 +9,6 @@ import { logoutPatient } from "../../slices/patientAuthSlice";
 import { IoIosNotifications } from "react-icons/io";
 import Notification from "../notification/Notification";
 
-// import { authContext } from "../../context/AuthContext";
-
 const navLinks = [
   {
     path: "/users/home",
