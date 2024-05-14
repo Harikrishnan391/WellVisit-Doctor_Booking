@@ -249,7 +249,7 @@ const Login = () => {
             >
               {loading ? <HashLoader size={25} color="#fff" /> : " Login"}
             </button>
-            <OAuth />
+            {/* <OAuth /> */}
 
             <p className="mt-5 text-textColor text-center">
               Don&apos;t have an Account?
@@ -258,6 +258,14 @@ const Login = () => {
                 className="text-primaryColor font-medium ml-1"
               >
                 Register
+              </Link>
+              <br />
+              Are you a doctor?
+              <Link
+                to="/doctors/doctorSignup"
+                className="text-red-500 font-medium ml-1"
+              >
+                Register as a Doctor
               </Link>
             </p>
           </div>

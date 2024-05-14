@@ -26,6 +26,10 @@ const Signup = () => {
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    if(e.target.value==="doctor"){
+      navigate('/doctors/doctorSignup')
+    }
   };
 
   const validateForm = () => {
