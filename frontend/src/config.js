@@ -1,5 +1,5 @@
-export const BASE_URL = "http://localhost:5000/api";
-// export const BASE_URL='https://www.wellvisit.online/api'
+// export const BASE_URL = "http://localhost:5000/api";
+export const BASE_URL='https://www.wellvisit.online/api'
 const userInLocal = JSON.parse(localStorage.getItem("PatientInfo")) || {};
 const doctorInLocal = JSON.parse(localStorage.getItem("doctorInfo")) || {};
 const adminInLocal = JSON.parse(localStorage.getItem("adminInfo"));
