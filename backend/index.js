@@ -78,8 +78,8 @@ const server = app.listen(port, () => {
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    // origin: "https://www.wellvisit.online, https://wellvisit.online",
-    origin: "http://localhost:5173",
+    origin: "https://www.wellvisit.online, https://wellvisit.online",
+    // origin: "http://localhost:5173",
     methods: ["GET", "POST"],
   },
 });
