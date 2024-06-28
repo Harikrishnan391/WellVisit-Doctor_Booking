@@ -212,7 +212,7 @@ const DoctorChat = () => {
                           Q
                         </div>
                         <div className="ml-2 text-sm font-semibold">
-                          {chat.user.name}
+                          {chat?.user?.name}
                         </div>
                       </button>
                     </div>

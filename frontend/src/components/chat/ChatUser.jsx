@@ -161,7 +161,7 @@ function ChatUser({ onClose, doctor, user, photo, doctorPic, userName }) {
                       </div>
 
                       <span className="text-xs text-gray-500 leading-none">
-                        {formatChatTime(chat.createdAt)}
+                        {formatChatTime(chat?.createdAt)}
                       </span>
                     </div>
                     <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 ">
