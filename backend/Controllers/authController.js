@@ -3,7 +3,7 @@ import Doctor from "../model/DoctorSchema.js";
 import bcrypt from "bcryptjs";
 import generatePatientToken from "../jwt/patient/patientjwt.js";
 import generateDoctorToken from "../jwt/doctor/doctorjwt.js";
-import { sendOtpTwlio } from "./otpController.js";
+// import { sendOtpTwlio } from "./otpController.js";
 import generateOTP from "../utils/generateOtp.js";
 import generateMail from "../utils/generateMail.js";
 
