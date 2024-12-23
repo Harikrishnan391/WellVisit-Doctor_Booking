@@ -32,7 +32,7 @@ export const getRoom = async (req, res) => {
     });
 
     if (room) {
-      res.status(200).json({ message: "roomm not found", data: room });
+      res.status(200).json({ message: "roomm  found", data: room });
     } else {
       res.status(400).json({ messafe: "errorFailed to fetch rooms" });
     }

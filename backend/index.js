@@ -16,6 +16,7 @@ import { Server } from "socket.io";
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -78,8 +79,8 @@ const server = app.listen(port, () => {
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "https://www.wellvisit.online, https://wellvisit.online",
-    // origin: "http://localhost:5173",
+    // origin: "https://www.wellvisit.online, https://wellvisit.online",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"],
   },
 });

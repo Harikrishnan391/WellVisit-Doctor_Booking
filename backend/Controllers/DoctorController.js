@@ -4,8 +4,6 @@ import bcrypt from "bcryptjs";
 import generateOTP from "../utils/generateOtp.js";
 import generateMail from "../utils/generateMail.js";
 import Booking from "../model/bookingSchema.js";
-import bookingSchema from "../model/bookingSchema.js";
-import User from "../model/UserSchema.js";
 import { v4 as uuidv4 } from "uuid";
 import ChatMessage from "../model/chatMessage.js";
 
@@ -60,7 +58,7 @@ export const resetPasswordOtpVerify = async (req, res) => {
       status: true,
     });
   } catch (error) {
-     console.log(error)
+    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };

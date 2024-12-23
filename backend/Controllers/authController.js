@@ -150,7 +150,7 @@ export const login = async (req, res) => {
     const userModel = role === "patient" ? User : Doctor;
     const user = await userModel.findOne({ email: email });
     if (!user) {
-      res.status(404).json({ message: "Invalid user" });
+      res.status(404).json({success:false, message: "Invalid user" });
     } else {
       if (user.isBlocked) {
         res.status(401).json({ message: "User is blocked" });
@@ -169,10 +169,7 @@ export const login = async (req, res) => {
             } else if (role === "doctor") {
               token = generateDoctorToken(user._id, res);
             }
-            // const token = generateToken(user);
-
-            // console.log("tokennnmmmmm", token);
-            // res.cookie("jwtPatient", token, { httpOnly: true, maxAge: maxAge * 1000 });
+  
             const { password, appointments, ...rest } = user._doc;
 
             res.status(200).json({
