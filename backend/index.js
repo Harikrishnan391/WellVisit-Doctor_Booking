@@ -61,24 +61,22 @@ app.use("/api/doctors", DoctorRoute);
 app.use("/api/reviews", reviewRoute);
 app.use("/api/admin", adminRoute);
 
-// if (process.env.NODE_ENV === "production") {
-//   const __dirname = path.resolve();
-//   app.use(express.static(path.join(parentDir, "/frontend/dist")));
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.resolve(parentDir, "frontend", "dist", "index.html"));
-//   });
-// } else {
-//   app.get("/", (req, res) => {
-//     res.send("API is running...");
-//   });
-// }
+if (process.env.NODE_ENV === "production") {
+  const __dirname = path.resolve();
+  app.use(express.static(path.join(parentDir, "/frontend/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(parentDir, "frontend", "dist", "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running...");
+  });
+}
 
 // Serve a simple message for the root route
-
-//
-app.get("/", (req, res) => {
-  res.send("API is running...");
-});
+// app.get("/", (req, res) => {
+//   res.send("API is running...");
+// });
 
 const server = app.listen(port, () => {
   try {
