@@ -63,9 +63,12 @@ app.use("/api/admin", adminRoute);
 
 if (process.env.NODE_ENV === "production") {
   const __dirname = path.resolve();
-  app.use(express.static(path.join(parentDir, "/frontend/dist")));
+  const frontendDistPath = path.join(__dirname, "..", "frontend", "dist");
+  app.use(express.static(frontendDistPath));
+  // app.use(express.static(path.join(parentDir, "/frontend/dist")));
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(parentDir, "frontend", "dist", "index.html"));
+    res.sendFile(path.resolve(frontendDistPath, "index.html"));
+    // res.sendFile(path.resolve(frontendDistPath, "frontend", "", "index.html"));
   });
 } else {
   app.get("/", (req, res) => {
