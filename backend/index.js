@@ -92,8 +92,8 @@ const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
     // origin: "https://www.wellvisit.online, https://wellvisit.online",
-    origin: "http://localhost:5173",
-    // origin: "https://wellvisit-doctor-booking.onrender.com",
+    // origin: "http://localhost:5173",
+    origin: "https://wellvisit-doctor-booking.onrender.com",
     methods: ["GET", "POST"],
   },
 });
