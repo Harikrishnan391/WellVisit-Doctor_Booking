@@ -38,8 +38,12 @@ const dum = path.join(parentDir, "/frontend/dist");
 
 //database connection
 mongoose.set("strictQuery", false);
+
 const connectDB = async () => {
   try {
+    if (mongoose.connection.readyState >= 1) {
+      return;
+    }
     await mongoose.connect(process.env.MONGO_URL, {});
 
     console.log("Mongodb data base connected");
@@ -47,6 +51,8 @@ const connectDB = async () => {
     console.log("mongodb databse is connection failed", error);
   }
 };
+
+connectDB();
 
 app.use(cors(corsOptions));
 app.use("/api/auth", authRoute);
@@ -68,13 +74,14 @@ app.use("/api/admin", adminRoute);
 // }
 
 // Serve a simple message for the root route
+
+//
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
 const server = app.listen(port, () => {
   try {
-    connectDB();
     console.log("Server is running on port", port);
   } catch (error) {
     console.log(error);
@@ -85,8 +92,8 @@ const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
     // origin: "https://www.wellvisit.online, https://wellvisit.online",
-    // origin: "http://localhost:5173",
-    origin: "https://wellvisit-doctor-booking.onrender.com",
+    origin: "http://localhost:5173",
+    // origin: "https://wellvisit-doctor-booking.onrender.com",
     methods: ["GET", "POST"],
   },
 });
