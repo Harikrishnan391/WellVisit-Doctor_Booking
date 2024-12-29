@@ -63,7 +63,8 @@ app.use("/api/admin", adminRoute);
 
 if (process.env.NODE_ENV === "production") {
   const __dirname = path.resolve();
-  const frontendDistPath = path.join(__dirname, "..", "frontend", "dist");
+  const frontendDistPath = path.join(__dirname, "frontend", "dist");
+  console.log(frontendDistPath, "frontend dist path");
   app.use(express.static(frontendDistPath));
   // app.use(express.static(path.join(parentDir, "/frontend/dist")));
   app.get("*", (req, res) => {
@@ -75,11 +76,6 @@ if (process.env.NODE_ENV === "production") {
     res.send("API is running...");
   });
 }
-
-// Serve a simple message for the root route
-// app.get("/", (req, res) => {
-//   res.send("API is running...");
-// });
 
 const server = app.listen(port, () => {
   try {
